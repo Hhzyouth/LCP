@@ -7,10 +7,11 @@
 软件架构说明
 
 #### 开发者介绍
-Hhzyouth 黄梓洋
-张庆豪 张庆豪
-熊俊豪 熊俊豪
-CLittleTree 陈文杰
+
+- Hhzyouth 黄梓洋
+- 张庆豪 张庆豪
+- 熊俊豪 熊俊豪
+- CLittleTree 陈文杰
 
 #### 安装教程
 
