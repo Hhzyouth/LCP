@@ -1,15 +1,18 @@
 <script setup>
     import Header from "../components/Header.vue"
+    import { useUserStore } from '@/store/user.js'
     import { ref } from 'vue'
     const coin=ref(0)
     const finishedTitle=ref(0)
     const rank=ref(600)
     const onlineNumber=ref(0)
     const Page=ref('1')
+
+    const store=useUserStore()
 </script>
 <script>
 const getWindowInfo = () => {
-    if (window.innerWidth<=937){
+    if (window.innerWidth<=1041){
                 const element = document.querySelector('.affix');
                 element.style.display = 'none';
             }else{
@@ -17,7 +20,7 @@ const getWindowInfo = () => {
                 element.style.display = '';
             }
 };
-window.addEventListener('resize', getWindowInfo);
+
 
 export default {
     data() {
@@ -33,6 +36,7 @@ export default {
         var myTimeDisplay = setInterval(() => {
            this.getNowTime(); //每秒更新一次时间
         }, 1000);
+        window.addEventListener('resize', getWindowInfo);
     },
     methods: {
         getNowTime() {
@@ -68,6 +72,9 @@ export default {
         },
         
     },
+    beforeDestroy(){
+        window.removeEventListener("resize", getWindowInfo);
+    }
 
 }
 
@@ -83,15 +90,15 @@ export default {
                 <div class="main-container">
                     <section class="main-body">
                         <div class="label">
-                            <span class="label-title">
+                            <router-link class="label-title" to="/Library">
                                 知识库 >
-                            </span>
+                            </router-link>
                             <div style="width: 80px;">
                                 <hr style="height: 2px;background-color: black;border-radius: 95px;">
                             </div>
                         </div>
                         <div class="label-content">
-                            <div class="knowledge-card">
+                            <router-link class="knowledge-card" to="/Python/Python-introduction">
                                 <p class="card-title">学习Python</p>
                                 <div class="detail">
                                     <img src="@/assets/knowledgeLogo/python-logo.png" alt="" class="card-img">
@@ -99,64 +106,64 @@ export default {
                                         Python 3.x版本 有条理的和强大的面向对象的程序设计语言
                                     </span>
                                 </div>                            
-                            </div>
+                            </router-link>
                             <div class="knowledge-card">
-                                <p class="card-title">学习Python</p>
+                                <p class="card-title">学习Java</p>
                                 <div class="detail">
-                                    <img src="@/assets/knowledgeLogo/python-logo.png" alt="" class="card-img">
+                                    <img src="@/assets/knowledgeLogo/java.png" alt="" class="card-img">
                                     <span class="text">
-                                        Python 3.x版本 有条理的和强大的面向对象的程序设计语言
+                                        基于JVM虚拟机的跨平台语言，一次编写，到处运行
                                     </span>
                                 </div>                            
                             </div>
                             <div class="knowledge-card">
-                                <p class="card-title">学习Python</p>
+                                <p class="card-title">学习C++</p>
                                 <div class="detail">
-                                    <img src="@/assets/knowledgeLogo/python-logo.png" alt="" class="card-img">
+                                    <img src="@/assets/knowledgeLogo/cpp-logo.png" alt="" class="card-img">
                                     <span class="text">
-                                        Python 3.x版本 有条理的和强大的面向对象的程序设计语言
+                                        一种计算机高级程序设计语言，由C语言扩展升级而产生
                                     </span>
                                 </div>                            
                             </div>
                             <div class="knowledge-card">
-                                <p class="card-title">学习Python</p>
+                                <p class="card-title">学习C</p>
                                 <div class="detail">
-                                    <img src="@/assets/knowledgeLogo/python-logo.png" alt="" class="card-img">
+                                    <img src="@/assets/knowledgeLogo/c-logo.png" alt="" class="card-img">
                                     <span class="text">
-                                        Python 3.x版本 有条理的和强大的面向对象的程序设计语言
+                                        一种通用的、面向过程式的计算机程序设计语言
                                     </span>
                                 </div>                            
                             </div>
                             <div class="knowledge-card">
-                                <p class="card-title">学习Python</p>
+                                <p class="card-title">学习C#</p>
                                 <div class="detail">
-                                    <img src="@/assets/knowledgeLogo/python-logo.png" alt="" class="card-img">
+                                    <img src="@/assets/knowledgeLogo/cs-logo.png" alt="" class="card-img">
                                     <span class="text">
-                                        Python 3.x版本 有条理的和强大的面向对象的程序设计语言
+                                        适用于 .NET 开发者平台的、面向对象的新式开源跨平台编程语言
                                     </span>
                                 </div>                            
                             </div>
                             <div class="knowledge-card">
-                                <p class="card-title">学习Python</p>
+                                <p class="card-title">学习Dart</p>
                                 <div class="detail">
-                                    <img src="@/assets/knowledgeLogo/python-logo.png" alt="" class="card-img">
+                                    <img src="@/assets/knowledgeLogo/dart.png" alt="" class="card-img">
                                     <span class="text">
-                                        Python 3.x版本 有条理的和强大的面向对象的程序设计语言
+                                        一个易用、可移植且高效的语言，在全平台开发高质量的应用程序
                                     </span>
                                 </div>                            
                             </div>
                         </div>
 
                         <div class="label">
-                            <span class="label-title">
+                            <router-link class="label-title" to="/Competition">
                                 竞赛 >
-                            </span>
+                            </router-link>
                             <div style="width: 80px;">
                                 <hr style="height: 2px;background-color: black;border-radius: 95px;">
                             </div>
                             <div class="label-content">
                                 <div class="race-card">
-                                    <div class="progress">
+                                    <div v-if="store.token!==''" class="progress">
                                         <el-progress type="dashboard" :percentage="rank/10" :width="80" :height="80" define-back-color="#bebebe" stroke-width="8">
                                             <template #default="{ percentage }">
                                                 <span class="percentage-value">{{ percentage*10 }}</span>
@@ -164,6 +171,7 @@ export default {
                                             </template>
                                         </el-progress>
                                     </div>
+                                    <img v-else src="@/assets/icon/MaterialSymbolsMilitaryTechOutlineRounded.svg   " alt="">
                                     <div class="race-detail">
                                         <p style="margin: 0;font-size: 1.2rem;">
                                             在线匹配
@@ -171,7 +179,7 @@ export default {
                                         <span style="font-size: 0.8rem;">
                                             在线人数: {{ onlineNumber }}
                                         </span>
-                                    </div>                            
+                                    </div>                         
                                 </div>
                                 <div class="race-card">
                                     <img src="@/assets/icon/MaterialSymbolsTrophyOutline.svg" alt="">
@@ -191,9 +199,9 @@ export default {
                         </div>
 
                         <div class="label">
-                            <span class="label-title">
+                            <router-link class="label-title" to="/Course">
                                 课堂 >
-                            </span>
+                            </router-link>
                             <div style="width: 80px;">
                                 <hr style="height: 2px;background-color: black;border-radius: 95px;">
                             </div>
@@ -281,10 +289,12 @@ export default {
                                 <hr style="height: 2px;background-color: black;border-radius: 95px;">
                             </div>
                             <div class="label-content">
-                                <div class="tool-card" onclick="window.open('https:/store.steampowered.com/')">
-                                    <img src="@/assets/toolicon/Steam.png" alt="" class="toolcard-img">
-                                    <span class="tool-name">欢迎来到Steam</span>
-                                </div>
+                                <a href="https:/store.steampowered.com/" target="_blank">
+                                    <div class="tool-card">
+                                        <img src="@/assets/toolicon/Steam.png" alt="" class="toolcard-img">
+                                        <span class="tool-name">欢迎来到Steam</span>
+                                    </div>
+                                </a>
                             </div>
                         </div>
 
@@ -303,7 +313,7 @@ export default {
                                             </span>
                                         </template>
                                     </el-calendar>
-                                    <section class="extra">
+                                    <section v-if="store.token!==''" class="extra">
                                         <div class="items">
                                             <img src="@/assets/icon/MaterialSymbolsTollOutlineRounded.svg" alt="" class="svgs">
                                             <p class="svg-description">积分</p>
@@ -320,6 +330,14 @@ export default {
                                             <p class="svg-num">{{ rank }}</p>
                                         </div>
                                     </section>
+                                    <section v-else class="extra-nologin">
+                                        <div>
+                                            欢迎你！ LoopCoder
+                                        </div>
+                                        <router-link class="login" to="/Login">
+                                            注册 / 登录
+                                        </router-link>
+                                    </section>
                                 </section>
                             </section>
                         </el-affix>     
@@ -330,7 +348,7 @@ export default {
     </div>
 </template>
 
-<style>
+<style scoped>
     .Header-Main-container{
         margin: 0;
         padding: 0;
@@ -344,22 +362,12 @@ export default {
         padding: 0;
         background-color: #071727;
     }
-    .is-selected {
-        color: #1989fa;
-        border-radius: 15px;
-    }
-    .calendar{
-        width: 300px;
-        border: 1px solid white;
-        box-shadow: 0px 0px 10px #e0e0e0;
-        border-radius: 15px;
-        padding: 5px;
-    }
     .body-side{
         width: 350px;
         margin: 0 8px;
     }
     .main-container{
+        padding-left: 50px;
         margin: 20px auto;
         display: flex;
         justify-content: center;
@@ -367,19 +375,6 @@ export default {
     .main-body{
         width: 800px;
         margin: 0 8px;
-    }
-    .el-calendar-table .el-calendar-day{
-        height: 50px;
-        padding: 5px;
-        margin: 3px;
-        border-radius: 15px;
-        text-align: center;
-    }
-    .el-calendar-table:not(.is-range) td.next, .el-calendar-table:not(.is-range) td.prev{
-        pointer-events: none;
-    }
-    .el-calendar__body{
-        padding-bottom: 10px;
     }
     .extra{
         width: 300px;
@@ -435,6 +430,7 @@ export default {
     }
     .text{
         font-size: 11px;
+        padding: 2px;
     }
     .label-content{
         display: flex;
@@ -445,7 +441,7 @@ export default {
     }
     .race-card{
         background-color: rgba(239, 239, 239, 0.5);
-        width: 230px;
+        width: 14.5rem;
         height: 85px;
         border-radius: 8px;
         padding: 8px;
@@ -471,9 +467,6 @@ export default {
         display: block;
         margin-top: 5px;
         font-size: 12px;
-    }
-    .el-progress-circle__track {
-        stroke: #bebebe;
     }
     .race-detail{
         display: flex;
@@ -542,6 +535,7 @@ export default {
         display: flex;
         align-items: center;
         margin:0 15px 15px 0;
+        color: #213547;
     }
     .tool-card:hover{
         background-color: rgba(239, 239, 239, 1);
@@ -549,5 +543,53 @@ export default {
     }
     .tool-name{
         font-size: 0.8rem;
+    }
+    .affix{
+        width: 365.95px;
+    }
+    
+</style>
+<style>
+    .el-calendar-table .el-calendar-day{
+        height: 50px;
+        padding: 5px;
+        margin: 3px;
+        border-radius: 15px;
+        text-align: center;
+    }
+    .el-calendar-table:not(.is-range) td.next, .el-calendar-table:not(.is-range) td.prev{
+        pointer-events: none;
+    }
+    .el-calendar__body{
+        padding-bottom: 10px;
+    }
+    .is-selected {
+        color: #1989fa;
+        border-radius: 15px;
+    }
+    .calendar{
+        width: 300px;
+        border: 1px solid white;
+        box-shadow: 0px 0px 10px #e0e0e0;
+        border-radius: 15px;
+        padding: 5px;
+    }
+    .el-progress-circle__track {
+        stroke: #bebebe;
+    }
+    .extra-nologin{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+    .login{
+        margin: 10px 0;
+        background-color: #071727cc;
+        color: white;
+        border-radius: 8px;
+        padding :4px 40px;
+    }
+    .login:hover{
+        color: white;
     }
 </style>

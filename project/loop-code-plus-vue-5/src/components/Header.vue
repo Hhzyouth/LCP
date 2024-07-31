@@ -11,7 +11,7 @@
             :ellipsis="false"
         >   
             <span class="logo-container">
-                <img src="../assets/image/main-logo.png" id="main-logo">
+                <img src="../assets/image/main-logo.png" id="main-logo" @click="imgToHome">
             </span>
             <el-menu-item index="1" style="font-size: 1rem;" class="menu-item">主页</el-menu-item>
             <el-menu-item index="2" style="font-size: 1rem;" class="menu-item">知识库</el-menu-item>
@@ -23,7 +23,7 @@
                 <div class="top-input">
                     <el-input class="input" v-model="input" style="width: 240px" placeholder="搜索" :prefix-icon="Search" @keyup.enter.native="Searchit()"/>
                 </div>
-                <el-popover placement="bottom" :width="280" trigger="click" popper-class="popover" :offset="20" popper-style="border-radius: 0.8rem;">
+                <el-popover v-if="store.token!==''" placement="bottom" :width="280" trigger="click" popper-class="popover" :offset="20" popper-style="border-radius: 0.8rem;">
                     <template #reference>
                         <el-avatar :src="circleUrl" style="width: 30px;height: 30px;"/>
                     </template>
@@ -68,13 +68,14 @@
                             <img src="@/assets/icon/MaterialSymbolsMarkdownCopyOutlineRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">设置</span>
                         </div>
-                        <div class="bar">
+                        <div class="bar" @click="exit">
                             <img src="@/assets/icon/MaterialSymbolsExitToAppRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">退出</span>
                         </div>
                     </div>
                 </el-popover>
-                <el-popover placement="bottom" :width="480" trigger="click" popper-class="popover" :offset="20" popper-style="height: 400px; overflow: auto;border-radius: 0.8rem;">
+                <router-link v-else style="color: white;" to="/Login">注册 / 登录</router-link>
+                <el-popover v-if="store.token!==''" placement="bottom" :width="480" trigger="click" popper-class="popover" :offset="20" popper-style="height: 400px; overflow: auto;border-radius: 0.8rem;">
                     <template #reference>
                         <el-icon style="width: 25px; height:25px; color: white;margin-left: 15px;"><Bell /></el-icon>
                     </template>
@@ -104,6 +105,7 @@
     import { ref, toRefs, defineProps } from 'vue'
     import { Search } from '@element-plus/icons-vue'
     import { useRouter } from 'vue-router'
+    import { useUserStore } from '@/store/user.js'
     const router =useRouter()
     const props = defineProps({
     //子组件接收父组件传递过来的值
@@ -111,6 +113,7 @@
     })
     const {page} =toRefs(props)
     const activeIndex = page
+    const imgToHome =()=>router.push('/')
     const handleSelect = (key, keyPath) => {
         switch (key) {
             case '1':
@@ -123,7 +126,7 @@
                 router.push('/Competition')
                 break;
             case '4':
-
+                router.push('/Course')
                 break;
             case '5':
                 router.push('/Store')
@@ -153,6 +156,12 @@
         {type:2,content:"这是一条超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超超长的示例消息"},
         {type:1,content:"这是一条示例消息"},
     ]
+
+    const store=useUserStore()
+    const exit=()=>{
+        console.log("=====Exit=====");
+        store.setToken({token:''})
+    }
 </script>
 <script>
 export default {
@@ -180,7 +189,7 @@ export default {
                         item.style.display = 'none'
                     })
                     this.cur=1
-                }else if(newVal>610 && newVal<=958){
+                }else if(newVal>610 && newVal<=970){
                     const element = document.querySelectorAll('.menu-item');
                     element.forEach((item)=>{
                         item.style.display = 'flex'
@@ -267,7 +276,7 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-left: 30px;
+        margin-left: 40px;
     }
     .toSetting:hover{
         cursor: pointer;

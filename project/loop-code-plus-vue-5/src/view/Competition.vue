@@ -19,5 +19,7 @@
 </script>
 
 <style scoped>
-
+.header{
+    padding: 0;
+}
 </style>
