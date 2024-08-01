@@ -174,7 +174,7 @@ export default {
                                     <img v-else src="@/assets/icon/MaterialSymbolsMilitaryTechOutlineRounded.svg   " alt="">
                                     <div class="race-detail">
                                         <p style="margin: 0;font-size: 1.2rem;">
-                                            在线匹配
+                                            单人匹配
                                         </p>
                                         <span style="font-size: 0.8rem;">
                                             在线人数: {{ onlineNumber }}

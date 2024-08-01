@@ -46,10 +46,10 @@
                             <img src="@/assets/icon/MaterialSymbolsClarifyOutlineRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">我的题目</span>
                         </div>
-                        <div class="tool">
+                        <router-link class="tool" to="/LCPlab">
                             <img src="@/assets/icon/MaterialSymbolsTerminalRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">LCPlab</span>
-                        </div>
+                        </router-link>
                         <div class="tool">
                             <img src="@/assets/icon/MaterialSymbolsBackpackOutlineRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">背包</span>
@@ -294,10 +294,12 @@ export default {
         background-color: rgba(239, 239, 239, 0.5);
         border-radius: 8px;
         margin-bottom: 10px;
+        color: #606266;
     }
     .tool:hover{
         background-color: rgba(239, 239, 239, 1);
         cursor: pointer;
+        color: #071727;
     }
     .tools{
         display: flex;

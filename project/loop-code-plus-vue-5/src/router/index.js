@@ -34,6 +34,10 @@ const routes = [
     component: ()=>import("@/view/tool/Login.vue")
   },
   { 
+    path: '/LCPlab',
+    component: ()=>import("@/view/tool/LCPlab.vue")
+  },
+  { 
     path: '/Python',
     component: ()=>import("@/view/Library/python/Python.vue"),
     redirect:'/Python/Python-introduction',
@@ -61,6 +65,38 @@ const routes = [
       { 
         path: 'Python-comment',
         component: ()=>import("@/view/Library/python/Python-comment.vue")
+      },
+      { 
+        path: 'Python-controller',
+        component: ()=>import("@/view/Library/python/Python-controller.vue")
+      },
+      { 
+        path: 'Python-dataStructure',
+        component: ()=>import("@/view/Library/python/Python-dataStructure.vue")
+      },
+      { 
+        path: 'Python-module',
+        component: ()=>import("@/view/Library/python/Python-module.vue")
+      },
+      { 
+        path: 'Python-inputAndOuput',
+        component: ()=>import("@/view/Library/python/Python-inputAndOuput.vue")
+      },
+      { 
+        path: 'Python-error',
+        component: ()=>import("@/view/Library/python/Python-error.vue")
+      },
+      { 
+        path: 'Python-class',
+        component: ()=>import("@/view/Library/python/Python-class.vue")
+      },
+      { 
+        path: 'Python-standardLibrary',
+        component: ()=>import("@/view/Library/python/Python-standardLibrary.vue")
+      },
+      { 
+        path: 'Python-next',
+        component: ()=>import("@/view/Library/python/Python-next.vue")
       },
     ]
   }

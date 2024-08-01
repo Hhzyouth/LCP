@@ -11,22 +11,22 @@
                 </span>
                 <div class="input-container">
                     <el-input
-                        v-model="input"
-                        style="width: 240px"
+                        v-model="mail"
+                        style="width: 300px;height: 40px;"
                         placeholder="邮箱"
                         clearable
                     />
                     <el-input
-                        v-model="input"
-                        style="width: 240px"
+                        v-model="password"
+                        style="width: 300px;height: 40px;"
                         type="password"
                         placeholder="密码"
                         show-password
                     />
                     <el-input
                         v-if="isReg"
-                        v-model="input"
-                        style="width: 240px"
+                        v-model="again"
+                        style="width: 300px;height: 40px;"
                         type="password"
                         placeholder="再次输入密码"
                         show-password
@@ -38,12 +38,15 @@
                         {{ text }}
                     </div>
                 </div>
-                <span v-if="isReg" @click="()=>{isReg=false;text='登录'}" class="to">
-                    去{{text}}
-                </span>
-                <span v-else @click="()=>{isReg=true;text='注册'}" class="to">
-                    去{{ text }}
-                </span>
+                <div class="goTo">
+                    <span v-if="isReg" @click="()=>{isReg=false;text='登录'}" class="to">
+                        去{{text}}
+                    </span>
+                    <span v-else @click="()=>{isReg=true;text='注册'}" class="to">
+                        去{{ text }}
+                    </span>
+                </div>
+                
             </div>
         </el-main>
       </el-container>
@@ -78,8 +81,13 @@
     height: calc(100vh - 60px);
     display: flex;
     justify-content: center;
-    align-items: start;
-    background-color: rgba(239, 239, 239, 0.5);
+    align-items: center;
+    background-image: url("../../assets/image/bg.jpg");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    /* background-color: rgba(239, 239, 239, 0.5); */
 }
 .container{
     display: flex;
@@ -89,7 +97,8 @@
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
-    padding: 20px;
+    padding: 25px;
+    margin-bottom: 60px;
 }
 .logo-container{
     padding: 0;
@@ -98,7 +107,7 @@
     cursor: pointer;
 }
 .input-container{
-    height: 120px;
+    height: 160px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -110,7 +119,8 @@
     height: 36px;
 }
 .goButton{
-    width: 80%;
+    width: 300px;
+    height: 40px;
     background-color: #FAB900;
     color: white;
     border-radius: 8px;
@@ -118,15 +128,18 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 10px;
-    padding: 2px 0;
 }
 .goButton:hover{
     cursor: pointer;
+    background-color: #fab700ce;
 }
 .text{
     font-size: 1.2rem;
 }
 .to{
     color: grey;
+}
+.goTo{
+    width: 300px;
 }
 </style>

@@ -1,7 +1,9 @@
 <template>
     <div class="Header-Aside-Main-container">
       <el-container>
-        <el-header>logo 返回知识库 搜索图标 头像 消息</el-header>
+        <el-header class="elheader">
+            <Header :page="Page"/>
+        </el-header>
         <el-container>
           <el-aside width="250px">
             <el-scrollbar class="scrollbar">
@@ -30,28 +32,28 @@
                     <el-menu-item index="/Python/Python-comment">
                         Python 注释
                     </el-menu-item>
-                    <el-menu-item index="/Python/Python-introduction">
+                    <el-menu-item index="/Python/Python-controller">
                         Python 控制流工具
                     </el-menu-item>
-                    <el-menu-item index="/Python/Python-install">
+                    <el-menu-item index="/Python/Python-dataStructure">
                         Python 数据结构
                     </el-menu-item>
-                    <el-menu-item index="/Python/Python-calculator">
+                    <el-menu-item index="/Python/Python-module">
                         Python 模块
                     </el-menu-item>
-                    <el-menu-item index="/Python/Python-basicSyntax">
+                    <el-menu-item index="/Python/Python-inputAndOuput">
                         Python 输入与输出
                     </el-menu-item>
-                    <el-menu-item index="/Python/Python-interpreter">
+                    <el-menu-item index="/Python/Python-error">
                         Python 错误与异常
                     </el-menu-item>
-                    <el-menu-item index="/Python/Python-comment">
+                    <el-menu-item index="/Python/Python-class">
                         Python 类
                     </el-menu-item>
-                    <el-menu-item index="/Python/Python-introduction">
+                    <el-menu-item index="/Python/Python-standardLibrary">
                         Python 标准库
                     </el-menu-item>
-                    <el-menu-item index="/Python/Python-install">
+                    <el-menu-item index="/Python/Python-next">
                         Python 接下来？
                     </el-menu-item>
                 </el-menu>
@@ -66,6 +68,8 @@
   </template>
 
 <script setup>
+import { ref } from "vue";
+const Page=ref("2")
 const handleOpen = (key, keyPath) => {
   console.log(key, keyPath)
 }
@@ -86,6 +90,9 @@ const handleClose = (key, keyPath) => {
         margin: 5px 10px;
         height: 35px;
         border-radius: 8px;
+    }
+    .elheader{
+        padding: 0;
     }
     .el-menu-item:hover{
         background-color: rgba(239, 239, 239, 0.5);
