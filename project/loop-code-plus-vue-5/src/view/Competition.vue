@@ -1,170 +1,230 @@
 <template>
-    <div class="Header-Aside-Main-container">
+    <div class="Header-Main-container">
         <div class="elcontainer">
             <el-container>
                 <el-header class="header">
                     <Header :page="Page"/>
                 </el-header>
                 <el-main class="elmain">
-                    <div class="top">
-                        <h1 class="text">
-                            LoopCodePlus 竞赛
-                        </h1>
-                    </div>
-                    <div class="main-body">
-                        <div class="match-card">
-                            <div class="entry">
-                                <img src="../assets/image/bg-match1.png" alt="">
-                                <div class="content">
-                                    <p class="content-title">
-                                        单人匹配
-                                    </p>
-                                    <p  class="content-text">
-                                        你将与另一位参赛者比拼完成1道随机题目的速度与质量
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="top-three">
-                                <div id="second">
-                                    <div class="frame" style="height: 105px;width: 105px;">
-                                        <el-avatar shape="circle" :size="90" :src="''" /> 
-                                    </div>
-                                </div>
-                                <div id="first">
-                                    <div class="frame" style="height: 135px;width: 135px;">
-                                        <el-avatar shape="circle" :size="120" :src="''" /> 
-                                    </div>
-                                </div>
-                                <div id="third">
-                                    <div class="frame" style="height: 105px;width: 105px;">
-                                        <el-avatar shape="circle" :size="90" :src="''" /> 
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ranking-list">
-                                <div class="ranking-item" v-for="item in rankingList">
-                                    <div class="border">
-                                        <div class="item-content">
-                                            <div class="item-content-container">
-                                                <span>{{ item.ranking ?  item.ranking : "-"}}</span>
-                                            </div>
-                                            <div class="item-content-container">
-                                                <el-avatar shape="circle" :size="30" :src="''" /> 
-                                            </div>
-                                            <div class="item-content-container">
-                                                <span class="item-content-name">{{ item.name ?  item.name : "-"}}</span>
-                                            </div>
-                                            <div class="item-content-container">
-                                                <span>{{ item.win ?  item.win : "-"}}</span>
-                                            </div>
-                                        </div>
-                                        <div class="border-line"></div>
-                                    </div>
-                                    
-                                </div>
+                    <div class="elmain-content">
+                        <div class="top">
+                            <div class="h-container">
+                                <h1 class="text">
+                                    LoopCodePlus 竞赛
+                                </h1>
                             </div>
                         </div>
-                        <div class="match-card">
-                            <div class="entry"  id="mul-entry">
-                                <img src="../assets/image/bg-match2.png" alt="">
-                                <div class="content">
-                                    <p class="content-title">
-                                        多人匹配
-                                    </p>
-                                    <p  class="content-text">
-                                        你将与两名队友一起同对手比拼完成3道随机题目的速度与质量
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="top-three">
-                                <div id="second">
-                                    <div class="frame" style="height: 105px;width: 105px;">
-                                        <el-avatar shape="circle" :size="90" :src="''" /> 
+                        <div class="main-body">
+                            <div class="match-card">
+                                <div class="entry" @click="singleMatchJoin=true">
+                                    <img src="../assets/image/bg-match1.png" alt="">
+                                    <div class="content">
+                                        <p class="content-title">
+                                            单人匹配
+                                        </p>
+                                        <p  class="content-text">
+                                            你将与另一位参赛者比拼完成1道随机题目的速度与质量
+                                        </p>
                                     </div>
                                 </div>
-                                <div id="first">
-                                    <div class="frame" style="height: 135px;width: 135px;">
-                                        <el-avatar shape="circle" :size="120" :src="''" /> 
-                                    </div>
-                                </div>
-                                <div id="third">
-                                    <div class="frame" style="height: 105px;width: 105px;">
-                                        <el-avatar shape="circle" :size="90" :src="''" /> 
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ranking-list">
-                                <div class="ranking-item" v-for="item in rankingList">
-                                    <div class="border">
-                                        <div class="item-content">
-                                            <div class="item-content-container">
-                                                <span>{{ item.ranking ?  item.ranking : "-"}}</span>
-                                            </div>
-                                            <div class="item-content-container">
-                                                <el-avatar shape="circle" :size="30" :src="''" /> 
-                                            </div>
-                                            <div class="item-content-container">
-                                                <span class="item-content-name">{{ item.name ?  item.name : "-"}}</span>
-                                            </div>
-                                            <div class="item-content-container">
-                                                <span>{{ item.win ?  item.win : "-"}}</span>
-                                            </div>
+                                <div class="top-three">
+                                    <div id="second">
+                                        <div class="frame" style="height: 105px;width: 105px;">
+                                            <el-avatar shape="circle" :size="90" :src="''" /> 
                                         </div>
-                                        <div class="border-line"></div>
                                     </div>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <div class="match-card">
-                            <div class="entry" id="match-entry">
-                                <img src="../assets/image/bg-match3.png" alt="">
-                                <div class="content">
-                                    <p class="content-title">
-                                        周赛
-                                    </p>
-                                    <p  class="content-text">
-                                        距下一场公开赛: {{ newTime }}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="top-three">
-                                <div id="second">
-                                    <div class="frame" style="height: 105px;width: 105px;">
-                                        <el-avatar shape="circle" :size="90" :src="''" /> 
-                                    </div>
-                                </div>
-                                <div id="first">
-                                    <div class="frame" style="height: 135px;width: 135px;">
-                                        <el-avatar shape="circle" :size="120" :src="''" /> 
-                                    </div>
-                                </div>
-                                <div id="third">
-                                    <div class="frame" style="height: 105px;width: 105px;">
-                                        <el-avatar shape="circle" :size="90" :src="''" /> 
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ranking-list">
-                                <div class="ranking-item" v-for="item in rankingList">
-                                    <div class="border">
-                                        <div class="item-content">
-                                            <div class="item-content-container">
-                                                <span>{{ item.ranking ?  item.ranking : "-"}}</span>
-                                            </div>
-                                            <div class="item-content-container">
-                                                <el-avatar shape="circle" :size="30" :src="''" /> 
-                                            </div>
-                                            <div class="item-content-container">
-                                                <span class="item-content-name">{{ item.name ?  item.name : "-"}}</span>
-                                            </div>
-                                            <div class="item-content-container">
-                                                <span>{{ item.win ?  item.win : "-"}}</span>
-                                            </div>
+                                    <div id="first">
+                                        <div class="frame" style="height: 135px;width: 135px;">
+                                            <el-avatar shape="circle" :size="120" :src="''" /> 
                                         </div>
-                                        <div class="border-line"></div>
                                     </div>
-                                    
+                                    <div id="third">
+                                        <div class="frame" style="height: 105px;width: 105px;">
+                                            <el-avatar shape="circle" :size="90" :src="''" /> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ranking-list">
+                                    <div class="ranking-item">
+                                        <div class="border">
+                                            <div class="header-item-content">
+                                                <div class="item-content-container">
+                                                    <span>排名</span>
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <span>头像</span> 
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <span>昵称</span> 
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <span>胜场</span>
+                                                </div>
+                                            </div>
+                                            <div class="border-line"></div>
+                                        </div>
+                                    </div>
+                                    <div class="ranking-item" v-for="item in rankingList">
+                                        <div class="border">
+                                            <div class="item-content">
+                                                <div class="item-content-container">
+                                                    <span>{{ item.ranking ?  item.ranking : "-"}}</span>
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <el-avatar shape="circle" :size="30" :src="''" /> 
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <span class="item-content-name">{{ item.name ?  item.name : "-"}}</span>
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <span>{{ item.win ?  item.win : "-"}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="border-line"></div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="match-card">
+                                <div class="entry"  id="mul-entry">
+                                    <img src="../assets/image/bg-match2.png" alt="">
+                                    <div class="content">
+                                        <p class="content-title">
+                                            多人匹配
+                                        </p>
+                                        <p  class="content-text">
+                                            你将与两名队友一起同对手比拼完成3道随机题目的速度与质量
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="top-three">
+                                    <div id="second">
+                                        <div class="frame" style="height: 105px;width: 105px;">
+                                            <el-avatar shape="circle" :size="90" :src="''" /> 
+                                        </div>
+                                    </div>
+                                    <div id="first">
+                                        <div class="frame" style="height: 135px;width: 135px;">
+                                            <el-avatar shape="circle" :size="120" :src="''" /> 
+                                        </div>
+                                    </div>
+                                    <div id="third">
+                                        <div class="frame" style="height: 105px;width: 105px;">
+                                            <el-avatar shape="circle" :size="90" :src="''" /> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ranking-list">
+                                    <div class="ranking-item">
+                                        <div class="border">
+                                            <div class="header-item-content">
+                                                <div class="item-content-container">
+                                                    <span>排名</span>
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <span>头像</span> 
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <span>昵称</span> 
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <span>胜场</span>
+                                                </div>
+                                            </div>
+                                            <div class="border-line"></div>
+                                        </div>
+                                    </div>
+                                    <div class="ranking-item" v-for="item in rankingList">
+                                        <div class="border">
+                                            <div class="item-content">
+                                                <div class="item-content-container">
+                                                    <span>{{ item.ranking ?  item.ranking : "-"}}</span>
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <el-avatar shape="circle" :size="30" :src="''" /> 
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <span class="item-content-name">{{ item.name ?  item.name : "-"}}</span>
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <span>{{ item.win ?  item.win : "-"}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="border-line"></div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="match-card">
+                                <div class="entry" id="match-entry">
+                                    <img src="../assets/image/bg-match3.png" alt="">
+                                    <div class="content">
+                                        <p class="content-title">
+                                            代码竞赛
+                                        </p>
+                                        <p  class="content-text">
+                                            距下一场周赛: {{ newTime }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="top-three">
+                                    <div id="second">
+                                        <div class="frame" style="height: 105px;width: 105px;">
+                                            <el-avatar shape="circle" :size="90" :src="''" /> 
+                                        </div>
+                                    </div>
+                                    <div id="first">
+                                        <div class="frame" style="height: 135px;width: 135px;">
+                                            <el-avatar shape="circle" :size="120" :src="''" /> 
+                                        </div>
+                                    </div>
+                                    <div id="third">
+                                        <div class="frame" style="height: 105px;width: 105px;">
+                                            <el-avatar shape="circle" :size="90" :src="''" /> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ranking-list">
+                                    <div class="ranking-item">
+                                        <div class="border">
+                                            <div class="header-item-content">
+                                                <div class="item-content-container">
+                                                    <span>排名</span>
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <span>头像</span> 
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <span>昵称</span> 
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <span>胜场</span>
+                                                </div>
+                                            </div>
+                                            <div class="border-line"></div>
+                                        </div>
+                                    </div>
+                                    <div class="ranking-item" v-for="item in rankingList">
+                                        <div class="border">
+                                            <div class="item-content">
+                                                <div class="item-content-container">
+                                                    <span>{{ item.ranking ?  item.ranking : "-"}}</span>
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <el-avatar shape="circle" :size="30" :src="''" /> 
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <span class="item-content-name">{{ item.name ?  item.name : "-"}}</span>
+                                                </div>
+                                                <div class="item-content-container">
+                                                    <span>{{ item.win ?  item.win : "-"}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="border-line"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -173,12 +233,68 @@
             </el-container>
         </div>
     </div>
+
+
+
+    <!-- ------------------------------------------------------------------------------ -->
+    <el-dialog v-model="singleMatchJoin" title="单人匹配" width="500" class="single-match-join" :show-close="!singleLoading" :close-on-click-modal="false" :close-on-press-escape="false">
+        <div>
+            <div class="ban">
+                <div class="ban-title">ban位1:</div>
+                <el-cascader v-model="ban1" :options="options" :show-all-levels="false" placeholder="禁用某一类型题目" :clearable="true"/>
+            </div>
+            <div class="ban">
+                <div class="ban-title">ban位2:</div>
+                <el-cascader v-model="ban2" :options="options" :show-all-levels="false" :placeholder="vipBan ? '禁用某一类型题目' : '仅VIP用户可用'" :disabled="!vipBan" :clearable="true"/>
+            </div>
+            <div class="ban">
+                <div class="ban-title">ban位3:</div>
+                <el-cascader v-model="ban3" :options="options" :show-all-levels="false" :placeholder="vipBan ? '禁用某一类型题目' : '仅VIP用户可用'" :disabled="!vipBan" :clearable="true"/>
+            </div>
+            <div class="ban">
+                <div class="ban-title">直选:</div>
+                <el-cascader v-model="select1" :options="options" :show-all-levels="false" :placeholder="vipBan ? '直接选定某一类型题目' : '仅VIP用户可用'" :disabled="!vipBan" :clearable="true"/>
+            </div>
+            
+        </div>
+        <template #footer>
+        <div class="dialog-footer">
+            <el-button @click='singleSuccess'>成功</el-button>
+            <el-button @click='singleFail'>失败</el-button>
+            <el-button @click="singleLoading = false;singleText='开始匹配'" v-show="singleLoading">取消</el-button>
+            <el-button :type="singleType" @click="singleLoading = true;singleText='匹配中';singleType='primary'" :loading="singleLoading" :disabled='singleDisabled'>
+                <template #loading>
+                    <div class="custom-loading">
+                        <svg class="circular" viewBox="-10, -10, 50, 50">
+                        <path
+                            class="path"
+                            d="
+                            M 30 15
+                            L 28 17
+                            M 25.61 25.61
+                            A 15 15, 0, 0, 1, 15 30
+                            A 15 15, 0, 1, 1, 27.99 7.5
+                            L 15 15
+                        "
+                            style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"
+                        />
+                        </svg>
+                    </div>
+                </template>
+            {{singleText}}
+            </el-button>
+        </div>
+        </template>
+    </el-dialog>
 </template>
   
 
 <script setup>
-import Header from "../components/Header.vue"
+    import Header from "../components/Header.vue"
+    import { useUserStore } from "../store/user";
     import { ref } from 'vue'
+
+    const store = useUserStore()
     const Page=ref('3')
     const rankingList = ref(
     [
@@ -194,6 +310,52 @@ import Header from "../components/Header.vue"
         {ranking:0,id:0,name:"",win:0,avatar:""},
     ]
     )
+    const singleMatchJoin=ref(false)
+    const ban1 = ref('')
+    const ban2 = ref('')
+    const ban3 = ref('')
+    const select1 = ref('')
+    const vipBan = ref(store.role=='VIP')
+    const singleLoading = ref(false)
+    const singleType = ref('primary')
+    const singleText = ref('开始匹配')
+    const singleDisabled=ref(false)
+    const singleSuccess=()=>{
+        singleType.value='success'
+        singleText.value='匹配成功'
+        singleLoading.value=false
+        singleDisabled.value=true
+    }
+    const singleFail=()=>{
+        singleType.value='warning'
+        singleText.value='没有匹配到对手'
+        singleLoading.value=false
+    }
+    const options = [
+    {
+        value: '算法',
+        label: '算法',
+        children:[
+            {value:'动态规划',label:'动态规划'},
+            {value:'贪心',label:'贪心'},
+            {value:'递归',label:'递归'},
+            {value:'深度优先搜索',label:'深度优先搜索'},
+            {value:'广度优先搜索',label:'广度优先搜索'},
+        ]
+    },
+    {
+        value: '数据结构',
+        label: '数据结构',
+        children: [
+            {value:'哈希表',label:'哈希表'},
+            {value:'树',label:'树'},
+            {value:'二叉树',label:'二叉树'},
+            {value:'堆',label:'堆'},
+            {value:'栈',label:'栈'},
+            {value:'图',label:'图'},
+        ]
+    },
+    ]
 </script>
 <script>
     export default {
@@ -252,33 +414,42 @@ import Header from "../components/Header.vue"
     padding: 0;
 }
 @keyframes fadeInLeft {
-  from {
-    opacity: 0;
-
-  }
-
-  to {
-    opacity: 1;
-
-  }
+  from {opacity: 0;}
+  to {opacity: 1;}
 }
 
 /*添加动画*/
 .text{
-    color: rgb(207, 207, 207);
+    color: white;
 }
 .elmain{
+    padding:0;
+    overflow-x:auto;
+    height:calc(100vh - 60px);
+}
+.elmain-content{
+    padding:8px;
+    box-sizing:border-box;
+    min-width: 1350px;
     background-color: rgba(239, 239, 239, 0.5);
+}
+.h-container{
+    width:100%;
+    height:100%;
+    backdrop-filter: blur(4px);
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 .top{
     border-radius: 8px;
-    background-color: #071727;
+    background-image: url('../assets/image/bg-matchTop.png');
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.Header-Aside-Main-container{
-    min-width: 1300px;
+.Header-Main-container{
     height: 100vh;
 }
 .main-body{
@@ -317,6 +488,7 @@ import Header from "../components/Header.vue"
 }
 .entry:hover{
     box-shadow: 0 0 20px rgb(165, 165, 165);
+    cursor: pointer;
 }
 .content{
     top: 0;
@@ -384,6 +556,14 @@ import Header from "../components/Header.vue"
 .item-content:hover{
     background-color: rgba(203, 213, 211, 0.20);
 }
+.header-item-content{
+    width: 100%;
+    padding: 0 25px 5px 25px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-sizing: border-box;
+}
 .border{
     display: flex;
     flex-direction: column;
@@ -397,5 +577,53 @@ import Header from "../components/Header.vue"
 
 .item-content-container{
     flex: 0 0 25%;
+}
+.ban{
+    display: flex;
+    align-items: center;
+    padding: 8px;
+}
+.ban-title{
+    padding-right: 8px;
+    width: 60px;
+    text-align: center;
+}
+.el-button .custom-loading .circular {
+  margin-right: 6px;
+  width: 18px;
+  height: 18px;
+  animation: spin 2s linear infinite;
+}
+.el-button .custom-loading .circular .path {
+  animation: loading-dash 1.8s ease-in-out infinite;
+  stroke-dasharray: 90, 150;
+  stroke-dashoffset: 0;
+  stroke-width: 2;
+  stroke: #ffffff;
+  stroke-linecap: round;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes loading-dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+
+</style>
+<style>
+.single-match-join{
+    border-radius: 16px;
 }
 </style>

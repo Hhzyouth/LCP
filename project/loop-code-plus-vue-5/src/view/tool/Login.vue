@@ -39,11 +39,11 @@
                     </div>
                 </div>
                 <div class="goTo">
-                    <span v-if="isReg" @click="()=>{isReg=false;text='登录'}" class="to">
-                        去{{text}}
+                    <span v-if="isReg" @click="()=>{isReg=false;text='登录';goText='注册'}" class="to">
+                        去{{ goText }}
                     </span>
-                    <span v-else @click="()=>{isReg=true;text='注册'}" class="to">
-                        去{{ text }}
+                    <span v-else @click="()=>{isReg=true;text='注册';goText='登录'}" class="to">
+                        去{{ goText }}
                     </span>
                 </div>
                 
@@ -63,6 +63,7 @@
     const input = ref('')
     const isReg =ref(false)
     const text=ref("登录")
+    const goText=ref("注册")
     const checkAndGo=()=>{
         if(isReg.value){
 

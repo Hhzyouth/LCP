@@ -188,7 +188,7 @@ export default {
                                             代码竞赛
                                         </p>
                                         <span style="font-size: 0.8rem;">
-                                            距下一场公开赛: 
+                                            距下一场周赛: 
                                         </span>
                                         <span style="font-size: 0.6rem;">
                                             {{ newTime }}

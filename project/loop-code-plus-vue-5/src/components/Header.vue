@@ -17,7 +17,8 @@
             <el-menu-item index="2" style="font-size: 1rem;" class="menu-item">知识库</el-menu-item>
             <el-menu-item index="3" style="font-size: 1rem;" class="menu-item">竞赛</el-menu-item>
             <el-menu-item index="4" style="font-size: 1rem;" class="menu-item">课堂</el-menu-item>
-            <el-menu-item index="5" style="font-size: 1rem;" class="menu-item">商店</el-menu-item>
+            <el-menu-item index="5" style="font-size: 1rem;" class="menu-item">题库</el-menu-item>
+            <el-menu-item index="6" style="font-size: 1rem;" class="menu-item">商店</el-menu-item>
             <div class="flex-grow" />
             <div class="top-menu-right">
                 <div class="top-input">
@@ -25,13 +26,15 @@
                 </div>
                 <el-popover v-if="store.token!==''" placement="bottom" :width="280" trigger="click" popper-class="popover" :offset="20" popper-style="border-radius: 0.8rem;">
                     <template #reference>
-                        <el-avatar :src="circleUrl" style="width: 30px;height: 30px;"/>
+                        <el-avatar :src="store.avatar" style="width: 30px;height: 30px;"/>
                     </template>
                     <div class="information">
-                        <el-avatar :src="circleUrl" style="width: 70px;height: 70px;margin-right: 10px;"/>
-                        <div class="detials">
-                            <p id="nickname">默认昵称</p>
-                            <span id="title">默认称号</span>
+                        <div class="information-left">
+                            <el-avatar :src="store.avatar" style="width: 70px;height: 70px;margin-right: 10px;"/>
+                            <div class="detials">
+                                <p id="nickname">{{store.nickname}}</p>
+                                <span id="title">{{store.title}}</span>
+                            </div>
                         </div>
                         <div class="toSetting">
                             <el-icon><ArrowRight /></el-icon>
@@ -129,7 +132,10 @@
                 router.push('/Course')
                 break;
             case '5':
-                router.push('/Store')
+                router.push('/Problem')
+                break;
+            case '6':
+            router.push('/Store')
                 break;
             default:
                 break;
@@ -158,6 +164,7 @@
     ]
 
     const store=useUserStore()
+    console.log(store.title);
     const exit=()=>{
         console.log("=====Exit=====");
         store.setToken({token:''})
@@ -251,7 +258,11 @@ export default {
         padding-right: 40px;
     }
     .head-container{
+        border:0;
         background-color: #071727;
+    }
+    .el-menu--horizontal.el-menu{
+        border-bottom:0;
     }
     .popover .el-popper__arrow{
         display: none;
@@ -260,6 +271,11 @@ export default {
         box-shadow: 0px 1px 3px #0000000a, 0px 10px 28px -4px #00000029;
     }
     .information{
+        display: flex;
+        align-items: center;
+        justify-content:space-between;
+    }
+    .information-left{
         display: flex;
         align-items: center;
     }
@@ -276,7 +292,6 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-left: 40px;
     }
     .toSetting:hover{
         cursor: pointer;

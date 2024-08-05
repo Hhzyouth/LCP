@@ -30,6 +30,10 @@ const routes = [
     component: ()=>import("@/view/Course.vue")
   },
   { 
+    path: '/Problem',
+    component: ()=>import("@/view/Problem.vue")
+  },
+  { 
     path: '/Login',
     component: ()=>import("@/view/tool/Login.vue")
   },
