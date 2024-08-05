@@ -11,6 +11,7 @@ import IconsResolver from 'unplugin-icons/resolver'
 export default defineConfig({
   plugins: [
     vue(),
+    // vueJsx(),
     // ...
     AutoImport({
       resolvers: [ElementPlusResolver()],
