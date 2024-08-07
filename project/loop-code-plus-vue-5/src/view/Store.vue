@@ -62,6 +62,9 @@
 
 
 <style scoped>
+    .header{
+        padding: 0;
+    }
     .store-container{
         width: 100%;
     }
