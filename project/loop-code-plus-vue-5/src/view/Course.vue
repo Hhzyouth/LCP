@@ -1,11 +1,15 @@
 <template>
-  <div Header-Aside-Main-container>
+  <div Header-Main-container>
       <div class="elcontainer">
           <el-container>
               <el-header class="header">
                   <Header :page="Page"/>
               </el-header>
-              <el-main>Main</el-main>
+              <el-main class="elmain">
+                <div class="container">
+                  
+                </div>
+              </el-main>
           </el-container>
       </div>
   </div>

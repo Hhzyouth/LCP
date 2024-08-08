@@ -37,7 +37,7 @@
                         </div>
                         <code-mirror basic :lang="lang" v-model="codeVal" style="height: calc(100% - 80px);" :theme="theme"/>
                         <div class="coding-bottom">
-                            <el-button class="runButton">运行</el-button>
+                            <el-button class="runButton" @click="()=>{console.log(codeVal)}">运行</el-button>
                             <el-button type="success">提交</el-button>
                         </div>
                     </div>
@@ -77,23 +77,25 @@
     const route = useRoute()
     const { p } = route.params;
     const content=`<p>输入两个整数，求这两个整数的和是多少。</p>
-<h4>输入格式</h4>
+                    <h4>输入格式</h4>
 
-<p>输出一个整数，表示这两个数的和</p>
-<h4>数据范围</h4>
+                    <p>输出一个整数，表示这两个数的和</p>
+                    <h4>数据范围</h4>
 
-<code>3 4
-</code>
+                    <code>3 4
+                    </code>
 
-<h4>输出样例</h4>
-<code>7
-</code>
-    `
+                    <h4>输出样例</h4>
+                    <code>7
+                    </code>
+                        `
     const language=ref('python')
     const languageList={'python':python(),'cpp':cpp(),'java':java(),'go':go()}
     const lang=ref(python())
-    const codeVal = ref('');
+    const codeVal = ref(`print(123)
+print(456)`);
     const theme = {
+        
         ".cm-content": {
             fontSize: '14px',
             fontFamily: 'Consolas, "Courier New", monospace',

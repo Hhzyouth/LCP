@@ -38,6 +38,14 @@ const routes = [
     component: ()=>import("@/view/problem/WorkingArea.vue")
   },
   { 
+    path: '/MyProblem',
+    component: ()=>import("@/view/tool/MyProblem.vue")
+  },
+  { 
+    path: '/MyProblem/EditProblem/:ep',
+    component: ()=>import("@/view/tool/EditProblem.vue")
+  },
+  { 
     path: '/Login',
     component: ()=>import("@/view/tool/Login.vue")
   },
