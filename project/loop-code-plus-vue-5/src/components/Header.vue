@@ -45,10 +45,10 @@
                             <img src="@/assets/icon/MaterialSymbolsMarkChatReadOutlineRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">我的题解</span>
                         </div>
-                        <div class="tool">
+                        <router-link class="tool" to="/MyProblem">
                             <img src="@/assets/icon/MaterialSymbolsClarifyOutlineRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">我的题目</span>
-                        </div>
+                        </router-link>
                         <router-link class="tool" to="/LCPlab">
                             <img src="@/assets/icon/MaterialSymbolsTerminalRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">LCPlab</span>
@@ -169,6 +169,7 @@
         console.log("=====Exit=====");
         store.setToken({token:''})
     }
+    
 </script>
 <script>
 export default {
@@ -187,35 +188,52 @@ export default {
                 that.clientWidth = window.clientWidth;
             })()
         };
+        const wid=document.body.clientWidth
+        if (wid<=650){
+            document.querySelectorAll('.menu-item').forEach((item)=>{
+                item.style.display = 'none'
+            })
+        }else if(wid>650 && wid<=1030){
+            document.querySelectorAll('.menu-item').forEach((item)=>{
+                item.style.display = 'flex'
+            })
+            document.querySelector('.top-menu-right').style.display = 'none';
+        }else{
+            document.querySelector('.top-menu-right').style.display = 'flex';
+        }
     },
     watch:{
-        clientWidth(newVal){
-            if (newVal<=610){
-                    const element = document.querySelectorAll('.menu-item');
-                    element.forEach((item)=>{
+        clientWidth(newVal,oldVal){
+            if (newVal<=650 && oldVal>650){
+                    document.querySelectorAll('.menu-item').forEach((item)=>{
                         item.style.display = 'none'
                     })
+                    document.querySelector('.top-menu-right').style.display = 'none';
+                    document.querySelectorAll('.popover').forEach((popover,index)=>{
+                        if (popover.style.display!=='none'){
+                            this.popoverDisplay[index]='block';
+                        }
+                        popover.style.display = 'none';
+                    })
                     this.cur=1
-                }else if(newVal>610 && newVal<=970){
-                    const element = document.querySelectorAll('.menu-item');
-                    element.forEach((item)=>{
+                }else if((oldVal<=650 || oldVal>1030) && newVal>650 && newVal<=1030){
+                    document.querySelectorAll('.menu-item').forEach((item)=>{
                         item.style.display = 'flex'
                     })
-                    const elementr = document.querySelector('.top-menu-right');
-                    elementr.style.display = 'none';
-                    const popover = document.querySelectorAll('.popover');
-                    popover.forEach((popover,index)=>{
+                    document.querySelector('.top-menu-right').style.display = 'none';
+                    document.querySelectorAll('.popover').forEach((popover,index)=>{
                         if (popover.style.display!=='none'){
                             this.popoverDisplay[index]='block';
                         }
                         popover.style.display = 'none';
                     })
                     this.cur=2
-                }else{
-                    const element = document.querySelector('.top-menu-right');
-                    element.style.display = 'flex';
-                    const popover = document.querySelectorAll('.popover');
-                    popover.forEach((popover,index)=>{
+                }else if(oldVal<=1030 && newVal>1030){
+                    document.querySelectorAll('.menu-item').forEach((item)=>{
+                        item.style.display = 'flex'
+                    })
+                    document.querySelector('.top-menu-right').style.display = 'flex';
+                    document.querySelectorAll('.popover').forEach((popover,index)=>{
                         if (popover.style.display==='none' && this.cur!==3){
                             popover.style.display = this.popoverDisplay[index];
                         }else{
