@@ -173,17 +173,18 @@ const classLevel=(level)=>{
   border-bottom: 1px solid rgba(128, 128, 128, 0.2);
 }
 .edit{
-    min-width: 0px;
-    width: 30px;
-    margin-right: 8px;
-    padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  min-width: 0px;
+  width: 40px;
+  align-items: center;
 }
 .status{
   min-width: 0px;
   width: 50px;
   flex: 10 0 auto;
   margin-left: 8px;
-  padding: 10px 0;
+  padding: 12px 0;
   box-sizing: border-box;
 }
 .id{
@@ -191,21 +192,21 @@ const classLevel=(level)=>{
   width: 70px;
   flex: 10 0 auto;
   margin-left: 8px;
-  padding: 10px 0;
+  padding: 12px 0;
 }
 .name{
   min-width: 0px;
   width: 150px;
   flex: 150 0 auto;
   margin-left: 8px;
-  padding: 10px 0;
+  padding: 12px 0;
 }
 .level{
   min-width: 0px;
   width: 50px;
   flex: 50 0 auto;
   margin-left: 8px;
-  padding: 10px 0;
+  padding: 12px 0;
 }
 .easy{
   color: #3C674B
@@ -227,7 +228,7 @@ const classLevel=(level)=>{
   width: 50px;
   flex: 200 0 auto;
   margin-left: 8px;
-  padding: 10px 0;
+  padding: 12px 0;
 }
 .problem-list{
   width: 100%;
@@ -240,14 +241,14 @@ const classLevel=(level)=>{
   width: 50px;
   flex: 200 0 auto;
   margin-left: 8px;
-  padding: 10px 0;
+  padding: 12px 0;
 }
 .main-header .collection{
   min-width: 0px;
   width: 50px;
   flex: 200 0 auto;
   margin-left: 8px;
-  padding: 10px 0;
+  padding: 12px 0;
 }
 .collection{
   display: flex;
@@ -257,7 +258,7 @@ const classLevel=(level)=>{
   width: 50px;
   flex: 200 0 auto;
   margin-left: 8px;
-  padding: 10px 0;
+  padding: 12px 0;
 }
 .problem{
   display: flex;
@@ -268,5 +269,15 @@ const classLevel=(level)=>{
 .tag-item{
   margin-right: 5px;
   white-space: nowrap;
+}
+.deleteButton{
+  border: none;
+  width: 30px;
+  height : 30px;
+}
+.editButton{
+  border: none;
+  width: 30px;
+  height : 30px;
 }
 </style>
