@@ -36,9 +36,9 @@
                                 <span id="title">{{store.title}}</span>
                             </div>
                         </div>
-                        <div class="toSetting">
+                        <router-link to="/PersonalCenter" class="toSetting">
                             <el-icon><ArrowRight /></el-icon>
-                        </div>
+                        </router-link>
                     </div>
                     <div class="tools">
                         <div class="tool">
@@ -53,10 +53,10 @@
                             <img src="@/assets/icon/MaterialSymbolsTerminalRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">LCPlab</span>
                         </router-link>
-                        <div class="tool">
+                        <router-link class="tool" to="/Backpack">
                             <img src="@/assets/icon/MaterialSymbolsBackpackOutlineRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">背包</span>
-                        </div>
+                        </router-link>
                         <div class="tool">
                             <img src="@/assets/icon/MaterialSymbolsVerifiedOutline.svg" alt="" class="tool-img">
                             <span class="tool-name">成就</span>

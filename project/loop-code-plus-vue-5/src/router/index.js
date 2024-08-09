@@ -41,6 +41,14 @@ const routes = [
     path: '/LCPlab',
     component: ()=>import("@/view/tool/LCPlab.vue")
   },
+  {
+    path: '/Backpack',
+    component: ()=>import("@/view/tool/Backpack.vue")
+  },
+  {
+    path:'/PersonalCenter',
+    component: ()=>import("@/view/tool/PersonalCenter.vue")
+  },
   { 
     path: '/Python',
     component: ()=>import("@/view/Library/python/Python.vue"),
