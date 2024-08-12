@@ -223,12 +223,12 @@ const setCollectionCSS=(index)=>{
 <script>
 const getWindowInfo = () => {
     if (window.innerWidth<=1301){
-                document.querySelector('.main-rightside').style.display = 'none';
-                document.querySelector('.main-container').style.width = '90%';
-            }else{
-                document.querySelector('.main-rightside').style.display = '';
-                document.querySelector('.main-container').style.width = '900px';
-            }
+        document.querySelector('.main-rightside').style.display = 'none';
+        document.querySelector('.main-container').style.width = '90%';
+    }else{
+        document.querySelector('.main-rightside').style.display = '';
+        document.querySelector('.main-container').style.width = '900px';
+    }
 };
 export default {
   mounted(){

@@ -46,6 +46,14 @@ const routes = [
     component: ()=>import("@/view/tool/EditProblem.vue")
   },
   { 
+    path: '/MyProblem/EditCollection/:ec',
+    component: ()=>import("@/view/tool/EditCollection.vue")
+  },
+  { 
+    path: '/MySolution',
+    component: ()=>import("@/view/tool/MySolution.vue")
+  },
+  { 
     path: '/Login',
     component: ()=>import("@/view/tool/Login.vue")
   },

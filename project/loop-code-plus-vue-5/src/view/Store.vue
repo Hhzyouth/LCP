@@ -10,7 +10,7 @@
                         class="first-box"
                         style="display: flex; gap: 8px"
                         :loading="loading"
-                        animated
+                        :animated="animated"
                         :count="6"
                         >
                         <template #template>
@@ -18,6 +18,8 @@
                                 <div class="third-box">
                                     <el-skeleton-item variant="image" style="height: 275px;width: 275px;" />
                                     <div style="padding: 14px">
+                                        <el-skeleton-item variant="h3" style="width: 40%" />
+                                        <el-skeleton-item variant="h3" style="width: 70%" />
                                         <el-skeleton-item variant="h3" style="width: 50%" />
                                         <div
                                         style="
@@ -35,9 +37,9 @@
                         </template>
                         <template #default>
                             <div class="first-box">
-                                <div class="second-box" v-for="{commodityName,stock,commodityId,description,price} in data" >
+                                <div class="second-box" v-for="{commodityName,stock,commodityId,description,price,picture} in data" >
                                     <div class="third-box">
-                                        <img src="@/assets/image/course-Python.png" alt="">
+                                        <img :src="'/api'+picture" alt="">
                                         <div class="price"><el-icon><Coin /></el-icon>{{price}}</div>
                                         <div class="name">{{commodityName}}</div>
                                         <div class="quantity">数量:{{stock}}</div>
@@ -73,6 +75,7 @@
     const currentPage=ref(1)
     const loading = ref(true)
     const PageCount=ref(1)
+    const animated=ref(true)
     const getGoods=()=>{
        getCurrentPageGoods(
             currentPage.value
@@ -82,10 +85,10 @@
             data.value=response.data.data
             PageCount.value=Math.ceil(response.data.storeNum/6)
             console.log(PageCount);
-            
         })
         .catch(function (error) {
-            console.log(error);
+            ElMessage.error('网络连接错误')
+            animated.value=false
         })
     }
     getGoods()
@@ -152,9 +155,10 @@
         background-color: white;
     }
     .third-box img{
-        object-fit: cover;
+        object-fit: contain;
         width:275px;
         height:275px;
+        background-color: rgba(239, 239, 239, 1);
     }
     .price{
         display: flex;

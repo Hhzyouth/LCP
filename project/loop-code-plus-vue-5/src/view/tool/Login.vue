@@ -100,10 +100,14 @@
                 regMail: ruleForm.mail,
                 passwd: ruleForm.pass
             }).then(function (response) {
-                console.log(response);
+                ElMessage.success("注册成功")
+                setTimeout(() => {
+                    router.go(0)
+                }, 3000);
             })
             .catch(function (error) {
                 console.log(error);
+                ElMessage.error("注册失败")
             });
         }else{
             store.setToken({token:"123"})
