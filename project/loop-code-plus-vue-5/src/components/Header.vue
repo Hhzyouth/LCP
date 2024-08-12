@@ -41,10 +41,10 @@
                         </router-link>
                     </div>
                     <div class="tools">
-                        <div class="tool">
+                        <router-link class="tool" to="/MySolution">
                             <img src="@/assets/icon/MaterialSymbolsMarkChatReadOutlineRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">我的题解</span>
-                        </div>
+                        </router-link>
                         <router-link class="tool" to="/MyProblem">
                             <img src="@/assets/icon/MaterialSymbolsClarifyOutlineRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">我的题目</span>

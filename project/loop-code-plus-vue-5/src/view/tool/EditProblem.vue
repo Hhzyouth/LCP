@@ -79,7 +79,10 @@
         size="40%"
     >   
         <div style="display: flex;flex-direction: column;">
-            <div><el-button text @click="initCases()">初始化模板</el-button></div>
+            <div style="display: flex;">
+                <el-button text @click="initCases()">初始化模板</el-button>
+                <el-button text @click="initCasesSample()">模板样例</el-button>
+            </div>
             <el-input
                 v-model="cases"
                 style="width: 100%"
@@ -156,14 +159,32 @@
         cases.value=
 `{
   1 : {
-    in : [[123],9],
-    out : true
+    in : ,   
+    out : 
+  },
+  2 : {
+    in : ,
+    out : 
+  }
+}
+`
+    }
+    const initCasesSample=()=>{
+        cases.value=
+`{
+  1 : {
+    in : [[123]],   一个输入变量[123]
+    out : true   一个输出true
+  },
+  2 : {
+    in : [4,"hello",97],   三个输入变量4,"hello",97
+    out : ["4","hello",97]   一个输出["4","hello",97]
   }
 }
 `
     }
     const toolbarConfig = {}
-    const editorConfig = { placeholder: '题目描述......同时建议使用模板快速建成框架并提高规范性' }
+    const editorConfig = { placeholder: '题目描述......<p></p>建议使用模板快速建成框架并提高规范性' }
     const mode = ref('default')
     const form = reactive({
         problemId:'',

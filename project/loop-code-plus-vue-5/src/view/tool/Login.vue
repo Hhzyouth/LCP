@@ -10,30 +10,58 @@
                     <img src="@/assets/image/main-logo.png" id="main-logo">
                 </span>
                 <div class="input-container">
-                    <el-input
-                        v-model="mail"
-                        style="width: 300px;height: 40px;"
-                        placeholder="邮箱"
-                        clearable
-                    />
-                    <el-input
-                        v-model="password"
-                        style="width: 300px;height: 40px;"
-                        type="password"
-                        placeholder="密码"
-                        show-password
-                    />
-                    <el-input
-                        v-if="isReg"
-                        v-model="again"
-                        style="width: 300px;height: 40px;"
-                        type="password"
-                        placeholder="再次输入密码"
-                        show-password
-                    />
+                    <el-form
+                        ref="ruleFormRef"
+                        style="max-width: 600px"
+                        :model="ruleForm"
+                        status-icon
+                        :rules="rules"
+                        label-width="auto"
+                        class="demo-ruleForm"
+                    >
+                        <Transition name="slide-fade">
+                            <el-form-item label="昵称" prop="nickname" v-if="isReg">
+                                <el-input
+                                    v-model.trim="ruleForm.nickname"
+                                    style="width: 300px;height: 40px;"
+                                    placeholder="昵称"
+                                    clearable
+                                />
+                            </el-form-item>
+                        </Transition>
+                        <el-form-item label="邮箱" prop="mail">
+                            <el-input
+                                v-model="ruleForm.mail"
+                                style="width: 300px;height: 40px;"
+                                type="email"
+                                placeholder="邮箱"
+                                clearable
+                            />
+                        </el-form-item>
+                        <el-form-item label="密码" prop="pass">
+                            <el-input
+                                v-model="ruleForm.pass"
+                                style="width: 300px;height: 40px;"
+                                type="password"
+                                placeholder="密码"
+                                show-password
+                            />
+                        </el-form-item>
+                        <Transition name="reslide-fade">
+                            <el-form-item label="验证" prop="checkPass" v-if="isReg">
+                                <el-input
+                                    v-model="ruleForm.checkPass"
+                                    style="width: 300px;height: 40px;"
+                                    type="password"
+                                    placeholder="再次输入密码"
+                                    show-password
+                                />
+                            </el-form-item>
+                        </Transition>
+                    </el-form>
                 </div>
                 
-                <div class="goButton" @click="checkAndGo">
+                <div class="goButton" @click="submitForm(ruleFormRef)">
                     <div class="text">
                         {{ text }}
                     </div>
@@ -55,22 +83,108 @@
 
 <script setup>
     import Header from '../../components/Header.vue';
-    import { ref } from 'vue'
+    import { ref, reactive } from 'vue'
     import { useUserStore } from '@/store/user.js'
     import { useRouter } from 'vue-router'
+    import { register } from '@/api/user.js'
+
     const store=useUserStore()
     const router=useRouter();
-    const input = ref('')
     const isReg =ref(false)
     const text=ref("登录")
     const goText=ref("注册")
     const checkAndGo=()=>{
         if(isReg.value){
-
+            register({
+                nickName: ruleForm.nickname,
+                regMail: ruleForm.mail,
+                passwd: ruleForm.pass
+            }).then(function (response) {
+                ElMessage.success("注册成功")
+                setTimeout(() => {
+                    router.go(0)
+                }, 3000);
+            })
+            .catch(function (error) {
+                console.log(error);
+                ElMessage.error("注册失败")
+            });
         }else{
             store.setToken({token:"123"})
             router.push("/")
         }
+    }
+
+    //表单验证--------------------------------------------------------
+    const ruleFormRef = ref()
+
+    const checkName = (rule, value, callback) => {
+        if (!value) {
+            callback(new Error('昵称不能为空'))
+        }else if(value.split(" ").join("").length!==value.length){ 
+            callback(new Error('昵称中不能有空白符'))
+        }else{
+            callback()
+        }
+    }
+    const checkMail = (rule, value, callback) => {
+        const regEmail = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+        if (!value) {
+            callback(new Error('邮箱不能为空'))
+        }else if(!regEmail.test(value)){
+            callback(new Error('请检查邮箱格式'))
+        }else{
+            callback()
+        }
+    }
+
+    const validatePass = (rule, value, callback) => {
+        if (value === '') {
+            callback(new Error('请输入密码'))
+        } else if (value.length<6 || value.length>20){
+            callback(new Error('密码长度必须在6~20之间'))
+        }else {
+            if (ruleForm.checkPass !== '') {
+            if (!ruleFormRef.value) return
+            ruleFormRef.value.validateField('checkPass')
+            }
+            callback()
+        }
+    }
+    const validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+            callback(new Error('请再次输入密码'))
+        } else if (value !== ruleForm.pass) {
+            callback(new Error("两次输入的密码不一致"))
+        } else {
+            callback()
+        }
+    }
+
+    const ruleForm = reactive({
+    pass: '',
+    checkPass: '',
+    mail: '',
+    nickname: ''
+    })
+
+    const rules = reactive({
+    pass: [{ validator: validatePass, trigger: 'blur' }],
+    checkPass: [{ validator: validatePass2, trigger: 'blur' }],
+    mail: [{ validator: checkMail, trigger: 'blur' }],
+    nickname: [{ validator: checkName, trigger: 'blur' }],
+    })
+
+    const submitForm = (formEl) => {
+        if (!formEl) return
+        formEl.validate((valid) => {
+            if (valid) {
+                console.log('submit!')
+                checkAndGo()
+            } else {
+                console.log('error submit!')
+            }
+        })
     }
 </script>
 
@@ -108,12 +222,8 @@
     cursor: pointer;
 }
 .input-container{
-    height: 160px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    margin-bottom:20px; 
+    flex: 1 0 40%;
+    margin:10px 0 20px 0; 
 }
 #main-logo{
     width: auto;
@@ -142,5 +252,33 @@
 }
 .goTo{
     width: 300px;
+}
+
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.2s ease-out;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateY(20px);
+  opacity: 0;
+}
+
+.reslide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.reslide-fade-leave-active {
+  transition: all 0.2s ease-out;
+}
+
+.reslide-fade-enter-from,
+.reslide-fade-leave-to {
+  transform: translateY(-20px);
+  opacity: 0;
 }
 </style>
