@@ -29,24 +29,28 @@
                   <div class="collection">题目集</div>
                 </div>
                 <div class="problem-list">
-                  <div v-for="(problem,index) in problemList" :key="problem.id" :class="index%2 == 0?'problem one':'problem two'">
+                  <div v-for="(problem,index) in problemList" :key="problem.problemId" :class="index%2 == 0?'problem one':'problem two'">
                     <div class="status">
-                      <el-icon v-if="problem.status==1" style="color: #67c23a;height: 100%;"><SuccessFilled /></el-icon>
+                      <el-icon v-if="problemDone.has(problem.problemId)" style="color: #67c23a;height: 100%;"><SuccessFilled /></el-icon>
                     </div>
-                    <div class="id">{{ problem.id }}</div>
-                    <router-link class="name" :to='`/Problem/WorkingArea/${problem.id}`'>{{ problem.name }}</router-link>
-                    <div :class="classLevel(problem.level)">{{ showLevel(problem.level) }}</div>
+                    <div class="id">{{ problem.problemId }}</div>
+                    <router-link class="name" :to='`/Problem/WorkingArea/${problem.problemId}`'>{{ problem.problemName }}</router-link>
+                    <div :class="classLevel(problem.difficultyLevel)">{{ showLevel(problem.difficultyLevel) }}</div>
                     <el-scrollbar class="tag-container">
                       <div class="tag">
-                        <el-tag v-for="tag in problem.tags" type="success" class="tag-item" round>{{ tag }}</el-tag>
+                        <el-tag v-for="tag in JSON.parse(problem.tag)" type="success" class="tag-item" round>{{ tag }}</el-tag>
                       </div>
                     </el-scrollbar>
                     <el-scrollbar class="collection-container">
                       <div class="collection">
-                        <el-tag v-for="collection in problem.collections" type="primary" class="tag-item" round>{{ collection }}</el-tag>
+                        <el-tag v-for="collection in JSON.parse(problem.collection)" type="primary" class="tag-item" round>{{ collection }}</el-tag>
                       </div>
                     </el-scrollbar>
                   </div>
+                </div>
+                <div style="display: flex;width: 100%;justify-content: center;" v-if="PageCount>1">
+                    <el-pagination background layout="prev, pager, next" :page-count="PageCount" class="pagination" @change="handelCurrentChange"
+                    v-model:current-page="currentPage"  />
                 </div>
               </div>
             </div>
@@ -83,40 +87,42 @@
 
 <script setup>
 import Header from "../components/Header.vue"
-import { reactive, ref } from 'vue'
+import { reactive, ref, toRaw } from 'vue'
+import { getProblems } from '@/api/problem.js'
+import { useUserStore } from '@/store/user.js'
 
+const loading=ref(false)
+const problemDone=ref(new Set())
+const store=useUserStore()
+const getProblem=()=>{
+  console.log(Array.from(toRaw(activeTagList)));
+  
+       getProblems(
+            currentPage.value,
+            Array.from(activeTagList),
+            Array.from(activeCollectionList),
+            store.userId
+        ).then(function (response) {
+            console.log(response)
+            loading.value=false
+            problemList.value=response.data.data.problemList
+            problemDone.value=new Set(response.data.data.problemNum)           
+            PageCount.value=Math.ceil(response.data.storeNum/30)
+            console.log(problemDone.value);
+            
+        })
+        .catch(function (error) {
+            ElMessage.error('网络连接错误')
+        })
+    }
 const activeNames = ref(['1'])
+const currentPage=ref(1)
+const PageCount=ref(1)
 const handleChange = (val) => {
   console.log(val)
 }
 const Page=ref('5')
-const problemList=[
-  {status:1,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:168,name:"两数求和2",level:4,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:7,name:"两数之积",level:9,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:12,name:"两数之积2",level:7,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:56,name:"两数之积3",level:6,tags:["数组","哈希表","链表","二叉树","深度优先搜索"],collections:["LCP101","微软面试","苏州大学练习题"]},
-  {status:0,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:168,name:"两数求和2",level:4,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:7,name:"两数之积",level:9,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:12,name:"两数之积2",level:7,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:56,name:"两数之积3",level:6,tags:["数组","哈希表","链表","二叉树","深度优先搜索"],collections:["LCP101","微软面试","苏州大学练习题"]},
-  {status:1,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:168,name:"两数求和2",level:4,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:7,name:"两数之积",level:9,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:12,name:"两数之积2",level:7,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:56,name:"两数之积3",level:6,tags:["数组","哈希表","链表","二叉树","深度优先搜索"],collections:["LCP101","微软面试","苏州大学练习题"]},
-  {status:0,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:168,name:"两数求和2",level:4,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:7,name:"两数之积",level:9,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:12,name:"两数之积2",level:7,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:56,name:"两数之积3",level:6,tags:["数组","哈希表","链表","二叉树","深度优先搜索"],collections:["LCP101","微软面试","苏州大学练习题"]},
-  {status:1,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:168,name:"两数求和2",level:4,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:7,name:"两数之积",level:9,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:12,name:"两数之积2",level:7,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:56,name:"两数之积3",level:6,tags:["数组","哈希表","链表","二叉树","深度优先搜索"],collections:["LCP101","微软面试","苏州大学练习题"]},
-]
+const problemList=ref([])
 const dataStructureList=["哈希表","树","二叉树","堆","栈","图","链表","集合","队列","双向链表","最小生成树","并查集","字典树","线段树","树状数组"];
 const dataStructureCSSList=reactive([{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' }])
 const algorithmList=["动态规划","贪心","深度优先搜索","二分查找","广度优先搜索","回溯","递归","分治","记忆化搜索","归并排序","快速选择"];
@@ -180,6 +186,7 @@ const setDataStructureCSS=(index)=>{
     dataStructureCSSList[index].effect='plain'
     activeTagList.delete(dataStructureList[index])
   }
+  getProblem()
 }
 const activeTagListClose=(item)=>{
   activeTagList.delete(item)
@@ -190,6 +197,7 @@ const activeTagListClose=(item)=>{
     dataStructureCSSList[dataStructureList.indexOf(item)].type='info'
     dataStructureCSSList[dataStructureList.indexOf(item)].effect='plain'
   }
+  getProblem()
   
 }
 const setAlgorithmCSS=(index)=>{
@@ -202,14 +210,16 @@ const setAlgorithmCSS=(index)=>{
     algorithmCSSList[index].effect='plain'
     activeTagList.delete(algorithmList[index])
   }
+  getProblem()
 }
 const activeCollectionListClose=(item)=>{
   activeCollectionList.delete(item)
   collectionCSSList[collectionList.indexOf(item)].type='info'
   collectionCSSList[collectionList.indexOf(item)].effect='plain'
+  getProblem()
 }
 const setCollectionCSS=(index)=>{
-  if(algorithmCSSList[index].type=='info'){
+  if(collectionCSSList[index].type=='info'){
     collectionCSSList[index].type='primary'
     collectionCSSList[index].effect='dark'
     activeCollectionList.add(collectionList[index])
@@ -218,7 +228,9 @@ const setCollectionCSS=(index)=>{
     collectionCSSList[index].effect='plain'
     activeCollectionList.delete(collectionList[index])
   }
+  getProblem()
 }
+getProblem()
 </script>
 <script>
 const getWindowInfo = () => {

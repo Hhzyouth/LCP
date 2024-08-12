@@ -42,7 +42,7 @@
                             @dragover="dragover"
                         >
                             <div class="edit"><el-button class="deleteButton" :icon="Delete" circle plain type="danger" @click="deleteConfirm(problem.name)"/></div>  
-                            <div class="edit"><router-link :to="'/MyProblem/EditProblem/'+problem.id"><el-button class="editButton" :icon="Edit" circle plain type="info"/></router-link></div>
+                            <div class="edit"><router-link :to="'/MyProblem/EditProblem/'+problem.id" v-if="problem.userId==store.userId"><el-button class="editButton" :icon="Edit" circle plain type="info"/></router-link></div>
                             <div class="status" :style="{color:problem.status==0?'#67C23A':'#409EFF'}">
                                 {{ problem.status==0 ? '私有' : '公开' }}
                             </div>
@@ -61,11 +61,53 @@
                             </el-scrollbar>
                         </div>
                     </TransitionGroup>
-                    <el-button type="success" plain round :icon="Plus">加入题目</el-button>
+                    <el-button type="success" plain round :icon="Plus" @click="drawer=true">加入题目</el-button>
                 </div>
             </el-main>
         </el-container>
     </div>
+    <el-drawer v-model="drawer" title="I am the title" :with-header="false" :size="'60%'">
+      <el-tabs type="border-card">
+        <el-tab-pane label="我的题目">
+          <div class="main-header">
+            <div class="check"></div>
+            <div class="status">状态</div>
+            <div class="id">编号</div>
+            <div class="name">题目</div>
+            <div class="level">难度</div>
+            <div class="tag">标签</div>
+            <div class="collection">题目集</div>
+            </div>
+            <div class="problem-list">
+            <el-checkbox-group v-model="problemList">
+              <div v-for="(problem,index) in MyProblemroblemList" :key="problem.id" :class="index%2 == 0?'problem one':'problem two'">
+                  <div class="check"><el-checkbox :value="problem" :label="indexOfProblem(problem.id)" >
+                  </el-checkbox></div>
+                  <div class="status" :style="{color:problem.status==0?'#67C23A':'#409EFF'}">
+                    {{ problem.status==0 ? '私有' : '公开' }}
+                  </div>
+                  <div class="id">{{ problem.id }}</div>
+                  <router-link class="name" :to='`/Problem/WorkingArea/${problem.id}`'>{{ problem.name }}</router-link>
+                  <div :class="classLevel(problem.level)">{{ showLevel(problem.level) }}</div>
+                  <el-scrollbar class="tag-container">
+                  <div class="tag">
+                      <el-tag v-for="tag in problem.tags" type="success" class="tag-item" round>{{ tag }}</el-tag>
+                  </div>
+                  </el-scrollbar>
+                  <el-scrollbar class="collection-container">
+                  <div class="collection">
+                      <el-tag v-for="collection in problem.collections" type="primary" class="tag-item" round>{{ collection }}</el-tag>
+                  </div>
+                </el-scrollbar>
+              </div>
+            </el-checkbox-group>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="公开题目">
+          
+        </el-tab-pane>
+      </el-tabs>
+    </el-drawer>
 </template>
   
   
@@ -75,6 +117,7 @@
     import { useRoute } from 'vue-router';
     import { reactive } from 'vue'
     import { Edit, Delete, Plus } from '@element-plus/icons-vue'
+    import { useUserStore } from '@/store/user.js'
 
     const form = reactive({
         problemId:'',
@@ -86,12 +129,13 @@
         status: false,
         tag: [],
     })
-
+    const store=useUserStore()
+    const drawer = ref(false)
     const onSubmit = () => {
-    console.log('submit!')
+      console.log('submit!')
     }
     const Page=ref('')
-
+    const checkList=ref([])
     const deleteConfirm=(name)=>{
       ElMessageBox.confirm(
       `题目 "${name}" 将从题目集中移出`,
@@ -160,12 +204,26 @@ const classLevel=(level)=>{
       return 'level notKnow'
   }
 }
+const indexOfProblem=(pid)=>{
+  const p=problemList.value.findIndex(item => item.id === pid)
+  return p==-1?'':p+1
+}
 const problemList=ref([
-  {status:1,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:168,name:"两数求和2",level:4,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:7,name:"两数之积",level:9,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:12,name:"两数之积2",level:7,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:56,name:"两数之积3",level:6,tags:["数组","哈希表","链表","二叉树","深度优先搜索"],collections:["LCP101","微软面试","苏州大学练习题"]},
+  {status:1,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
+  {status:0,id:168,name:"两数求和2",level:4,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
+  {status:0,id:7,name:"两数之积",level:9,tags:["数组","哈希表"],collections:["LCP101"],userId:11},
+  {status:0,id:12,name:"两数之积2",level:7,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
+  {status:0,id:56,name:"两数之积3",level:6,tags:["数组","哈希表","链表","二叉树","深度优先搜索"],collections:["LCP101","微软面试","苏州大学练习题"],userId:25},
+])
+
+const MyProblemroblemList=ref([
+  {status:1,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
+  {status:0,id:168,name:"两数求和2",level:4,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
+  {status:0,id:12,name:"两数之积2",level:7,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
+  {status:0,id:169,name:"两数求和4",level:8,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
+  {status:0,id:13,name:"两数之积4",level:8,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
+  {status:0,id:170,name:"两数求和5",level:9,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
+  {status:0,id:14,name:"两数之积5",level:9,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
 ])
 
 let dragIndex = 0
@@ -248,6 +306,13 @@ function dragend(e) {
   width: 40px;
   align-items: center;
 }
+.check{
+  display: flex;
+  justify-content: center;
+  min-width: 60px;
+  width: 60px;
+  align-items: center;
+}
 .status{
   min-width: 0px;
   width: 50px;
@@ -255,6 +320,7 @@ function dragend(e) {
   margin-left: 16px;
   padding: 12px 0;
   box-sizing: border-box;
+  font-size: 1rem;
 }
 .id{
   min-width: 0px;
@@ -262,6 +328,7 @@ function dragend(e) {
   flex: 10 0 auto;
   margin-left: 8px;
   padding: 12px 0;
+  font-size: 1rem;
 }
 .name{
   min-width: 0px;
@@ -269,6 +336,7 @@ function dragend(e) {
   flex: 150 0 auto;
   margin-left: 8px;
   padding: 12px 0;
+  font-size: 1rem;
 }
 .level{
   min-width: 0px;
@@ -276,6 +344,7 @@ function dragend(e) {
   flex: 50 0 auto;
   margin-left: 8px;
   padding: 12px 0;
+  font-size: 1rem;
 }
 .main-header .tag{
   min-width: 0px;
@@ -334,6 +403,7 @@ function dragend(e) {
   margin: 16px 0;
   border-radius: 16px;
   background-color: rgba(239, 239, 239, 0.3); 
+  align-items: center;
 }
 .tag-item{
   margin-right: 5px;

@@ -77,6 +77,7 @@
     const PageCount=ref(1)
     const animated=ref(true)
     const getGoods=()=>{
+        data.value=[]
        getCurrentPageGoods(
             currentPage.value
         ).then(function (response) {
@@ -115,7 +116,6 @@
             elem.classList.toggle("active");
         }
     }
-    const disWidth=ref('0')
 </script>
 
 

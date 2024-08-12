@@ -5,7 +5,7 @@ export const useUserStore = defineStore('user', {
 	state: () => {
 		return {
 			token: localStorage.getItem('token')?localStorage.getItem('token'):'',
-			userId:'',
+			userId:1,
 			nickname:'LCP官方账号',
 			title:'数组撕裂者',
 			role:'VIP',
