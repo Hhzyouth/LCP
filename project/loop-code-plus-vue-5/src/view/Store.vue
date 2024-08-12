@@ -43,7 +43,7 @@
 <script setup>
     import Header from "../components/Header.vue"
     import { ref } from 'vue'
-    const Page=ref()
+    const Page=ref('6')
     const data= ref([
                 {id:1, quantity: 20, title: '测试名称', url: '@/assets/image/course-Python.png'},
                 {id:2, quantity: 20, title: '测试名称', url: '@/assets/image/course-Python.png'},

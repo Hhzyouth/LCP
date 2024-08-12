@@ -9,7 +9,6 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import { ElConfigProvider } from 'element-plus'; //局部加载
 
 
-
 const pinia = createPinia()
 const app = createApp(App)
 app.component('ElConfigProvider', ElConfigProvider)
@@ -22,4 +21,5 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 app.use(router)
 app.use(pinia)
 app.mount('#app')
+
 
