@@ -86,7 +86,7 @@
     import { ref, reactive } from 'vue'
     import { useUserStore } from '@/store/user.js'
     import { useRouter } from 'vue-router'
-    import { register } from '@/api/user.js'
+    import { register, login } from '@/api/user.js'
 
     const store=useUserStore()
     const router=useRouter();
@@ -101,17 +101,33 @@
                 passwd: ruleForm.pass
             }).then(function (response) {
                 ElMessage.success("注册成功")
-                setTimeout(() => {
-                    router.go(0)
-                }, 3000);
+                console.log(response);
+                
+                // setTimeout(() => {
+                //     router.go(0)
+                // }, 3000);
             })
             .catch(function (error) {
                 console.log(error);
                 ElMessage.error("注册失败")
             });
         }else{
-            store.setToken({token:"123"})
-            router.push("/")
+            login({
+                regMail:ruleForm.mail,
+                passwd:ruleForm.pass
+            }).then((response)=>{
+                console.log(response);
+                
+                if (response.data.code==500){
+                    ElMessage.error(response.data.data)
+                }else{
+                    store.setToken(response.data.message)
+                    store.setInformation(response.data.data)
+                    router.push("/")
+                }
+            }).catch(()=>{
+                ElMessage.error("网络超时")
+            })
         }
     }
 

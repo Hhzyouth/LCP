@@ -41,7 +41,7 @@
                         </router-link>
                     </div>
                     <div class="tools">
-                        <router-link class="tool" to="/MySolution">
+                        <router-link class="tool" to="/MySolution" @click.prevent="()=>{}">
                             <img src="@/assets/icon/MaterialSymbolsMarkChatReadOutlineRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">我的题解</span>
                         </router-link>
@@ -143,7 +143,6 @@
     }
     const input = ref('')
     function Searchit() {
-        console.log(123);
         if (input.value!==''){
             router.push({ path: `/Search/${input.value}`});
         }   
@@ -164,10 +163,9 @@
     ]
 
     const store=useUserStore()
-    console.log(store.title);
     const exit=()=>{
         console.log("=====Exit=====");
-        store.setToken({token:''})
+        store.setToken('')
     }
     
 </script>
@@ -198,8 +196,6 @@ export default {
                 item.style.display = 'flex'
             })
             document.querySelector('.top-menu-right').style.display = 'none';
-        }else{
-            document.querySelector('.top-menu-right').style.display = 'flex';
         }
     },
     watch:{

@@ -7,7 +7,7 @@
             <el-main class="elmain">
                 <div class="container">
                     <div style="max-width: 600px;flex: 1 1;height: 100%;overflow-y: auto;">
-                        <el-form :model="form" label-width="auto">
+                        <el-form :model="form" label-width="auto" :rules="rules" ref="ruleFormRef">
                             <el-form-item label="题目ID">
                                 <el-input v-model="form.problemId" disabled placeholder="题目ID会自动生成"/>
                             </el-form-item>
@@ -21,17 +21,17 @@
                                 </div>
                             </el-form-item>
                             <el-form-item label="是否公开题目" required>
-                            <el-switch v-model="form.delivery" />
+                            <el-switch v-model="deliver" />
                             </el-form-item>
                             <el-form-item label="标签" required>
-                            <el-checkbox-group v-model="form.type">
+                            <el-checkbox-group v-model="form.tag">
                                 <el-checkbox v-for="item in tagList" :value="item" name="type">
                                     {{ item }}
                                 </el-checkbox>
                             </el-checkbox-group>
                             </el-form-item>
                             <el-form-item label="输入用例" required>
-                                <el-input v-model="form.inputSample" placeholder="此用例仅用于测试 例:[1,2,3]"/>
+                                <el-input v-model="form.inputSample" placeholder="此用例仅用于测试 例:{lst:[1,2,3]}"/>
                             </el-form-item>
                             <el-form-item label="输出用例" required>
                                 <el-input v-model="form.outputSample" placeholder="此用例仅用于测试 例:6"/>
@@ -43,7 +43,7 @@
                             </el-form-item>
                             <el-form-item>
                                 <div style="width: 100%;display: flex;justify-content: end;">
-                                    <el-button type="success" @click="onSubmit">确认并保存</el-button>
+                                    <el-button type="success" @click="submitForm(ruleFormRef)">确认并保存</el-button>
                                     <el-button @click="()=>{this.$router.go(-1)}">取消</el-button>
                                 </div>
                             </el-form-item>
@@ -63,7 +63,7 @@
                     />
                     <Editor
                         style="flex: 1; overflow-y: hidden;"
-                        v-model="valueHtml"
+                        v-model="form.description"
                         :defaultConfig="editorConfig"
                         :mode="mode"
                         @onCreated="handleCreated"
@@ -84,7 +84,7 @@
                 <el-button text @click="initCasesSample()">模板样例</el-button>
             </div>
             <el-input
-                v-model="cases"
+                v-model="form.testCase"
                 style="width: 100%"
                 autosize
                 type="textarea"
@@ -98,16 +98,43 @@
   
 <script setup>
     import Header from "../../components/Header.vue"
-    import { ref, shallowRef, onBeforeUnmount } from 'vue'
+    import { ref, shallowRef, onBeforeUnmount, reactive, toRaw } from 'vue'
     import { useRoute } from 'vue-router';
-    import { reactive } from 'vue'
     import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
     import '@wangeditor/editor/dist/css/style.css'
+    import { setProblem } from '@/api/problem.js'
+    import { useUserStore } from "../../store/user";
 
-    const cases=ref('')
+    const deliver=ref(false)
+    const store=useUserStore()
+    const form = reactive({
+        userId:store.userId,
+        problemId:null,
+        problemName: '',
+        description: '',
+        inputSample:'',
+        outputSample:'',
+        difficultyLevel: 1,
+        tag: [],
+        collection:[],
+        testCase:''
+    })
+    const ruleFormRef = ref()
     const drawer = ref(false)
     const editorRef = shallowRef()
-    const valueHtml = ref('')
+    const sendProblem=()=>{
+        form.status=deliver.value ? 1:0
+        console.log(form);
+        
+        setProblem(
+            toRaw(form)
+        ).then((response)=>{
+            console.log(response);  
+        }).catch((error)=>{
+            console.log(error);
+            
+        })
+    }
     onBeforeUnmount(() => {
         const editor = editorRef.value
         if (editor == null) return
@@ -117,10 +144,10 @@
       editorRef.value = editor // 记录 editor 实例，重要！
     }
     const clearValueHtml=()=>{
-        valueHtml.value=''
+        form.description=''
     }
     const initValueHtml=()=>{
-        valueHtml.value=
+        form.description=
 `<h2>题目名字</h2>   
 <p>题目描述<code>行内代码</code></p> 
 <br>
@@ -136,7 +163,7 @@
 `
     }
     const initValueHtmlSample=()=>{
-        valueHtml.value=
+        form.description=
 `<h2>数组求和</h2>   
 <p>给定一个只由数字组成的数组 <code>lst</code> ，请返回数组内所有数字之和。</p> 
 <br>
@@ -156,29 +183,29 @@
 `
     }
     const initCases=()=>{
-        cases.value=
+        form.testCase=
 `{
-  1 : {
-    in : ,   
-    out : 
+  "1" : {
+    "in" : ,   
+    "out" : 
   },
-  2 : {
-    in : ,
-    out : 
+  "2" : {
+    "in" : ,
+    "out" : 
   }
 }
 `
     }
     const initCasesSample=()=>{
-        cases.value=
-`{
-  1 : {
-    in : [[123]],   一个输入变量[123]
-    out : true   一个输出true
+        form.testCase=
+`{序号,in,out都使用双引号包裹
+  "1" : {
+    "in" : [[123]],   一个输入变量[123]
+    "out" : true   一个输出true
   },
-  2 : {
-    in : [4,"hello",97],   三个输入变量4,"hello",97
-    out : ["4","hello",97]   一个输出["4","hello",97]
+  "2" : {
+    "in" : [4,["hello"],97],   三个输入变量4,["hello"],97
+    "out" : ["4","hello",97]   一个输出["4","hello",97]
   }
 }
 `
@@ -186,25 +213,13 @@
     const toolbarConfig = {}
     const editorConfig = { placeholder: '题目描述......<p></p>建议使用模板快速建成框架并提高规范性' }
     const mode = ref('default')
-    const form = reactive({
-        problemId:'',
-        problemName: '',
-        description: '',
-        inputSample:'',
-        outputSample:'',
-        difficultyLevel: 1,
-        status: false,
-        tag: [],
-    })
 
-    const onSubmit = () => {
-    console.log('submit!')
-    }
+
     const Page=ref('')
 
     const route = useRoute()
     const { ep } = route.params;
-    const tagList=["哈希表","树","二叉树","堆","栈","图","链表","集合","队列","双向链表","最小生成树","并查集","字典树","线段树","树状数组","动态规划","贪心","深度优先搜索","二分查找","广度优先搜索","回溯","递归","分治","记忆化搜索","归并排序","快速选择"]
+    const tagList=["哈希表","树","二叉树","堆","栈","图","链表","集合","队列","双向链表","二叉搜索树","强连通分量","最小生成树","并查集","字典树","线段树","树状数组","后缀数组","动态规划","贪心","深度优先搜索","二分查找","广度优先搜索","回溯","递归","分治","记忆化搜索","归并排序","快速选择","数组","字符串","矩阵"]
     const showLevel=(level)=>{
   switch(level){
     case 1:
@@ -246,6 +261,45 @@ const classLevel=(level)=>{
     default:
       return 'level notKnow'
   }
+}
+
+const rules = reactive({
+    problemName: [
+        { required: true, message: '题目名称不能为空', trigger: 'blur' },
+    ],
+    inputSample: [
+    {
+      required: true,
+      message: '输入用例不能为空',
+      trigger: 'blur',
+    },
+  ],
+  outputSample: [
+    {
+      required: true,
+      message: '输出用例不能为空',
+      trigger: 'blur',
+    },
+  ],
+  tag: [
+    {
+      required: true,
+      message: '标签不能为空',
+      trigger: 'blur',
+    },
+  ]
+})
+
+const submitForm = async (formEl) => {
+  if (!formEl) return
+  await formEl.validate((valid, fields) => {
+    if (valid && form.description!=='' && form.testCase!=='') {
+        sendProblem()
+      console.log('submit!')
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
 }
 </script>
 

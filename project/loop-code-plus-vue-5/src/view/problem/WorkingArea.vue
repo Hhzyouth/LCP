@@ -1,5 +1,5 @@
 <template>
-    <div class="Header-Main-container">
+    <div class="Header-Main-container" @keydown.9.native.prevent="()=>{}">
         <el-container>
             <el-header class="elheader">
                 <Header :page="Page"/>
@@ -35,10 +35,10 @@
                                 <el-button class="fullButton" :icon="FullScreen" circle @click="allController"/>
                             </div>
                         </div>
-                        <code-mirror basic :lang="lang" v-model="codeVal" style="height: calc(100% - 80px);" :theme="theme"/>
+                        <code-mirror basic :lang="lang" v-model="codeVal" style="height: calc(100% - 80px);" :theme="theme" :tab="true"/>
                         <div class="coding-bottom">
                             <el-button class="runButton" @click="()=>{console.log(codeVal)}">运行</el-button>
-                            <el-button type="success">提交</el-button>
+                            <el-button type="success" @click="runCode">提交</el-button>
                         </div>
                     </div>
                     <div :class="bottomClass">
@@ -73,9 +73,23 @@
     import { java } from '@codemirror/lang-java';
     import { go } from '@codemirror/lang-go';
     import { ArrowLeftBold, ArrowDownBold, FullScreen } from '@element-plus/icons-vue'
-    const Page=ref('5')
+    import { run } from '@/api/workingArea.js'
+    import { useUserStore } from "@/store/user.js";
+
+    const store=useUserStore()
     const route = useRoute()
     const { p } = route.params;
+    const runCode=()=>{
+        run(
+            codeVal.value,
+            store.userId,
+            parseInt(p)
+        ).then(function (response) {
+            console.log(response)
+        })
+    }
+    const Page=ref('5')
+    
     const content=`<p>输入两个整数，求这两个整数的和是多少。</p>
                     <h4>输入格式</h4>
 
@@ -92,8 +106,8 @@
     const language=ref('python')
     const languageList={'python':python(),'cpp':cpp(),'java':java(),'go':go()}
     const lang=ref(python())
-    const codeVal = ref(`print(123)
-print(456)`);
+    const codeVal = ref(`def main(a,b):
+`);
     const theme = {
         
         ".cm-content": {
@@ -160,6 +174,7 @@ print(456)`);
         label: 'Go',
     },
     ]
+
 </script>
 
 <style scoped>

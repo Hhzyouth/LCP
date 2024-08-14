@@ -8,3 +8,10 @@ export const register = (data) => {
         data : data,
     });
 };
+export const login = (data) => {
+    return request({
+        url: '/user/login',
+        method: 'post',
+        data : data,
+    });
+};
