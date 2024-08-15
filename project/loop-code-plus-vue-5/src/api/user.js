@@ -8,6 +8,8 @@ export const register = (data) => {
         data : data,
     });
 };
+
+//登录
 export const login = (data) => {
     return request({
         url: '/user/login',

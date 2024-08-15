@@ -93,7 +93,6 @@ import { useUserStore } from '@/store/user.js'
 
 const loading=ref(false)
 const mainLoading=ref(false)
-const getIt=ref(false)
 const problemDone=ref(new Set())
 const store=useUserStore()
 const getProblem=()=>{
@@ -105,7 +104,6 @@ const getProblem=()=>{
         Array.from(activeCollectionList),
         store.userId
     ).then(function (response) {
-      getIt.value=true
         // console.log(response)
         loading.value=false
         problemList.value=response.data.data.problemList
@@ -127,12 +125,12 @@ const handleChange = (val) => {
 }
 const Page=ref('5')
 const problemList=ref([])
-const dataStructureList=getIt.value?["哈希表","树","二叉树","堆","栈","图","链表","集合","队列","双向链表","最小生成树","并查集","字典树","线段树","树状数组"]:[];
+const dataStructureList=["哈希表","树","二叉树","堆","栈","图","链表","集合","队列","双向链表","最小生成树","并查集","字典树","线段树","树状数组"];
 const dataStructureCSSList=reactive([{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' }])
-const algorithmList=getIt.value?["动态规划","贪心","深度优先搜索","二分查找","广度优先搜索","回溯","递归","分治","记忆化搜索","归并排序","快速选择"]:[];
+const algorithmList=["动态规划","贪心","深度优先搜索","二分查找","广度优先搜索","回溯","递归","分治","记忆化搜索","归并排序","快速选择"];
 const initAlgorithmCSSList=[{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' }]
 const algorithmCSSList=reactive([...initAlgorithmCSSList])
-const collectionList=getIt.value?["LCP101","微软面试","微软笔试","苏州大学练习题","苏州大学考试题","华为","字节跳动","考研408","Python学习","Java学习","蓝桥杯"]:[];
+const collectionList=["LCP101","微软面试","微软笔试","苏州大学练习题","苏州大学考试题","华为","字节跳动","考研408","Python学习","Java学习","蓝桥杯"];
 const collectionCSSList=reactive([{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' }])
 
 const activeTagList=reactive(new Set());

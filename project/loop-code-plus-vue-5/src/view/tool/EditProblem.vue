@@ -99,16 +99,18 @@
 <script setup>
     import Header from "../../components/Header.vue"
     import { ref, shallowRef, onBeforeUnmount, reactive, toRaw } from 'vue'
-    import { useRoute } from 'vue-router';
+    import { useRoute, useRouter } from 'vue-router';
     import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
     import '@wangeditor/editor/dist/css/style.css'
     import { setProblem } from '@/api/problem.js'
     import { useUserStore } from "../../store/user";
 
     const deliver=ref(false)
+    const route = useRoute()
+    const router = useRouter()
     const store=useUserStore()
     const form = reactive({
-        userId:store.userId,
+        userId:0,
         problemId:null,
         problemName: '',
         description: '',
@@ -123,16 +125,25 @@
     const drawer = ref(false)
     const editorRef = shallowRef()
     const sendProblem=()=>{
+        form.userId=store.userId
         form.status=deliver.value ? 1:0
         console.log(form);
         
         setProblem(
             toRaw(form)
         ).then((response)=>{
-            console.log(response);  
+            console.log(response);
+            if (response.data.code===200){
+              ElMessage({
+                message: '题目已保存',
+                type: 'success',
+              })
+              setTimeout(() => {
+                  router.go(0)
+              }, 3000);
+            }
         }).catch((error)=>{
             console.log(error);
-            
         })
     }
     onBeforeUnmount(() => {
@@ -217,7 +228,6 @@
 
     const Page=ref('')
 
-    const route = useRoute()
     const { ep } = route.params;
     const tagList=["哈希表","树","二叉树","堆","栈","图","链表","集合","队列","双向链表","二叉搜索树","强连通分量","最小生成树","并查集","字典树","线段树","树状数组","后缀数组","动态规划","贪心","深度优先搜索","二分查找","广度优先搜索","回溯","递归","分治","记忆化搜索","归并排序","快速选择","数组","字符串","矩阵"]
     const showLevel=(level)=>{

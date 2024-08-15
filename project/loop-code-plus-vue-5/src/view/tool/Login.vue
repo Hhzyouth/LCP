@@ -101,11 +101,9 @@
                 passwd: ruleForm.pass
             }).then(function (response) {
                 ElMessage.success("注册成功")
-                console.log(response);
-                
-                // setTimeout(() => {
-                //     router.go(0)
-                // }, 3000);
+                setTimeout(() => {
+                    router.go(0)
+                }, 3000);
             })
             .catch(function (error) {
                 console.log(error);

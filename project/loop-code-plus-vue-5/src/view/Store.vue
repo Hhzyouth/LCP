@@ -86,6 +86,8 @@
             data.value=response.data.data
             PageCount.value=Math.ceil(response.data.storeNum/6)
             console.log(PageCount);
+            console.log(Math.ceil(response.data.storeNum/6));
+            
         })
         .catch(function (error) {
             ElMessage.error('网络连接错误')
@@ -201,7 +203,7 @@
     }
     .discription.active{
         width: calc(100% - 275px); 
-        padding: 0 10px;
+        padding: 8px;
     }
     .dis-container{
         word-wrap: break-word;

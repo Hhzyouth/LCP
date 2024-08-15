@@ -109,6 +109,7 @@
     import { Search } from '@element-plus/icons-vue'
     import { useRouter } from 'vue-router'
     import { useUserStore } from '@/store/user.js'
+    import { getBaseInfo } from '../api/header'
     const router =useRouter()
     const props = defineProps({
     //子组件接收父组件传递过来的值
@@ -117,7 +118,7 @@
     const {page} =toRefs(props)
     const activeIndex = page
     const imgToHome =()=>router.push('/')
-    const handleSelect = (key, keyPath) => {
+    const handleSelect = (key) => {
         switch (key) {
             case '1':
                 router.push('/')
@@ -135,7 +136,7 @@
                 router.push('/Problem')
                 break;
             case '6':
-            router.push('/Store')
+                router.push('/Store')
                 break;
             default:
                 break;
@@ -166,6 +167,17 @@
     const exit=()=>{
         console.log("=====Exit=====");
         store.setToken('')
+    }
+    console.log(store.token!=='')
+    console.log(store.token);
+    console.log(store.nickName);
+    
+    if (store.userId===0 && store.token!=='') {
+       getBaseInfo()
+       .then((response)=>{
+            console.log(response);
+            store.setInformation(response.data.data)
+       }) 
     }
     
 </script>

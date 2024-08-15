@@ -9,7 +9,7 @@ const servicewi = axios.create({
 servicewi.interceptors.request.use(
     (config) => {
         let token = localStorage.getItem('token');
-        console.log("token request",token)
+        // console.log("token request",token)
         // config.headers['authorization'] = token;
         config.headers.Authorization = token
         return config;

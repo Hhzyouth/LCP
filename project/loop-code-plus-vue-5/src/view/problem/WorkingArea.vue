@@ -73,12 +73,20 @@
     import { java } from '@codemirror/lang-java';
     import { go } from '@codemirror/lang-go';
     import { ArrowLeftBold, ArrowDownBold, FullScreen } from '@element-plus/icons-vue'
-    import { run } from '@/api/workingArea.js'
+    import { run, getProblemContent } from '@/api/workingArea.js'
     import { useUserStore } from "@/store/user.js";
 
-    const store=useUserStore()
     const route = useRoute()
     const { p } = route.params;
+    getProblemContent(
+        parseInt(p)
+    ).then((response)=>{
+        console.log(response);
+        
+        content.value=response.data.data.description
+    })
+    const store=useUserStore()
+    
     const runCode=()=>{
         run(
             codeVal.value,
@@ -90,19 +98,7 @@
     }
     const Page=ref('5')
     
-    const content=`<p>输入两个整数，求这两个整数的和是多少。</p>
-                    <h4>输入格式</h4>
-
-                    <p>输出一个整数，表示这两个数的和</p>
-                    <h4>数据范围</h4>
-
-                    <code>3 4
-                    </code>
-
-                    <h4>输出样例</h4>
-                    <code>7
-                    </code>
-                        `
+    const content=ref('')
     const language=ref('python')
     const languageList={'python':python(),'cpp':cpp(),'java':java(),'go':go()}
     const lang=ref(python())
