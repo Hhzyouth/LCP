@@ -39,12 +39,18 @@
                     <div class="course-aside">
                       <div class="creater">
                         <div style="width: 100%;display: flex">
-                          <div style="background-color: #FAB900;height: 100%;width: 10px;margin-right: 20px;"></div>
+                          <div style="background-color: #FAB900;height: 100%;width: 10px;margin-right: 15px;"></div>
                           <span>课程创建者</span>
                         </div>
                         <div class="course-info">
                           <el-avatar :src="store.avatar" style="width: 100px;height: 100px;"/>
                           <p>创建人名字</p>
+                        </div>
+                      </div>
+                      <div class="description">
+                        <div style="width: 100%;display: flex">
+                          <div style="background-color: #FAB900;height: 100%;width: 10px;margin-right: 15px;"></div>
+                          <span>课程描述</span>
                         </div>
                       </div>
                     </div> 
@@ -58,7 +64,7 @@
   
   <script setup>
     import Header from "../../components/Header.vue"
-    import { ref, reactive } from 'vue'
+    import { ref, reactive, onMounted,onUnmounted } from 'vue'
     import { useUserStore } from '@/store/user.js'
     import { useRoute } from "vue-router";
   
@@ -95,6 +101,22 @@
     timestamp: '2018-04-03 20:46',
   },
 ]
+const getWindowInfo = () => {
+  if (window.innerWidth<=1280){
+      const element = document.querySelector('.course-aside');
+      element.style.flexDirection = 'row';
+  }else{
+      const element = document.querySelector('.course-aside');
+      element.style.flexDirection = 'column';
+  }
+};
+onMounted(()=>{
+  getWindowInfo()
+  window.addEventListener('resize', getWindowInfo)
+})
+onUnmounted(()=>{
+  window.removeEventListener('resize', getWindowInfo)
+})
   </script>
   <style scoped>
   .Header-Main-container{
@@ -113,7 +135,7 @@
     padding: 0;
   }
   .main-content{
-    padding: 16px;
+    padding: 16px 0 16px 16px;
     width:100%;
     box-sizing: border-box;
     display: flex;
@@ -158,6 +180,7 @@
     background-color: white;
     border-radius: 16px;
     padding: 32px 0;
+    margin-right: 16px;
   }
   .creater{
     width: 300px;
@@ -171,9 +194,25 @@
     box-sizing: border-box;
     font-size: 1.3rem;
     margin-bottom: 16px;
+    margin-right: 16px;
+  }
+  .description{
+    width: 300px;
+    height: 300px;
+    border-radius: 16px;
+    background-color: white;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    font-size: 1.3rem;
+    margin-bottom: 16px;
+    margin-right: 16px;
   }
   .course-aside{
-    margin-left: 16px;
+    display: flex;
+    flex-direction: column;
   }
   .course-info{
     display: flex;

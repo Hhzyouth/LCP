@@ -49,7 +49,7 @@
                   </div>
                 </div>
                 <div style="display: flex;width: 100%;justify-content: center;" v-if="PageCount>1">
-                    <el-pagination background layout="prev, pager, next" :page-count="PageCount" class="pagination" @change="handelCurrentChange"
+                    <el-pagination background layout="prev, pager, next" :page-count="PageCount" class="pagination" @change="getProblem()"
                     v-model:current-page="currentPage"  />
                 </div>
               </div>
@@ -107,8 +107,9 @@ const getProblem=()=>{
         // console.log(response)
         loading.value=false
         problemList.value=response.data.data.problemList
-        problemDone.value=new Set(response.data.data.problemNum)           
-        PageCount.value=Math.ceil(response.data.storeNum/30)     
+        problemDone.value=new Set(response.data.data.num)           
+        PageCount.value=Math.ceil(response.data.num/30)    
+         
     })
     .catch(function (error) {
         ElMessage.error('网络连接错误')
@@ -188,6 +189,7 @@ const setDataStructureCSS=(index)=>{
     dataStructureCSSList[index].effect='plain'
     activeTagList.delete(dataStructureList[index])
   }
+  currentPage.value=1
   getProblem()
 }
 const activeTagListClose=(item)=>{
@@ -199,6 +201,7 @@ const activeTagListClose=(item)=>{
     dataStructureCSSList[dataStructureList.indexOf(item)].type='info'
     dataStructureCSSList[dataStructureList.indexOf(item)].effect='plain'
   }
+  currentPage.value=1
   getProblem()
   
 }
@@ -212,12 +215,14 @@ const setAlgorithmCSS=(index)=>{
     algorithmCSSList[index].effect='plain'
     activeTagList.delete(algorithmList[index])
   }
+  currentPage.value=1
   getProblem()
 }
 const activeCollectionListClose=(item)=>{
   activeCollectionList.delete(item)
   collectionCSSList[collectionList.indexOf(item)].type='info'
   collectionCSSList[collectionList.indexOf(item)].effect='plain'
+  currentPage.value=1
   getProblem()
 }
 const setCollectionCSS=(index)=>{
@@ -230,6 +235,7 @@ const setCollectionCSS=(index)=>{
     collectionCSSList[index].effect='plain'
     activeCollectionList.delete(collectionList[index])
   }
+  currentPage.value=1
   getProblem()
 }
 getProblem()
@@ -392,5 +398,8 @@ export default {
 .collectionList{
   margin: 0 2px 5px 0;
   cursor: pointer;
+}
+.pagination{
+  margin-top: 16px;
 }
 </style>

@@ -168,14 +168,10 @@
         console.log("=====Exit=====");
         store.setToken('')
     }
-    console.log(store.token!=='')
-    console.log(store.token);
-    console.log(store.nickName);
     
     if (store.userId===0 && store.token!=='') {
        getBaseInfo()
        .then((response)=>{
-            console.log(response);
             store.setInformation(response.data.data)
        }) 
     }

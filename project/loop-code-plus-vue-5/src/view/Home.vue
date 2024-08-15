@@ -13,12 +13,12 @@
 <script>
 const getWindowInfo = () => {
     if (window.innerWidth<=1041){
-                const element = document.querySelector('.affix');
-                element.style.display = 'none';
-            }else{
-                const element = document.querySelector('.affix');
-                element.style.display = '';
-            }
+        const element = document.querySelector('.affix');
+        element.style.display = 'none';
+    }else{
+        const element = document.querySelector('.affix');
+        element.style.display = '';
+    }
 };
 
 
@@ -164,7 +164,7 @@ export default {
                             <div class="label-content">
                                 <div class="race-card">
                                     <div v-if="store.token!==''" class="progress">
-                                        <el-progress type="dashboard" :percentage="rank/10" :width="80" :height="80" define-back-color="#bebebe" stroke-width="8">
+                                        <el-progress type="dashboard" :percentage="rank/10" :width="80" :height="80" define-back-color="#bebebe" :stroke-width="8">
                                             <template #default="{ percentage }">
                                                 <span class="percentage-value">{{ percentage*10 }}</span>
                                                 <span class="percentage-label">排位分</span>

@@ -8,7 +8,9 @@
                 <div :class="leftClass">
                     <el-tabs type="card" class="eltabs">
                         <el-tab-pane label="题目信息" class="pane">
-                            <div v-html="content" style="overflow-y: auto; height: 100%;"></div>
+                            <el-scrollbar>
+                                <div v-html="content" style="overflow-y: auto; height: 100%;"></div>
+                            </el-scrollbar>
                         </el-tab-pane>
                         <el-tab-pane label="题解" class="pane">Config</el-tab-pane>
                         <el-tab-pane label="提交记录" class="pane">Role</el-tab-pane>
@@ -35,15 +37,15 @@
                                 <el-button class="fullButton" :icon="FullScreen" circle @click="allController"/>
                             </div>
                         </div>
-                        <code-mirror basic :lang="lang" v-model="codeVal" style="height: calc(100% - 80px);" :theme="theme" :tab="true"/>
+                        <code-mirror basic :lang="lang" v-model="codeVal" style="height: 0;flex: 1;" :theme="theme" :tab="true"/>
                         <div class="coding-bottom">
                             <el-button class="runButton" @click="()=>{console.log(codeVal)}">运行</el-button>
-                            <el-button type="success" @click="runCode">提交</el-button>
+                            <el-button type="success" @click="runCode" :loading="runLoading">提交</el-button>
                         </div>
                     </div>
                     <div :class="bottomClass">
-                        <el-tabs type="card" class="eltabsResult">
-                            <el-tab-pane label="测试用例" class="paneResult">
+                        <el-tabs type="card" class="eltabsResult" v-model="activeTab">
+                            <el-tab-pane name="测试用例" label="测试用例" class="paneResult">
                                 <span>
                                     测试用例
                                 </span>
@@ -53,7 +55,7 @@
                                 </span>
                                 <el-input v-model="guessInput" style="width: 95%;margin: 8px 0;" placeholder="预期结果" class="elinput" type="textarea" autosize resize="none"/> 
                             </el-tab-pane>
-                            <el-tab-pane label="运行结果" class="paneResult">Config</el-tab-pane>
+                            <el-tab-pane name="运行结果" label="运行结果" class="paneResult">{{ result }}</el-tab-pane>
                         </el-tabs>
                         <el-button :class="bottomCloseButton" type="info" :icon="ArrowDownBold" circle style="position: absolute;top: 5px;right: 5px;" @click="bottomController"/>
                     </div>
@@ -64,7 +66,7 @@
 </template>
 
 <script setup>
-    import { ref } from "vue";
+    import { reactive, ref, toRefs, toRaw } from "vue";
     import Header from "../../components/Header.vue"
     import { useRoute } from 'vue-router';
     import CodeMirror from 'vue-codemirror6'
@@ -76,34 +78,49 @@
     import { run, getProblemContent } from '@/api/workingArea.js'
     import { useUserStore } from "@/store/user.js";
 
+    const activeTab=ref('测试用例')
     const route = useRoute()
     const { p } = route.params;
+    const Page=ref('5')
+    const runLoading=ref(false)
+    const content=ref('')
+    const language=ref('python')
+    const languageList={'python':python(),'cpp':cpp(),'java':java(),'go':go()}
+    const lang=ref(python())
+    const codeVal = ref('');
+    const result =ref('')
+    const caseInput=ref('')
+    const guessInput=ref('')
     getProblemContent(
         parseInt(p)
     ).then((response)=>{
         console.log(response);
-        
+        try{
+            const pm=Object.keys(JSON.parse(response.data.data.inputSample)).join(',')
+            codeVal.value=`def main(${pm}):`
+        }catch{
+            codeVal.value=`def main():`
+        }
         content.value=response.data.data.description
+        caseInput.value=response.data.data.inputSample
+        guessInput.value=response.data.data.outputSample
     })
     const store=useUserStore()
-    
     const runCode=()=>{
+        runLoading.value=true
         run(
             codeVal.value,
             store.userId,
             parseInt(p)
         ).then(function (response) {
             console.log(response)
+            runLoading.value=false
+            result.value=response.data.data
+            activeTab.value="运行结果"
         })
     }
-    const Page=ref('5')
     
-    const content=ref('')
-    const language=ref('python')
-    const languageList={'python':python(),'cpp':cpp(),'java':java(),'go':go()}
-    const lang=ref(python())
-    const codeVal = ref(`def main(a,b):
-`);
+    
     const theme = {
         
         ".cm-content": {
@@ -149,8 +166,7 @@
             leftCloseButton.value='closeButton-close'
         }
     }
-    const caseInput=ref('')
-    const guessInput=ref('')
+    
     
     const langList=[
     {
@@ -208,6 +224,7 @@
     flex-direction: column;
     flex: 6 1 0;
     margin: 8px;
+    min-width: 0;
 }
 .coding{
     width: 100%;
@@ -215,6 +232,10 @@
     border-radius: 16px;
     background-color:white;
     margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    min-width: 0;
 }
 .result{
     position: relative;
@@ -296,7 +317,7 @@
     border-radius: 16px 16px 0 0;
 }
 .coding-bottom{
-    padding: 0 16px;
+    padding: 6px 16px;
     display: flex;
     justify-content: end;
 }

@@ -148,9 +148,6 @@
         align-items: center;
         font-size: 1.5rem;
     }
-    .result{
-
-    }
 </style>
 <style>
     .el-tabs__item.is-active {

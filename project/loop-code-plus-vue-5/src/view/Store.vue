@@ -84,10 +84,7 @@
             console.log(response)
             loading.value=false
             data.value=response.data.data
-            PageCount.value=Math.ceil(response.data.storeNum/6)
-            console.log(PageCount);
-            console.log(Math.ceil(response.data.storeNum/6));
-            
+            PageCount.value=Math.ceil(response.data.num/6)
         })
         .catch(function (error) {
             ElMessage.error('网络连接错误')
