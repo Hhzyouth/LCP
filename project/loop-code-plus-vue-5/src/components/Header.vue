@@ -24,7 +24,7 @@
                 <div class="top-input">
                     <el-input class="input" v-model="input" style="width: 240px" placeholder="搜索" :prefix-icon="Search" @keyup.enter.native="Searchit()"/>
                 </div>
-                <el-popover v-if="store.token!==''" placement="bottom" :width="280" trigger="click" popper-class="popover" :offset="20" popper-style="border-radius: 0.8rem;">
+                <el-popover v-if="store.token!=='' && store.userId!==0" placement="bottom" :width="280" trigger="click" popper-class="popover" :offset="20" popper-style="border-radius: 0.8rem;">
                     <template #reference>
                         <el-avatar :src="store.avatar" style="width: 30px;height: 30px;"/>
                     </template>
@@ -78,7 +78,7 @@
                     </div>
                 </el-popover>
                 <router-link v-else style="color: white;" to="/Login">注册 / 登录</router-link>
-                <el-popover v-if="store.token!==''" placement="bottom" :width="480" trigger="click" popper-class="popover" :offset="20" popper-style="height: 400px; overflow: auto;border-radius: 0.8rem;">
+                <el-popover v-if="store.token!==''&& store.userId!==0" placement="bottom" :width="480" trigger="click" popper-class="popover" :offset="20" popper-style="height: 400px; overflow: auto;border-radius: 0.8rem;">
                     <template #reference>
                         <el-icon style="width: 25px; height:25px; color: white;margin-left: 15px;"><Bell /></el-icon>
                     </template>

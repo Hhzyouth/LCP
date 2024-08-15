@@ -15,15 +15,4 @@ export const getProblems = (page,tag,collection,userId) => {
     });
 };
 
-//设置题目
-export const setProblem = (data) => {
-    let temp=JSON.parse(JSON.stringify(data));
-    temp.tag=JSON.stringify(data.tag)
-    temp.collection=JSON.stringify(data.collection)
 
-    return requestwi({
-        url: '/problem/add',
-        method: 'post',
-        data: temp
-    });
-};

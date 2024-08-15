@@ -102,13 +102,14 @@
     import { useRoute, useRouter } from 'vue-router';
     import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
     import '@wangeditor/editor/dist/css/style.css'
-    import { setProblem } from '@/api/problem.js'
+    import { setProblem, getMyProblem } from '@/api/myProblem.js'
     import { useUserStore } from "../../store/user";
 
     const deliver=ref(false)
     const route = useRoute()
     const router = useRouter()
     const store=useUserStore()
+    const { ep } = route.params;
     const form = reactive({
         userId:0,
         problemId:null,
@@ -228,7 +229,7 @@
 
     const Page=ref('')
 
-    const { ep } = route.params;
+    
     const tagList=["哈希表","树","二叉树","堆","栈","图","链表","集合","队列","双向链表","二叉搜索树","强连通分量","最小生成树","并查集","字典树","线段树","树状数组","后缀数组","动态规划","贪心","深度优先搜索","二分查找","广度优先搜索","回溯","递归","分治","记忆化搜索","归并排序","快速选择","数组","字符串","矩阵"]
     const showLevel=(level)=>{
   switch(level){
@@ -272,7 +273,33 @@ const classLevel=(level)=>{
       return 'level notKnow'
   }
 }
-
+if(ep!=='0'){
+  getMyProblem(
+    parseInt(ep),
+    store.userId
+  ).then((response)=>{
+    if (response.data.code===500){
+      router.go(-1)
+      ElMessage.error("你无权限编辑此题目")
+    }else{
+      form.problemId=response.data.data.problemId
+      form.problemName=response.data.data.problemName
+      form.description=response.data.data.description
+      form.inputSample=response.data.data.inputSample
+      form.outputSample=response.data.data.outputSample
+      form.difficultyLevel=response.data.data.difficultyLevel
+      form.tag=JSON.parse(response.data.data.tag)
+      form.testCase=response.data.data.testCase
+      deliver.value=response.data.data.status===1?true:false
+    }
+  }).catch((error)=>{
+    router.go(-1)
+    ElMessage({
+        type: 'error',
+        message: '网络错误',
+      })
+  })
+}
 const rules = reactive({
     problemName: [
         { required: true, message: '题目名称不能为空', trigger: 'blur' },
