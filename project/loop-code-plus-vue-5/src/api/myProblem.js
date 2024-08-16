@@ -2,24 +2,22 @@ import request from '../https/request';
 import requestwi from '../https/requestWI';
 
 //获取我的题目
-export const getMyProblems=(page,userId)=>{
+export const getMyProblems=(page)=>{
     return requestwi({
-        url: '/myProblem/list',
+        url: '/problem/myList',
         method: 'get',
         params: {
             page : page,
-            userId : userId
           },
     });
 }
 //获取可编辑的题目内容
-export const getMyProblem=(problemId,userId)=>{
+export const getMyProblem=(problemId)=>{
     return requestwi({
-        url: '/myProblem/get',
+        url: '/problem/updateContent',
         method: 'get',
         params: {
             problemId : problemId,
-            userId : userId
           },
     });
 }
@@ -35,35 +33,52 @@ export const setProblem = (data) => {
     });
 };
 //删除我的题目
-export const deleteMyProblem=(problemId,userId)=>{
+export const deleteMyProblem=(problemId)=>{
     return requestwi({
-        url: '/myProblem/delete',
+        url: '/problem/delete',
         method: 'delete',
         params: {
             problemId : problemId,
-            userId : userId
           },
     });
 }
 //获取我的题目集
-export const getMyCollections=(page,userId)=>{
+export const getMyCollections=(page)=>{
     return requestwi({
         url: '/myCollection/list',
         method: 'get',
         params: {
-            page : page,
-            userId : userId
+            page : page
           },
     });
 }
-//删除我的题目
-export const deleteMyCollection=(collectionId,userId)=>{
+//删除我的题目集
+export const deleteMyCollection=(collectionId)=>{
     return requestwi({
         url: '/myCollection/delete',
         method: 'delete',
         params: {
-            collectionId : collectionId,
-            userId : userId
+            collectionId : collectionId
           },
     });
 }
+//获取可编辑的题目集内容
+export const getMyCollection=(collectionId)=>{
+    return requestwi({
+        url: '/myCollection/get',
+        method: 'get',
+        params: {
+            collectionId : collectionId
+          },
+    });
+}
+//设置题目集
+export const setCollection = (data) => {
+    let temp=JSON.parse(JSON.stringify(data));
+    temp.problemList=JSON.stringify(data.problemList)
+    return requestwi({
+        url: '/collection/add',
+        method: 'post',
+        data: temp
+    });
+};

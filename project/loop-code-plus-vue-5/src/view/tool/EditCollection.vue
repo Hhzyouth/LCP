@@ -6,19 +6,19 @@
             </el-header>
             <el-main class="elmain">
                 <div class="container">
-                    <el-form :model="form" label-width="auto" :inline="true">
+                    <el-form :model="form" label-width="auto" :inline="true" :rules="rules" ref="formRef">
                         <el-form-item label="题目集ID">
-                            <el-input v-model="form.problemId" disabled placeholder="题目ID会自动生成"/>
+                            <el-input v-model="form.collectionId" disabled placeholder="题目ID会自动生成"/>
                         </el-form-item>
-                        <el-form-item label="题目集名称" required>
-                            <el-input v-model="form.problemName" placeholder="请输入题目名称"/>
+                        <el-form-item label="题目集名称" required prop="collectionName">
+                            <el-input v-model="form.collectionName" placeholder="请输入题目名称"/>
                         </el-form-item>
                         <el-form-item label="是否公开题目集" required>
-                        <el-switch v-model="form.delivery" :active-text="form.delivery?'题目也将被公开':''" style="width: 148px;"/>
+                        <el-switch v-model="delivery" :active-text="delivery?'题目也将被公开':''" style="width: 148px;"/>
                         </el-form-item>
                         <el-form-item>
                             <div style="width: 100%;display: flex;justify-content: end;">
-                                <el-button type="success" @click="onSubmit">确认并保存</el-button>
+                                <el-button type="success" @click="submitForm(formRef)">确认并保存</el-button>
                                 <el-button @click="()=>{this.$router.go(-1)}">取消</el-button>
                             </div>
                         </el-form-item>
@@ -34,14 +34,14 @@
                         <div class="collection">题目集</div>
                     </div>
                     <TransitionGroup name="list" tag="div" class="problem-list">
-                        <div v-for="(problem,index) in problemList" :key="problem.id" class="problem" 
+                        <div v-for="(problem,index) in form.problemList" :key="problem.id" class="problem" 
                             draggable="true"
                             @dragstart="dragstart($event, index)"
                             @dragenter="dragenter($event, index)"
                             @dragend="dragend"
                             @dragover="dragover"
                         >
-                            <div class="edit"><el-button class="deleteButton" :icon="Delete" circle plain type="danger" @click="deleteConfirm(problem.name)"/></div>  
+                            <div class="edit"><el-button class="deleteButton" :icon="Delete" circle plain type="danger" @click="deleteConfirm(problem.name,index)"/></div>  
                             <div class="edit"><router-link :to="'/MyProblem/EditProblem/'+problem.id" v-if="problem.userId==store.userId"><el-button class="editButton" :icon="Edit" circle plain type="info"/></router-link></div>
                             <div class="status" :style="{color:problem.status==0?'#67C23A':'#409EFF'}">
                                 {{ problem.status==0 ? '私有' : '公开' }}
@@ -79,7 +79,7 @@
             <div class="collection">题目集</div>
             </div>
             <div class="problem-list">
-            <el-checkbox-group v-model="problemList">
+            <el-checkbox-group v-model="form.problemList">
               <div v-for="(problem,index) in MyProblemroblemList" :key="problem.id" :class="index%2 == 0?'problem one':'problem two'">
                   <div class="check"><el-checkbox :value="problem" :label="indexOfProblem(problem.id)" >
                   </el-checkbox></div>
@@ -118,25 +118,27 @@
     import { reactive } from 'vue'
     import { Edit, Delete, Plus } from '@element-plus/icons-vue'
     import { useUserStore } from '@/store/user.js'
+    import { getMyCollection, setCollection } from '@/api/myProblem.js'
 
     const form = reactive({
-        problemId:'',
-        problemName: '',
-        description: '',
-        inputSample:'',
-        outputSample:'',
-        difficultyLevel: 1,
+        collectionId:null,
+        collectionName: '',
         status: false,
-        tag: [],
+        problemList:[
+  {status:1,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
+  {status:0,id:168,name:"两数求和2",level:4,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
+  {status:0,id:7,name:"两数之积",level:9,tags:["数组","哈希表"],collections:["LCP101"],userId:11},
+  {status:0,id:12,name:"两数之积2",level:7,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
+  {status:0,id:56,name:"两数之积3",level:6,tags:["数组","哈希表","链表","二叉树","深度优先搜索"],collections:["LCP101","微软面试","苏州大学练习题"],userId:25},
+]
     })
+    const formRef=ref()
     const store=useUserStore()
     const drawer = ref(false)
-    const onSubmit = () => {
-      console.log('submit!')
-    }
+    const delivery=ref(false)
     const Page=ref('')
     const checkList=ref([])
-    const deleteConfirm=(name)=>{
+    const deleteConfirm=(name,index)=>{
       ElMessageBox.confirm(
       `题目 "${name}" 将从题目集中移出`,
       '警告',
@@ -148,6 +150,7 @@
       }
     )
       .then(() => {
+        form.problemList.splice(index, 1);
         ElMessage({
           type: 'success',
           message: '题目已移出',
@@ -205,16 +208,9 @@ const classLevel=(level)=>{
   }
 }
 const indexOfProblem=(pid)=>{
-  const p=problemList.value.findIndex(item => item.id === pid)
+  const p=form.problemList.findIndex(item => item.id === pid)
   return p==-1?'':p+1
 }
-const problemList=ref([
-  {status:1,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
-  {status:0,id:168,name:"两数求和2",level:4,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
-  {status:0,id:7,name:"两数之积",level:9,tags:["数组","哈希表"],collections:["LCP101"],userId:11},
-  {status:0,id:12,name:"两数之积2",level:7,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
-  {status:0,id:56,name:"两数之积3",level:6,tags:["数组","哈希表","链表","二叉树","深度优先搜索"],collections:["LCP101","微软面试","苏州大学练习题"],userId:25},
-])
 
 const MyProblemroblemList=ref([
   {status:1,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
@@ -238,9 +234,9 @@ function dragenter(e, index) {
 	e.preventDefault()
 
     if (dragIndex !== index) {
-        const source = problemList.value[dragIndex];
-        problemList.value.splice(dragIndex, 1);
-        problemList.value.splice(index, 0, source);
+        const source = form.problemList[dragIndex];
+        form.problemList.splice(dragIndex, 1);
+        form.problemList.splice(index, 0, source);
 
         dragIndex = index
     }
@@ -253,7 +249,35 @@ function dragover(e) {
 function dragend(e) {
 	e.target.classList.remove('moveing')
 }
+if(ec!=='0'){
+  getMyCollection(
+    parseInt(ec)
+  ).then((response)=>{
+    form.collectionId=response.data.data.colId
+    form.collectionName=response.data.data.colName
+    delivery.value=response.data.data.status===1?true:false
+    form.problemList=response.data.data.problemList
+  }).catch((error)=>{
+    ElMessage.error("网络错误")
+  })
+}
 
+const rules = reactive({
+    collectionName: [
+        { required: true, message: '题目集名称不能为空', trigger: 'blur' },
+    ],
+})
+const submitForm = async (formEl) => {
+  if (!formEl) return
+  await formEl.validate((valid, fields) => {
+    if (valid) {
+      console.log('submit!')
+      setCollection(form)
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
+}
 </script>
 
 

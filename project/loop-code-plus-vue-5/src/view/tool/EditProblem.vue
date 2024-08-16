@@ -11,7 +11,7 @@
                             <el-form-item label="题目ID">
                                 <el-input v-model="form.problemId" disabled placeholder="题目ID会自动生成"/>
                             </el-form-item>
-                            <el-form-item label="题目名称" required>
+                            <el-form-item label="题目名称" required prop="problemName">
                                 <el-input v-model="form.problemName" placeholder="请输入题目名称"/>
                             </el-form-item>
                             <el-form-item label="难度等级" required style="display: flex;">
@@ -23,17 +23,17 @@
                             <el-form-item label="是否公开题目" required>
                             <el-switch v-model="deliver" />
                             </el-form-item>
-                            <el-form-item label="标签" required>
+                            <el-form-item label="标签" required prop="tag">
                             <el-checkbox-group v-model="form.tag">
                                 <el-checkbox v-for="item in tagList" :value="item" name="type">
                                     {{ item }}
                                 </el-checkbox>
                             </el-checkbox-group>
                             </el-form-item>
-                            <el-form-item label="输入用例" required>
+                            <el-form-item label="输入用例" required prop="inputSample">
                                 <el-input v-model="form.inputSample" placeholder="此用例仅用于测试 例:{lst:[1,2,3]}"/>
                             </el-form-item>
-                            <el-form-item label="输出用例" required>
+                            <el-form-item label="输出用例" required prop="outputSample">
                                 <el-input v-model="form.outputSample" placeholder="此用例仅用于测试 例:6"/>
                             </el-form-item>
                             <el-form-item>
@@ -142,6 +142,11 @@
               setTimeout(() => {
                   router.go(0)
               }, 3000);
+            }else{
+              ElMessage({
+                message: '保存失败，请重试',
+                type: 'success',
+              })
             }
         }).catch((error)=>{
             console.log(error);
@@ -275,8 +280,7 @@ const classLevel=(level)=>{
 }
 if(ep!=='0'){
   getMyProblem(
-    parseInt(ep),
-    store.userId
+    parseInt(ep)
   ).then((response)=>{
     if (response.data.code===500){
       router.go(-1)

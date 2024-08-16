@@ -71,11 +71,6 @@
                     {{ item }}
                   </el-tag>
                 </el-collapse-item>
-                <el-collapse-item title="其他" name="4">
-                  <div>
-                    暂无其他标签
-                  </div>
-                </el-collapse-item>
               </el-collapse>
             </div>
           </div>
@@ -126,8 +121,8 @@ const handleChange = (val) => {
 }
 const Page=ref('5')
 const problemList=ref([])
-const dataStructureList=["哈希表","树","二叉树","堆","栈","图","链表","集合","队列","双向链表","最小生成树","并查集","字典树","线段树","树状数组"];
-const dataStructureCSSList=reactive([{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' }])
+const dataStructureList=["哈希表","树","二叉树","堆","栈","图","链表","集合","队列","双向链表","最小生成树","并查集","字典树","线段树","树状数组","后缀数组","数组","字符串","矩阵"];
+const dataStructureCSSList=reactive([{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' }])
 const algorithmList=["动态规划","贪心","深度优先搜索","二分查找","广度优先搜索","回溯","递归","分治","记忆化搜索","归并排序","快速选择"];
 const initAlgorithmCSSList=[{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' }]
 const algorithmCSSList=reactive([...initAlgorithmCSSList])

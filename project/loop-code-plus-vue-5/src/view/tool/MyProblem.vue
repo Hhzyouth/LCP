@@ -21,22 +21,22 @@
                             </div>
                             <div class="problem-list">
                             <div v-for="(problem,index) in problemList" :key="problem.id" :class="index%2 == 0?'problem one':'problem two'">
-                                <div class="edit"><el-button class="deleteButton" :icon="Delete" circle plain type="danger" @click="deleteConfirm(problem.name,problem.id)"/></div>  
-                                <div class="edit"><router-link :to="'/MyProblem/EditProblem/'+problem.id"><el-button class="editButton" :icon="Edit" circle plain type="info"/></router-link></div>
+                                <div class="edit"><el-button class="deleteButton" :icon="Delete" circle plain type="danger" @click="deleteConfirm(problem.problemName,problem.problemId)"/></div>  
+                                <div class="edit"><router-link :to="'/MyProblem/EditProblem/'+problem.problemId"><el-button class="editButton" :icon="Edit" circle plain type="info"/></router-link></div>
                                 <div class="status" :style="{color:problem.status==0?'#67C23A':'#409EFF'}">
                                   {{ problem.status==0 ? '私有' : '公开' }}
                                 </div>
-                                <div class="id">{{ problem.id }}</div>
-                                <router-link class="name" :to='`/Problem/WorkingArea/${problem.id}`'>{{ problem.name }}</router-link>
-                                <div :class="classLevel(problem.level)">{{ showLevel(problem.level) }}</div>
+                                <div class="id">{{ problem.problemId }}</div>
+                                <router-link class="name" :to='`/Problem/WorkingArea/${problem.problemName}`'>{{ problem.problemName }}</router-link>
+                                <div :class="classLevel(problem.difficultyLevel)">{{ showLevel(problem.difficultyLevel) }}</div>
                                 <el-scrollbar class="tag-container">
                                 <div class="tag">
-                                    <el-tag v-for="tag in problem.tags" type="success" class="tag-item" round>{{ tag }}</el-tag>
+                                    <el-tag v-for="tag in JSON.parse(problem.tag)" type="success" class="tag-item" round>{{ tag }}</el-tag>
                                 </div>
                                 </el-scrollbar>
                                 <el-scrollbar class="collection-container">
                                 <div class="collection">
-                                    <el-tag v-for="collection in problem.collections" type="primary" class="tag-item" round>{{ collection }}</el-tag>
+                                    <el-tag v-for="collection in JSON.parse(problem.collection)" type="primary" class="tag-item" round>{{ collection }}</el-tag>
                                 </div>
                                 </el-scrollbar>
                               </div>
@@ -118,13 +118,21 @@ const deleteConfirm=(name,id)=>{
 )
   .then(() => {
     deleteMyProblem(
-      id,
-      store.userId
+      id
     ).then((response)=>{
-      ElMessage({
-        type: 'success',
-        message: '题目已删除',
+      console.log(response);
+      if (response.data.code===200){
+        ElMessage({
+          type: 'success',
+          message: '题目已删除',
+        })
+        toGetMyProblems()
+      }else{
+        ElMessage({
+        type: 'warning',
+        message: '题目未能成功删除，请重试',
       })
+      }
     }).catch((error)=>{
       ElMessage({
         type: 'warning',
@@ -152,8 +160,7 @@ const deleteConfirmList=(name,id)=>{
 )
   .then(() => {
     deleteMyCollection(
-      id,
-      store.userId
+      id
     ).then((response)=>{
       ElMessage({
         type: 'success',
@@ -178,19 +185,19 @@ const deleteConfirmList=(name,id)=>{
 const toGetMyProblems=()=>{
   problemLoading.value=true
   getMyProblems(
-    problemCurrentPage.value,
-    store.userId
+    problemCurrentPage.value
   ).then((response)=>{
+    console.log(response);
+    
     problemLoading.value=false
-    problemList.value=response.data.data.problemList   
+    problemList.value=response.data.data
     problemPageCount.value=Math.ceil(response.data.num/30) 
   })
 }
 const toGetMyCollections=()=>{
   collectionLoading.value=true
   getMyCollections(
-    collectionCurrentPage.value,
-    store.userId
+    collectionCurrentPage.value
   ).then((response)=>{
     collectionLoading.value=false
     collectionList.value=response.data.data.collectionList   
