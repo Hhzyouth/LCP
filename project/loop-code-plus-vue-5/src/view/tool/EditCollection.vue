@@ -8,10 +8,10 @@
                 <div class="container">
                     <el-form :model="form" label-width="auto" :inline="true" :rules="rules" ref="formRef">
                         <el-form-item label="题目集ID">
-                            <el-input v-model="form.collectionId" disabled placeholder="题目ID会自动生成"/>
+                            <el-input v-model="form.colId" disabled placeholder="题目ID会自动生成"/>
                         </el-form-item>
-                        <el-form-item label="题目集名称" required prop="collectionName">
-                            <el-input v-model="form.collectionName" placeholder="请输入题目名称"/>
+                        <el-form-item label="题目集名称" required prop="colName">
+                            <el-input v-model="form.colName" placeholder="请输入题目名称"/>
                         </el-form-item>
                         <el-form-item label="是否公开题目集" required>
                         <el-switch v-model="delivery" :active-text="delivery?'题目也将被公开':''" style="width: 148px;"/>
@@ -19,7 +19,7 @@
                         <el-form-item>
                             <div style="width: 100%;display: flex;justify-content: end;">
                                 <el-button type="success" @click="submitForm(formRef)">确认并保存</el-button>
-                                <el-button @click="()=>{this.$router.go(-1)}">取消</el-button>
+                                <el-button @click="()=>{router.go(-1)}">返回</el-button>
                             </div>
                         </el-form-item>
                     </el-form>
@@ -34,41 +34,41 @@
                         <div class="collection">题目集</div>
                     </div>
                     <TransitionGroup name="list" tag="div" class="problem-list">
-                        <div v-for="(problem,index) in form.problemList" :key="problem.id" class="problem" 
+                        <div v-for="(problem,index) in problemList" :key="problem.problemId" class="problem" 
                             draggable="true"
                             @dragstart="dragstart($event, index)"
                             @dragenter="dragenter($event, index)"
                             @dragend="dragend"
                             @dragover="dragover"
                         >
-                            <div class="edit"><el-button class="deleteButton" :icon="Delete" circle plain type="danger" @click="deleteConfirm(problem.name,index)"/></div>  
-                            <div class="edit"><router-link :to="'/MyProblem/EditProblem/'+problem.id" v-if="problem.userId==store.userId"><el-button class="editButton" :icon="Edit" circle plain type="info"/></router-link></div>
+                            <div class="edit"><el-button class="deleteButton" :icon="Delete" circle plain type="danger" @click="deleteConfirm(problem.problemName,index)"/></div>  
+                            <div class="edit"><router-link :to="'/MyProblem/EditProblem/'+problem.problemId" v-if="problem.userId==store.userId"><el-button class="editButton" :icon="Edit" circle plain type="info"/></router-link></div>
                             <div class="status" :style="{color:problem.status==0?'#67C23A':'#409EFF'}">
                                 {{ problem.status==0 ? '私有' : '公开' }}
                             </div>
-                            <div class="id">{{ problem.id }}</div>
-                            <router-link class="name" :to='`/Problem/WorkingArea/${problem.id}`' draggable="false">{{ problem.name }}</router-link>
-                            <div :class="classLevel(problem.level)">{{ showLevel(problem.level) }}</div>
+                            <div class="id">{{ problem.problemId }}</div>
+                            <router-link class="name" :to='`/Problem/WorkingArea/${problem.problemId}`' draggable="false">{{ problem.problemName }}</router-link>
+                            <div :class="classLevel(problem.difficultyLevel)">{{ showLevel(problem.difficultyLevel) }}</div>
                             <el-scrollbar class="tag-container">
                             <div class="tag">
-                                <el-tag v-for="(tag,index) in problem.tags" :key="`${problem.id}+${index}`" type="success" class="tag-item" round>{{ tag }}</el-tag>
+                                <el-tag v-for="(tag,index) in JSON.parse(problem.tag)" :key="`${problem.problemId}+${index}`" type="success" class="tag-item" round>{{ tag }}</el-tag>
                             </div>
                             </el-scrollbar>
                             <el-scrollbar class="collection-container">
                             <div class="collection">
-                                <el-tag v-for="(collection,index) in problem.collections" :key="collection" type="primary" class="tag-item" round>{{ collection }}</el-tag>
+                                <el-tag v-for="(collection,index) in JSON.parse(problem.collection)" :key="collection" type="primary" class="tag-item" round>{{ collection }}</el-tag>
                             </div>
                             </el-scrollbar>
                         </div>
                     </TransitionGroup>
-                    <el-button type="success" plain round :icon="Plus" @click="drawer=true">加入题目</el-button>
+                    <el-button type="success" plain round :icon="Plus" @click="open()">加入题目</el-button>
                 </div>
             </el-main>
         </el-container>
     </div>
-    <el-drawer v-model="drawer" title="I am the title" :with-header="false" :size="'60%'">
-      <el-tabs type="border-card">
-        <el-tab-pane label="我的题目">
+    <el-drawer v-model="drawer" :with-header="false" :size="'70%'">
+      <el-tabs type="border-card" :tab-change="tabChange()" v-model="activeName">
+        <el-tab-pane label="我的题目" v-loading="problemLoading" name="myProblem">
           <div class="main-header">
             <div class="check"></div>
             <div class="status">状态</div>
@@ -79,32 +79,72 @@
             <div class="collection">题目集</div>
             </div>
             <div class="problem-list">
-            <el-checkbox-group v-model="form.problemList">
-              <div v-for="(problem,index) in MyProblemroblemList" :key="problem.id" :class="index%2 == 0?'problem one':'problem two'">
-                  <div class="check"><el-checkbox :value="problem" :label="indexOfProblem(problem.id)" >
+            <el-checkbox-group v-model="problemList">
+              <div v-for="(problem,index) in MyProblemList" :key="problem.problemId" :class="index%2 == 0?'problem one':'problem two'">
+                  <div class="check"><el-checkbox :value="{problemId:problem.problemId,userId:problem.userId,problemName:problem.problemName,difficultyLevel:problem.difficultyLevel,tag:problem.tag,collection:problem.collection}" :label="indexOfProblem(problem.problemId)" >
                   </el-checkbox></div>
                   <div class="status" :style="{color:problem.status==0?'#67C23A':'#409EFF'}">
                     {{ problem.status==0 ? '私有' : '公开' }}
                   </div>
-                  <div class="id">{{ problem.id }}</div>
-                  <router-link class="name" :to='`/Problem/WorkingArea/${problem.id}`'>{{ problem.name }}</router-link>
-                  <div :class="classLevel(problem.level)">{{ showLevel(problem.level) }}</div>
+                  <div class="id">{{ problem.problemId }}</div>
+                  <router-link class="name" :to='`/Problem/WorkingArea/${problem.problemId}`' :title="problem.problemName">{{ problem.problemName }}</router-link>
+                  <div :class="classLevel(problem.difficultyLevel)">{{ showLevel(problem.difficultyLevel) }}</div>
                   <el-scrollbar class="tag-container">
-                  <div class="tag">
-                      <el-tag v-for="tag in problem.tags" type="success" class="tag-item" round>{{ tag }}</el-tag>
-                  </div>
+                    <div class="tag">
+                        <el-tag v-for="tag in JSON.parse(problem.tag)" type="success" class="tag-item" round>{{ tag }}</el-tag>
+                    </div>
                   </el-scrollbar>
                   <el-scrollbar class="collection-container">
                   <div class="collection">
-                      <el-tag v-for="collection in problem.collections" type="primary" class="tag-item" round>{{ collection }}</el-tag>
+                      <el-tag v-for="collection in JSON.parse(problem.collection)" type="primary" class="tag-item" round>{{ collection }}</el-tag>
                   </div>
                 </el-scrollbar>
               </div>
             </el-checkbox-group>
           </div>
+          <div style="display: flex;width: 100%;justify-content: center;" v-if="myProblemPageCount>1">
+              <el-pagination background layout="prev, pager, next" :page-count="myProblemPageCount" class="pagination" @change="toGetMyProblems()"
+              v-model:current-page="myProblemCurrentPage"  />
+          </div>
         </el-tab-pane>
-        <el-tab-pane label="公开题目">
-          
+        <el-tab-pane label="公开题目" name="publicProblem">
+          <div class="main-header">
+            <div class="check"></div>
+            <div class="status">状态</div>
+            <div class="id">编号</div>
+            <div class="name">题目</div>
+            <div class="level">难度</div>
+            <div class="tag">标签</div>
+            <div class="collection">题目集</div>
+            </div>
+            <div class="problem-list">
+            <el-checkbox-group v-model="problemList">
+              <div v-for="(problem,index) in publicProblemList" :key="problem.problemId" :class="index%2 == 0?'problem one':'problem two'">
+                  <div class="check"><el-checkbox :value="{problemId:problem.problemId,userId:problem.userId,problemName:problem.problemName,difficultyLevel:problem.difficultyLevel,tag:problem.tag,collection:problem.collection}" :label="indexOfProblem(problem.problemId)" >
+                  </el-checkbox></div>
+                  <div class="status" :style="{color:problem.status==0?'#67C23A':'#409EFF'}">
+                    {{ problem.status==0 ? '私有' : '公开' }}
+                  </div>
+                  <div class="id">{{ problem.problemId }}</div>
+                  <router-link class="name" :to='`/Problem/WorkingArea/${problem.problemId}`' :title="problem.problemName">{{ problem.problemName }}</router-link>
+                  <div :class="classLevel(problem.difficultyLevel)">{{ showLevel(problem.difficultyLevel) }}</div>
+                  <el-scrollbar class="tag-container">
+                    <div class="tag">
+                        <el-tag v-for="tag in JSON.parse(problem.tag)" type="success" class="tag-item" round>{{ tag }}</el-tag>
+                    </div>
+                  </el-scrollbar>
+                  <el-scrollbar class="collection-container">
+                  <div class="collection">
+                      <el-tag v-for="collection in JSON.parse(problem.collection)" type="primary" class="tag-item" round>{{ collection }}</el-tag>
+                  </div>
+                </el-scrollbar>
+              </div>
+            </el-checkbox-group>
+          </div>
+          <div style="display: flex;width: 100%;justify-content: center;" v-if="publicProblemPageCount>1">
+              <el-pagination background layout="prev, pager, next" :page-count="publicProblemPageCount" class="pagination" @change="toGetPublicProblems()"
+              v-model:current-page="publicProblemCurrentPage"  />
+          </div>
         </el-tab-pane>
       </el-tabs>
     </el-drawer>
@@ -113,31 +153,34 @@
   
 <script setup>
     import Header from "../../components/Header.vue"
-    import { ref } from 'vue'
-    import { useRoute } from 'vue-router';
-    import { reactive } from 'vue'
+    import { ref, reactive } from 'vue'
+    import { useRoute, useRouter } from 'vue-router';
     import { Edit, Delete, Plus } from '@element-plus/icons-vue'
     import { useUserStore } from '@/store/user.js'
-    import { getMyCollection, setCollection } from '@/api/myProblem.js'
+    import { getMyCollection, setCollection, getMyProblems } from '@/api/myProblem.js'
+    import { getProblems } from '@/api/problem.js'
 
+    const myProblemPageCount=ref(1)
+    const router=useRouter()
+    const myProblemCurrentPage=ref(1)
+    const publicProblemCurrentPage=ref(1)
+    const publicProblemPageCount=ref(1)
+    const problemLoading=ref(false)
+    const store=useUserStore()
+    const problemList=ref([])
+    const publicProblemList=ref([])
+    const activeName=ref('myProblem')
     const form = reactive({
-        collectionId:null,
-        collectionName: '',
-        status: false,
-        problemList:[
-  {status:1,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
-  {status:0,id:168,name:"两数求和2",level:4,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
-  {status:0,id:7,name:"两数之积",level:9,tags:["数组","哈希表"],collections:["LCP101"],userId:11},
-  {status:0,id:12,name:"两数之积2",level:7,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
-  {status:0,id:56,name:"两数之积3",level:6,tags:["数组","哈希表","链表","二叉树","深度优先搜索"],collections:["LCP101","微软面试","苏州大学练习题"],userId:25},
-]
+        userId:store.userId,
+        colId:null,
+        colName: '',
+        problemList:[]
+        
     })
     const formRef=ref()
-    const store=useUserStore()
     const drawer = ref(false)
     const delivery=ref(false)
     const Page=ref('')
-    const checkList=ref([])
     const deleteConfirm=(name,index)=>{
       ElMessageBox.confirm(
       `题目 "${name}" 将从题目集中移出`,
@@ -150,7 +193,7 @@
       }
     )
       .then(() => {
-        form.problemList.splice(index, 1);
+        problemList.value.splice(index, 1);
         ElMessage({
           type: 'success',
           message: '题目已移出',
@@ -208,19 +251,11 @@ const classLevel=(level)=>{
   }
 }
 const indexOfProblem=(pid)=>{
-  const p=form.problemList.findIndex(item => item.id === pid)
+  const p=problemList.value.findIndex(item => item.problemId === pid)
   return p==-1?'':p+1
 }
 
-const MyProblemroblemList=ref([
-  {status:1,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
-  {status:0,id:168,name:"两数求和2",level:4,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
-  {status:0,id:12,name:"两数之积2",level:7,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
-  {status:0,id:169,name:"两数求和4",level:8,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
-  {status:0,id:13,name:"两数之积4",level:8,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
-  {status:0,id:170,name:"两数求和5",level:9,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
-  {status:0,id:14,name:"两数之积5",level:9,tags:["数组","哈希表"],collections:["LCP101"],userId:1},
-])
+const MyProblemList=ref([])
 
 let dragIndex = 0
 function dragstart(e, index) {
@@ -234,9 +269,9 @@ function dragenter(e, index) {
 	e.preventDefault()
 
     if (dragIndex !== index) {
-        const source = form.problemList[dragIndex];
-        form.problemList.splice(dragIndex, 1);
-        form.problemList.splice(index, 0, source);
+        const source = problemList.value[dragIndex];
+        problemList.value.splice(dragIndex, 1);
+        problemList.value.splice(index, 0, source);
 
         dragIndex = index
     }
@@ -253,17 +288,19 @@ if(ec!=='0'){
   getMyCollection(
     parseInt(ec)
   ).then((response)=>{
-    form.collectionId=response.data.data.colId
-    form.collectionName=response.data.data.colName
-    delivery.value=response.data.data.status===1?true:false
-    form.problemList=response.data.data.problemList
+    console.log(response);
+    
+    form.colId=response.data.data.collection.colId
+    form.colName=response.data.data.collection.colName
+    delivery.value=response.data.data.collection.status===1?true:false
+    problemList.value=response.data.data.problemList
   }).catch((error)=>{
     ElMessage.error("网络错误")
   })
 }
 
 const rules = reactive({
-    collectionName: [
+    colName: [
         { required: true, message: '题目集名称不能为空', trigger: 'blur' },
     ],
 })
@@ -272,11 +309,61 @@ const submitForm = async (formEl) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       console.log('submit!')
-      setCollection(form)
+      form.status=delivery.value?1:0
+      form.problemList=[]
+      for (let item of problemList.value){
+        form.problemList.push({problemId:item.problemId,problemName:item.problemName})
+      }
+      setCollection(
+        form
+      ).then((response)=>{
+        console.log(response);
+        if (response.data.code===200){
+          ElMessage({
+            type:'success',
+            message:'保存成功'
+          })
+        }
+      })
     } else {
       console.log('error submit!', fields)
     }
   })
+}
+const toGetMyProblems=()=>{
+  problemLoading.value=true
+  getMyProblems(
+    myProblemCurrentPage.value
+  ).then((response)=>{
+    console.log(response);
+    
+    problemLoading.value=false
+    MyProblemList.value=response.data.data
+    myProblemPageCount.value=Math.ceil(response.data.num/30) 
+  })
+}
+const toGetPublicProblems=()=>{
+  getProblems(
+        publicProblemCurrentPage.value,
+        [],
+        [],
+        store.userId
+    ).then(function (response) {
+        console.log(response)
+        publicProblemList.value=response.data.data.problemList      
+        publicProblemPageCount.value=Math.ceil(response.data.data.num/30)    
+    })
+}
+const open=()=>{
+  drawer.value=true
+  // toGetMyProblems()
+}
+const tabChange=()=>{
+  if (activeName.value==="myProblem"){
+    toGetMyProblems()
+  }else{
+    toGetPublicProblems()
+  }
 }
 </script>
 
@@ -356,16 +443,19 @@ const submitForm = async (formEl) => {
 }
 .name{
   min-width: 0px;
-  width: 120px;
+  width: 130px;
   flex: 150 0 auto;
   margin-left: 8px;
   padding: 12px 0;
   font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .level{
   min-width: 0px;
-  width: 50px;
-  flex: 50 0 auto;
+  width: 40px;
+  flex: 40 0 auto;
   margin-left: 8px;
   padding: 12px 0;
   font-size: 1rem;
@@ -379,6 +469,7 @@ const submitForm = async (formEl) => {
 }
 .problem-list{
   width: 100%;
+  min-height: 16px;
 }
 .list-move, 
 .list-enter-active,

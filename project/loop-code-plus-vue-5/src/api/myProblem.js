@@ -45,7 +45,7 @@ export const deleteMyProblem=(problemId)=>{
 //获取我的题目集
 export const getMyCollections=(page)=>{
     return requestwi({
-        url: '/myCollection/list',
+        url: '/collection/list',
         method: 'get',
         params: {
             page : page
@@ -55,20 +55,20 @@ export const getMyCollections=(page)=>{
 //删除我的题目集
 export const deleteMyCollection=(collectionId)=>{
     return requestwi({
-        url: '/myCollection/delete',
+        url: '/collection/deleteCollection',
         method: 'delete',
         params: {
-            collectionId : collectionId
+            colId : collectionId
           },
     });
 }
 //获取可编辑的题目集内容
 export const getMyCollection=(collectionId)=>{
     return requestwi({
-        url: '/myCollection/get',
+        url: '/collection/getCollection',
         method: 'get',
         params: {
-            collectionId : collectionId
+            colId : collectionId
           },
     });
 }

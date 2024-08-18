@@ -6,46 +6,10 @@
             </el-header>
             <el-main class="elmain">
                 <div :class="leftClass">
-                    <el-tabs type="card" class="eltabs" v-model="eltabs" :tab-change="tabChange()">
+                    <el-tabs type="card" class="eltabs" v-model="eltabs">
                         <el-tab-pane label="题目信息" class="pane" name="info">
                             <el-scrollbar>
                                 <div v-html="content" style="overflow-y: auto; height: 100%;"></div>
-                            </el-scrollbar>
-                        </el-tab-pane>
-                        <el-tab-pane label="题解" class="pane solutions" name="solution">
-                            <div style="width: 100%;margin: 6px;"><router-link :to='"/MyProblem/EditSolution/"+p+"/0"' target="_blank"><el-button type="success" plain round>+ 发布题解</el-button></router-link></div>
-                            <el-scrollbar>
-                                <div class="solution-card" v-for="s in solutions" :key="s.solutionId" :id="s.solutionId">
-                                    <div class="card-header">
-                                        <div class="solution-name">{{ s.solutionName }}</div>
-                                        <div style="width: 30%;">
-                                            <el-tag v-for="tag in JSON.parse(s.tag)" type="success" class="tag-item" round>{{ tag }}</el-tag>
-                                        </div>
-                                    </div>
-                                    <div class="card-content">
-                                        <el-scrollbar  class="solution-html">
-                                            <div v-html="s.content" style="overflow-y: auto; height: 100%;"></div>     
-                                        </el-scrollbar>
-                                    </div>
-                                    <el-button @click="extend(s.solutionId)" :icon="DCaret" circle class="fullButton" style="position: absolute;right: 8px;bottom: 8px;"/>
-                                </div>
-                                <div style="height: 30px;"></div>
-                            </el-scrollbar>
-                        </el-tab-pane>
-                        <el-tab-pane label="提交记录" class="pane" name="record">
-                            <el-scrollbar>
-                                <div class="main-header">
-                                    <div class="status">状态</div>
-                                    <div class="type">类型</div>
-                                    <div class="point">分数</div>
-                                    <div class="code">代码</div>
-                                </div>
-                                <div v-for="(record,index) in records" :class="index%2===0?'record one':'record two'">
-                                    <div class="status"><div :class="statusClass(record.returnValue)" style="padding: 2px 7px;border-radius: 8px;color: white;">{{transStatus(record.returnValue)}}</div></div>
-                                    <div class="type">{{transType(record.recordType)}}</div>
-                                    <div class="point">{{ record.recordType===1?'-':record.point }}</div>
-                                    <div class="code"><el-button text type="primary" style="height: 80%;padding: 5px;" @click="codeVal=record.submit">载入代码></el-button></div>
-                                </div>
                             </el-scrollbar>
                         </el-tab-pane>
                     </el-tabs>
@@ -110,12 +74,13 @@
     import { cpp } from '@codemirror/lang-cpp';
     import { java } from '@codemirror/lang-java';
     import { go } from '@codemirror/lang-go';
-    import { ArrowLeftBold, ArrowDownBold, FullScreen, DCaret } from '@element-plus/icons-vue'
-    import { run, getProblemContent, getProblemRecord } from '@/api/workingArea.js'
+    import { ArrowLeftBold, ArrowDownBold, FullScreen } from '@element-plus/icons-vue'
+    import { run, getProblemContent } from '@/api/workingArea.js'
     import { useUserStore } from "@/store/user.js";
     import confetti from 'canvas-confetti'
-    import { getSolutions } from "../../api/solution";
+    import { useSocketStore } from "../store/websocket";
 
+    const socketStore=useSocketStore()
     const activeTab=ref('测试用例')
     const route = useRoute()
     const { p } = route.params;
@@ -132,9 +97,11 @@
     const guessInput=ref('')
     const resultLoading=ref(false)
     const eltabs=ref('info')
-    const recordLoading=ref(false)
-    const records=ref([])
-    const solutions=ref([])
+
+
+    socketStore.$subscribe((mutation,state)=>{
+        console.log(state);   
+    })
     const togetProblemContent=()=>{
         getProblemContent(
         parseInt(p)
@@ -150,17 +117,6 @@
         caseInput.value=response.data.data.inputSample
         guessInput.value=response.data.data.outputSample
     })
-    }
-    const toGetProblemRecord=()=>{
-        getProblemRecord(
-                parseInt(p)
-            ).then((response)=>{
-                console.log(response);
-                records.value=response.data.data
-                recordLoading.value=false
-            }).catch((error)=>{
-                ElMessage.error("网络错误")
-            })
     }
     const store=useUserStore()
     const runCode=()=>{
@@ -178,7 +134,6 @@
             result.value=response.data.data
             activeTab.value="运行结果"
             resultText.value=showResult()
-            toGetProblemRecord()
             })
     }
     const showResult=()=>{
@@ -278,43 +233,6 @@ const transStatus=(r)=>{
     }
     return ''
 }
-const statusClass=(r)=>{
-    const t=eval(r)
-    switch(t[2]){
-        case 0:
-            return 'green'
-        case 4:
-            return 'red'
-        default:
-            return 'orange'     
-    }
-}
-const transType=(t)=>{
-    if (t===1){
-        return '练习'
-    }else{
-        return '竞赛'
-    }
-}
-const last=ref('')
-const tabChange=()=>{
-    if (eltabs.value==='info' && eltabs.value!==last.value){
-        togetProblemContent()
-        last.value='info'
-    }else if(eltabs.value==='record' && eltabs.value!==last.value){
-        last.value='record'
-        recordLoading.value=true
-        toGetProblemRecord()
-    }else{
-        getSolutions(
-            parseInt(p),
-            1
-        ).then((response)=>{
-            console.log(response);
-            solutions.value=response.data.data
-        })
-    }
-}
 const cheer=()=>{
     confetti({
       particleCount: 500,
@@ -339,12 +257,7 @@ const cheer=()=>{
       },
     })
 }
-    const extend=(id)=> {
-        console.log(id);
-        
-        const elem=document.getElementById(id)
-        elem.classList.toggle("active");
-    }
+    togetProblemContent()
 </script>
 
 <style scoped>

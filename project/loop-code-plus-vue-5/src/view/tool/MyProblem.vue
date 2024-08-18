@@ -27,7 +27,7 @@
                                   {{ problem.status==0 ? '私有' : '公开' }}
                                 </div>
                                 <div class="id">{{ problem.problemId }}</div>
-                                <router-link class="name" :to='`/Problem/WorkingArea/${problem.problemName}`'>{{ problem.problemName }}</router-link>
+                                <router-link class="name" :to='`/Problem/WorkingArea/${problem.problemId}`'>{{ problem.problemName }}</router-link>
                                 <div :class="classLevel(problem.difficultyLevel)">{{ showLevel(problem.difficultyLevel) }}</div>
                                 <el-scrollbar class="tag-container">
                                 <div class="tag">
@@ -41,7 +41,7 @@
                                 </el-scrollbar>
                               </div>
                           </div>
-                          <div style="display: flex;width: 100%;justify-content: center;" v-if="problemPageCount>1">
+                          <div style="display: flex;width: 100%;justify-content: center;margin-top: 16px;" v-if="problemPageCount>1">
                               <el-pagination background layout="prev, pager, next" :page-count="problemPageCount" class="pagination" @change="toGetMyProblems()"
                               v-model:current-page="problemCurrentPage"  />
                           </div>
@@ -56,22 +56,22 @@
                             <div class="problem-container">题目</div>
                             </div>
                             <div class="problem-list">
-                            <div v-for="(collection,index) in collectionList" :key="collection.id" :class="index%2 == 0?'problem one':'problem two'">
-                                <div class="edit"><el-button class="deleteButton" :icon="Delete" circle plain type="danger" @click="deleteConfirmList(collection.name,collection.id)"/></div>  
-                                <div class="edit"><router-link :to="'/MyProblem/EditCollection/'+collection.id"><el-button class="editButton" :icon="Edit" circle plain type="info"/></router-link></div>
+                            <div v-for="(collection,index) in collectionList" :key="collection.colId" :class="index%2 == 0?'problem one':'problem two'">
+                                <div class="edit"><el-button class="deleteButton" :icon="Delete" circle plain type="danger" @click="deleteConfirmList(collection.colName,collection.colId)"/></div>  
+                                <div class="edit"><router-link :to="'/MyProblem/EditCollection/'+collection.colId"><el-button class="editButton" :icon="Edit" circle plain type="info"/></router-link></div>
                                 <div class="status" :style="{color:collection.status==0?'#67C23A':'#409EFF'}">
                                   {{ collection.status==0 ? '私有' : '公开' }}
                                 </div>
-                                <div class="id">{{ collection.id }}</div>
-                                <router-link class="name" :to='`/Problem/WorkingArea/${collection.id}`'>{{ collection.name }}</router-link>
+                                <div class="id">{{ collection.colId }}</div>
+                                <router-link class="name" :to='`/Problem/WorkingArea/${collection.colId}`'>{{ collection.colName }}</router-link>
                                 <el-scrollbar class="problem-container">
                                 <div class="problem">
-                                    <span v-for="item in collection.problems" class="tag-item">《{{ item[1] }}》</span>
+                                    <span v-for="item in JSON.parse(collection.problemList)" class="tag-item">《{{ item.problemName }}》</span>
                                 </div>
                                 </el-scrollbar>
                               </div>
                           </div>
-                          <div style="display: flex;width: 100%;justify-content: center;" v-if="collectionPageCount>1">
+                          <div style="display: flex;width: 100%;justify-content: center;margin-top: 16px;" v-if="collectionPageCount>1">
                               <el-pagination background layout="prev, pager, next" :page-count="collectionPageCount" class="pagination" @change="toGetMyCollections()"
                               v-model:current-page="collectionCurrentPage"  />
                           </div>
@@ -90,9 +90,10 @@ import Header from "../../components/Header.vue"
 import { ref } from 'vue'
 import { Edit, Delete, Plus } from '@element-plus/icons-vue'
 import { getMyProblems, deleteMyProblem, getMyCollections, deleteMyCollection } from "../../api/myProblem";
-import { useUserStore } from '@/store/user.js'
-
-const activeName = ref('problem')
+// import { useUserStore } from '@/store/user.js'
+import { useControllerStore } from "@/store/controller";
+const cstore=useControllerStore()
+const activeName = ref(cstore.myProblemTabsActiveName)
 const problemPageCount=ref(1)
 const problemCurrentPage=ref(1)
 const problemLoading=ref(false)
@@ -103,7 +104,7 @@ const collectionCurrentPage=ref(1)
 const collectionLoading=ref(false)
 const collectionList=ref([])
 
-const store=useUserStore()
+// const store=useUserStore()
 const Page=ref('')
 const deleteConfirm=(name,id)=>{
   ElMessageBox.confirm(
@@ -199,8 +200,10 @@ const toGetMyCollections=()=>{
   getMyCollections(
     collectionCurrentPage.value
   ).then((response)=>{
+    console.log(response);
+    
     collectionLoading.value=false
-    collectionList.value=response.data.data.collectionList   
+    collectionList.value=response.data.data
     collectionPageCount.value=Math.ceil(response.data.num/30) 
   })
 }
@@ -248,8 +251,14 @@ const classLevel=(level)=>{
       return 'level notKnow'
   }
 }
-toGetMyProblems()
+
+if(activeName.value==='problem'){
+  toGetMyProblems()
+}else{
+  toGetMyCollections()
+}
 const handleChange = () => {
+  cstore.setMyProblemTabsActiveName(activeName.value)
   if(activeName.value==='problem'){
     toGetMyProblems()
   }else{

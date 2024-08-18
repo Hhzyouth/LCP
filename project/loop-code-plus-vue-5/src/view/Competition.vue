@@ -261,8 +261,8 @@
         <div class="dialog-footer">
             <el-button @click='singleSuccess'>成功</el-button>
             <el-button @click='singleFail'>失败</el-button>
-            <el-button @click="singleLoading = false;singleText='开始匹配'" v-show="singleLoading">取消</el-button>
-            <el-button :type="singleType" @click="singleLoading = true;singleText='匹配中';singleType='primary'" :loading="singleLoading" :disabled='singleDisabled'>
+            <el-button @click="singleLoading = false;singleText='开始匹配';close()" v-show="singleLoading">取消</el-button>
+            <el-button :type="singleType" @click="singleLoading = true;singleText='匹配中';singleType='primary';toSingleMatch()" :loading="singleLoading" :disabled='singleDisabled'>
                 <template #loading>
                     <div class="custom-loading">
                         <svg class="circular" viewBox="-10, -10, 50, 50">
@@ -293,7 +293,10 @@
     import Header from "../components/Header.vue"
     import { useUserStore } from "../store/user";
     import { ref } from 'vue'
+    import { createWebSocket, close, add } from "../api/competition";
+    import { useSocketStore } from "../store/websocket";
 
+    const socketStore=useSocketStore()
     const store = useUserStore()
     const Page=ref('3')
     const rankingList = ref(
@@ -311,10 +314,10 @@
     ]
     )
     const singleMatchJoin=ref(false)
-    const ban1 = ref('')
-    const ban2 = ref('')
-    const ban3 = ref('')
-    const select1 = ref('')
+    const ban1 = ref("")
+    const ban2 = ref("")
+    const ban3 = ref("")
+    const select1 = ref("")
     const vipBan = ref(store.role=='VIP')
     const singleLoading = ref(false)
     const singleType = ref('primary')
@@ -356,6 +359,29 @@
         ]
     },
     ]
+    const toSingleMatch=()=>{
+        createWebSocket()
+        
+    }
+    socketStore.$subscribe((mutation,state)=>{
+        console.log(mutation,state);
+        switch(state.message){
+            case '0':
+                const temp={
+                    code:1,
+                    userId:store.userId,
+                    ban1:ban1.value,
+                    ban2:ban2.value,
+                    ban3:ban3.value,
+                    select1:select1.value
+                }
+                add(JSON.stringify(temp)) 
+                break
+            case '1':
+                router.push()
+        }
+        
+    })
 </script>
 <script>
     export default {

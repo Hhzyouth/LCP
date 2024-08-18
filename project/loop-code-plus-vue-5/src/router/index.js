@@ -54,6 +54,10 @@ const routes = [
     component: ()=>import("@/view/tool/EditCollection.vue")
   },
   { 
+    path: '/MyProblem/EditSolution/:esp/:es',
+    component: ()=>import("@/view/tool/EditSolution.vue")
+  },
+  { 
     path: '/MySolution',
     component: ()=>import("@/view/tool/MySolution.vue")
   },

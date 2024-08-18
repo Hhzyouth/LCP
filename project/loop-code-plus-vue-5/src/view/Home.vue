@@ -163,7 +163,7 @@ export default {
                             </div>
                             <div class="label-content">
                                 <div class="race-card">
-                                    <div v-if="store.token!==''" class="progress">
+                                    <div v-if="store.userId!==0" class="progress">
                                         <el-progress type="dashboard" :percentage="rank/10" :width="80" :height="80" define-back-color="#bebebe" :stroke-width="8">
                                             <template #default="{ percentage }">
                                                 <span class="percentage-value">{{ percentage*10 }}</span>
@@ -313,7 +313,7 @@ export default {
                                             </span>
                                         </template>
                                     </el-calendar>
-                                    <section v-if="store.token!==''" class="extra">
+                                    <section v-if="store.userId!==0" class="extra">
                                         <div class="items">
                                             <img src="@/assets/icon/MaterialSymbolsTollOutlineRounded.svg" alt="" class="svgs">
                                             <p class="svg-description">积分</p>
