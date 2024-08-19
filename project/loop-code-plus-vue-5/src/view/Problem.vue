@@ -55,7 +55,7 @@
               </div>
             </div>
             <div class="main-rightside">
-              <el-collapse v-model="activeNames" @change="handleChange">
+              <el-collapse v-model="activeNames">
                 <el-collapse-item title="数据结构" name="1">
                   <el-tag v-for="(item,index) in dataStructureList" round class="dataStructureList" :key="index" :type="dataStructureCSSList[index].type" :effect="dataStructureCSSList[index].effect" @click="setDataStructureCSS(index)">
                     {{ item }}
@@ -99,10 +99,10 @@ const getProblem=()=>{
         Array.from(activeCollectionList),
         store.userId
     ).then(function (response) {
-        // console.log(response)
+        console.log(response)
         loading.value=false
         problemList.value=response.data.data.problemList
-        problemDone.value=new Set(response.data.data.num)           
+        problemDone.value=new Set(response.data.data.problemNum)           
         PageCount.value=Math.ceil(response.data.num/30)    
          
     })
@@ -116,9 +116,6 @@ const getProblem=()=>{
 const activeNames = ref([])
 const currentPage=ref(1)
 const PageCount=ref(1)
-const handleChange = (val) => {
-  console.log(val)
-}
 const Page=ref('5')
 const problemList=ref([])
 const dataStructureList=["哈希表","树","二叉树","堆","栈","图","链表","集合","队列","双向链表","最小生成树","并查集","字典树","线段树","树状数组","后缀数组","数组","字符串","矩阵"];

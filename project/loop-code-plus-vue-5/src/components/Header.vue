@@ -167,6 +167,8 @@
     const exit=()=>{
         console.log("=====Exit=====");
         store.setToken('')
+        store.clearInformation()
+        router.go(0)
     }
     
     if (store.userId===0 && store.token!=='') {

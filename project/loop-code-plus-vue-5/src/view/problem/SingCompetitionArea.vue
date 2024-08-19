@@ -2,7 +2,11 @@
     <div class="Header-Main-container" @keydown.9.native.prevent="()=>{}">
         <el-container>
             <el-header class="elheader">
-                <Header :page="Page"/>
+                <el-icon style="margin-right: 8px;"><Clock /></el-icon>
+                <div>
+                    {{ getTime() }}
+                </div>
+                <el-button type="danger" plain round style="position: absolute;left: 32px;" @click="toExit()">退出</el-button>
             </el-header>
             <el-main class="elmain">
                 <div :class="leftClass">
@@ -66,9 +70,8 @@
 </template>
 
 <script setup>
-    import { reactive, ref } from "vue";
-    import Header from "../../components/Header.vue"
-    import { useRoute } from 'vue-router';
+    import { reactive, ref, onMounted, h } from "vue";
+    import { useRoute, useRouter } from 'vue-router';
     import CodeMirror from 'vue-codemirror6'
     import { python } from '@codemirror/lang-python';
     import { cpp } from '@codemirror/lang-cpp';
@@ -78,13 +81,17 @@
     import { run, getProblemContent } from '@/api/workingArea.js'
     import { useUserStore } from "@/store/user.js";
     import confetti from 'canvas-confetti'
-    import { useSocketStore } from "../store/websocket";
+    import { useSocketStore } from "@/store/websocket";
+    import { add } from "../../api/competition";
+    import { useCompetitionStore } from "../../store/competition";
+    import { getBaseInfo } from '@/api/header'
 
     const socketStore=useSocketStore()
+    const competitionStore=useCompetitionStore()
+    const router=useRouter()
     const activeTab=ref('测试用例')
     const route = useRoute()
-    const { p } = route.params;
-    const Page=ref('5')
+    const { scp } = route.params;
     const runLoading=ref(false)
     const resultText=ref('')
     const content=ref('')
@@ -97,14 +104,16 @@
     const guessInput=ref('')
     const resultLoading=ref(false)
     const eltabs=ref('info')
+    const time=ref(0)
+    const isFinished=ref(competitionStore.isFinished)
 
-
+    
     socketStore.$subscribe((mutation,state)=>{
         console.log(state);   
     })
     const togetProblemContent=()=>{
         getProblemContent(
-        parseInt(p)
+        parseInt(scp)
     ).then((response)=>{
         console.log(response);
         try{
@@ -123,20 +132,52 @@
         runLoading.value=true
         resultLoading.value=true
         resultText.value=''
-        run(
-            codeVal.value,
-            store.userId,
-            parseInt(p)
-        ).then(function (response) {
-            // console.log(response)
-            runLoading.value=false
-            resultLoading.value=false
-            result.value=response.data.data
-            activeTab.value="运行结果"
-            resultText.value=showResult()
+        if (isFinished.value){
+            run(
+                codeVal.value,
+                store.userId,
+                parseInt(scp)
+            ).then(function (response) {
+                // console.log(response)
+                runLoading.value=false
+                resultLoading.value=false
+                result.value=response.data.data
+                activeTab.value="运行结果"
+                resultText.value=showResultFinished()
             })
+        }else{
+            console.log("竞赛提交");
+            
+           add(
+            JSON.stringify({
+                code:2,
+                userId:store.userId,
+                roomId:competitionStore.roomId,
+                codeVal : codeVal.value,
+                token:store.token,
+                problemId:parseInt(scp)
+                })
+            ) 
+        }
+        
     }
     const showResult=()=>{
+        const temp=result.value
+        // const temp=eval('('+result.value+')')
+        if (temp[3]===100){
+            startCheer()
+            return '所有用例已通过'
+        }else{
+            return `分数
+${temp[3]}
+错误信息
+${temp[0].split('$').join('\n')}
+控制台输出
+${temp[2]}`
+        }
+        
+    }
+    const showResultFinished=()=>{
         const temp=eval(result.value)
         // const temp=eval('('+result.value+')')
         if (temp[2]===0){
@@ -151,6 +192,22 @@ ${temp[3]}`
         }
         
     }
+    const transStatus=(r)=>{
+    const t=eval(r)
+    switch(t[2]){
+        case 0:
+            return '正确'
+        case 1:
+            return '超出时间限制'
+        case 2:
+            return '运行错误'
+        case 3:
+            return '编译错误'
+        case 4:
+            return '答案错误'       
+    }
+    return ''
+}
     
     const theme = {
         
@@ -217,22 +274,6 @@ ${temp[3]}`
         label: 'Go',
     },
     ]
-const transStatus=(r)=>{
-    const t=eval(r)
-    switch(t[2]){
-        case 0:
-            return '正确'
-        case 1:
-            return '超出时间限制'
-        case 2:
-            return '运行错误'
-        case 3:
-            return '编译错误'
-        case 4:
-            return '答案错误'       
-    }
-    return ''
-}
 const cheer=()=>{
     confetti({
       particleCount: 500,
@@ -244,6 +285,7 @@ const cheer=()=>{
       origin: {
         x: 0
       },
+      colors:['#bd2332']
     });
     confetti({
       particleCount: 500,
@@ -255,14 +297,126 @@ const cheer=()=>{
       origin: {
         x: 1
       },
+      colors:['#bd2332']
     })
 }
+function startCheer() {
+  var end = Date.now() + (5 * 1000);
+
+  (function frame() {
+    confetti({
+      particleCount: 5,
+      angle: 60,
+      spread: 90,
+      startVelocity: 70,
+      ticks:300,
+      gravity:1.2,
+      origin: {
+        x: 0
+      },
+    });
+    confetti({
+      particleCount: 5,
+      angle: 120,
+      spread: 90,
+      ticks:300,
+      gravity:1.2,
+      startVelocity: 70,
+      origin: {
+        x: 1
+      },
+    })
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  }());
+}
+const toExit=()=>{
+    ElMessageBox.confirm(
+    '您确定要退出吗？（退出后将无法返回）',
+    '警告',
+    {
+      confirmButtonText: '退出',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+        router.go(-1)
+    })
+}
+    const getTime=()=>{
+        let t=time.value
+        let hour=Math.floor(t/3600)
+        t=t%3600
+        let minute=Math.floor(t/60)
+        let second=t%60
+        return `${hour} : ${minute} : ${second}`
+    }
     togetProblemContent()
+
+    socketStore.$subscribe((mutation,state)=>{
+        console.log(mutation,state);
+        let m=JSON.parse(state.message)
+        switch(m.code){
+            case 2:
+                if (m.point==100){
+                    ElNotification({
+                    title: '注意',
+                    message: h('i', { style: 'color: teal' }, `对手已提交，取得了${m.point}分,比赛已经结束，但你仍然可以提交，提交将被视为普通的练习`),
+                    type: 'warning',
+                    duration:0
+                    })
+                    competitionStore.setis(true)
+                }else{
+                    ElNotification({
+                    title: '注意',
+                    message: h('i', { style: 'color: teal' }, `对手已提交，取得了${m.point}分`),
+                    type: 'warning',
+                    duration:6000
+                    })
+                }
+                cheer()
+                break
+            case 3:
+                console.log(m.result);
+                console.log("收到结果")
+                runLoading.value=false
+                resultLoading.value=false
+                result.value=m.result
+                activeTab.value="运行结果"
+                resultText.value=showResult()
+                break
+            case 4:
+                ElMessage.error("token失效，请重新登录")
+        }
+        
+    })
+    if (store.userId===0 && store.token!=='') {
+       getBaseInfo()
+       .then((response)=>{
+            store.setInformation(response.data.data)
+       }) 
+    }
+
+
+    onMounted(()=>{
+        setInterval(() => {
+            time.value++
+        }, 1000);
+    })
+    
 </script>
 
 <style scoped>
 .elheader{
+    position: relative;
     padding: 0;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .elmain{
     overflow: hidden;

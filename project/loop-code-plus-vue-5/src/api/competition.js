@@ -7,7 +7,7 @@ export const createWebSocket=()=>{
     socket=createSocket()
 
     socket.addEventListener("open", function (event) {
-        socket.send("connect");
+        
     });
       
     socket.addEventListener("message", function (event) {

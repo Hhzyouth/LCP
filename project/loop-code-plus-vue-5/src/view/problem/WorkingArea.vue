@@ -40,7 +40,7 @@
                                     <div class="point">分数</div>
                                     <div class="code">代码</div>
                                 </div>
-                                <div v-for="(record,index) in records" :class="index%2===0?'record one':'record two'">
+                                <div v-for="(record,index) in records.slice().reverse()" :class="index%2===0?'record one':'record two'">
                                     <div class="status"><div :class="statusClass(record.returnValue)" style="padding: 2px 7px;border-radius: 8px;color: white;">{{transStatus(record.returnValue)}}</div></div>
                                     <div class="type">{{transType(record.recordType)}}</div>
                                     <div class="point">{{ record.recordType===1?'-':record.point }}</div>
@@ -306,13 +306,17 @@ const tabChange=()=>{
         recordLoading.value=true
         toGetProblemRecord()
     }else{
-        getSolutions(
-            parseInt(p),
-            1
-        ).then((response)=>{
-            console.log(response);
-            solutions.value=response.data.data
-        })
+        if(eltabs.value!==last.value){
+            last.value='solution'
+            getSolutions(
+                parseInt(p),
+                1
+            ).then((response)=>{
+                console.log(response);
+                solutions.value=response.data.data
+            })
+        }
+        
     }
 }
 const cheer=()=>{

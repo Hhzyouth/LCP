@@ -42,6 +42,10 @@ const routes = [
     component: ()=>import("@/view/problem/WorkingArea.vue")
   },
   { 
+    path: '/Problem/SingCompetitionArea/:scp',
+    component: ()=>import("@/view/problem/SingCompetitionArea.vue")
+  },
+  { 
     path: '/MyProblem',
     component: ()=>import("@/view/tool/MyProblem.vue")
   },

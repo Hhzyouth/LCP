@@ -27,6 +27,13 @@ export const useUserStore = defineStore('user', {
 			this.title=data.title,
 			this.role=data.role,
 			this.avatar=data.avatar
+		},
+		clearInformation(){
+			this.userId=0,
+			this.nickname='',
+			this.title='',
+			this.role='',
+			this.avatar=''
 		}
 	}
 });
