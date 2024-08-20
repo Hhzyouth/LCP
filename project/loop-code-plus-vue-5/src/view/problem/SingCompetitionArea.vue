@@ -2,50 +2,18 @@
     <div class="Header-Main-container" @keydown.9.native.prevent="()=>{}">
         <el-container>
             <el-header class="elheader">
-                <Header :page="Page"/>
+                <el-icon style="margin-right: 8px;"><Clock /></el-icon>
+                <div>
+                    {{ getTime() }}
+                </div>
+                <el-button type="danger" plain round style="position: absolute;left: 32px;" @click="toExit()">退出</el-button>
             </el-header>
             <el-main class="elmain">
                 <div :class="leftClass">
-                    <el-tabs type="card" class="eltabs" v-model="eltabs" :tab-change="tabChange()">
+                    <el-tabs type="card" class="eltabs" v-model="eltabs">
                         <el-tab-pane label="题目信息" class="pane" name="info">
                             <el-scrollbar>
                                 <div v-html="content" style="overflow-y: auto; height: 100%;"></div>
-                            </el-scrollbar>
-                        </el-tab-pane>
-                        <el-tab-pane label="题解" class="pane solutions" name="solution">
-                            <div style="width: 100%;margin: 6px;"><router-link :to='"/MyProblem/EditSolution/"+p+"/0"' target="_blank"><el-button type="success" plain round>+ 发布题解</el-button></router-link></div>
-                            <el-scrollbar>
-                                <div class="solution-card" v-for="s in solutions" :key="s.solutionId" :id="s.solutionId">
-                                    <div class="card-header">
-                                        <div class="solution-name">{{ s.solutionName }}</div>
-                                        <div style="width: 30%;">
-                                            <el-tag v-for="tag in JSON.parse(s.tag)" type="success" class="tag-item" round>{{ tag }}</el-tag>
-                                        </div>
-                                    </div>
-                                    <div class="card-content">
-                                        <el-scrollbar  class="solution-html">
-                                            <div v-html="s.content" style="overflow-y: auto; height: 100%;"></div>     
-                                        </el-scrollbar>
-                                    </div>
-                                    <el-button @click="extend(s.solutionId)" :icon="DCaret" circle class="fullButton" style="position: absolute;right: 8px;bottom: 8px;"/>
-                                </div>
-                                <div style="height: 30px;"></div>
-                            </el-scrollbar>
-                        </el-tab-pane>
-                        <el-tab-pane label="提交记录" class="pane" name="record">
-                            <el-scrollbar>
-                                <div class="main-header">
-                                    <div class="status">状态</div>
-                                    <div class="type">类型</div>
-                                    <div class="point">分数</div>
-                                    <div class="code">代码</div>
-                                </div>
-                                <div v-for="(record,index) in records.slice().reverse()" :class="index%2===0?'record one':'record two'">
-                                    <div class="status"><div :class="statusClass(record.returnValue)" style="padding: 2px 7px;border-radius: 8px;color: white;">{{transStatus(record.returnValue)}}</div></div>
-                                    <div class="type">{{transType(record.recordType)}}</div>
-                                    <div class="point">{{ record.recordType===1?'-':record.point }}</div>
-                                    <div class="code"><el-button text type="primary" style="height: 80%;padding: 5px;" @click="codeVal=record.submit">载入代码></el-button></div>
-                                </div>
                             </el-scrollbar>
                         </el-tab-pane>
                     </el-tabs>
@@ -102,24 +70,28 @@
 </template>
 
 <script setup>
-    import { reactive, ref } from "vue";
-    import Header from "../../components/Header.vue"
-    import { useRoute } from 'vue-router';
+    import { reactive, ref, onMounted, h } from "vue";
+    import { useRoute, useRouter } from 'vue-router';
     import CodeMirror from 'vue-codemirror6'
     import { python } from '@codemirror/lang-python';
     import { cpp } from '@codemirror/lang-cpp';
     import { java } from '@codemirror/lang-java';
     import { go } from '@codemirror/lang-go';
-    import { ArrowLeftBold, ArrowDownBold, FullScreen, DCaret } from '@element-plus/icons-vue'
-    import { run, getProblemContent, getProblemRecord } from '@/api/workingArea.js'
+    import { ArrowLeftBold, ArrowDownBold, FullScreen } from '@element-plus/icons-vue'
+    import { run, getProblemContent } from '@/api/workingArea.js'
     import { useUserStore } from "@/store/user.js";
     import confetti from 'canvas-confetti'
-    import { getSolutions } from "../../api/solution";
+    import { useSocketStore } from "@/store/websocket";
+    import { add } from "../../api/competition";
+    import { useCompetitionStore } from "../../store/competition";
+    import { getBaseInfo } from '@/api/header'
 
+    const socketStore=useSocketStore()
+    const competitionStore=useCompetitionStore()
+    const router=useRouter()
     const activeTab=ref('测试用例')
     const route = useRoute()
-    const { p } = route.params;
-    const Page=ref('5')
+    const { scp } = route.params;
     const runLoading=ref(false)
     const resultText=ref('')
     const content=ref('')
@@ -132,12 +104,16 @@
     const guessInput=ref('')
     const resultLoading=ref(false)
     const eltabs=ref('info')
-    const recordLoading=ref(false)
-    const records=ref([])
-    const solutions=ref([])
+    const time=ref(0)
+    const isFinished=ref(competitionStore.isFinished)
+
+    
+    socketStore.$subscribe((mutation,state)=>{
+        console.log(state);   
+    })
     const togetProblemContent=()=>{
         getProblemContent(
-        parseInt(p)
+        parseInt(scp)
     ).then((response)=>{
         console.log(response);
         try{
@@ -151,39 +127,57 @@
         guessInput.value=response.data.data.outputSample
     })
     }
-    const toGetProblemRecord=()=>{
-        getProblemRecord(
-                parseInt(p)
-            ).then((response)=>{
-                console.log(response);
-                records.value=response.data.data
-                recordLoading.value=false
-            }).catch((error)=>{
-                ElMessage.error("网络错误")
-            })
-    }
     const store=useUserStore()
     const runCode=()=>{
         runLoading.value=true
         resultLoading.value=true
         resultText.value=''
-        run(
-            codeVal.value,
-            store.userId,
-            parseInt(p)
-        ).then(function (response) {
-            // console.log(response)
-            runLoading.value=false
-            resultLoading.value=false
-            result.value=response.data.data
-            activeTab.value="运行结果"
-            resultText.value=showResult()
-            toGetProblemRecord()
+        if (isFinished.value){
+            run(
+                codeVal.value,
+                store.userId,
+                parseInt(scp)
+            ).then(function (response) {
+                // console.log(response)
+                runLoading.value=false
+                resultLoading.value=false
+                result.value=response.data.data
+                activeTab.value="运行结果"
+                resultText.value=showResultFinished()
             })
-    }
-    const showResult=()=>{ 
-        console.log(result.value);
+        }else{
+            console.log("竞赛提交");
+            
+           add(
+            JSON.stringify({
+                code:2,
+                userId:store.userId,
+                roomId:competitionStore.roomId,
+                codeVal : codeVal.value,
+                token:store.token,
+                problemId:parseInt(scp)
+                })
+            ) 
+        }
         
+    }
+    const showResult=()=>{
+        const temp=result.value
+        // const temp=eval('('+result.value+')')
+        if (temp[3]===100){
+            startCheer()
+            return '所有用例已通过'
+        }else{
+            return `分数
+${temp[3]}
+错误信息
+${temp[0].split('$').join('\n')}
+控制台输出
+${temp[2]}`
+        }
+        
+    }
+    const showResultFinished=()=>{
         const temp=eval(result.value)
         // const temp=eval('('+result.value+')')
         if (temp[2]===0){
@@ -198,6 +192,22 @@ ${temp[3]}`
         }
         
     }
+    const transStatus=(r)=>{
+    const t=eval(r)
+    switch(t[2]){
+        case 0:
+            return '正确'
+        case 1:
+            return '超出时间限制'
+        case 2:
+            return '运行错误'
+        case 3:
+            return '编译错误'
+        case 4:
+            return '答案错误'       
+    }
+    return ''
+}
     
     const theme = {
         
@@ -264,65 +274,6 @@ ${temp[3]}`
         label: 'Go',
     },
     ]
-const transStatus=(r)=>{
-    const t=eval(r)
-    switch(t[2]){
-        case 0:
-            return '正确'
-        case 1:
-            return '超出时间限制'
-        case 2:
-            return '运行错误'
-        case 3:
-            return '编译错误'
-        case 4:
-            return '答案错误'       
-    }
-    return ''
-}
-const statusClass=(r)=>{
-    console.log(r);
-    
-    const t=eval(r)
-    switch(t[2]){
-        case 0:
-            return 'green'
-        case 4:
-            return 'red'
-        default:
-            return 'orange'     
-    }
-}
-const transType=(t)=>{
-    if (t===1){
-        return '练习'
-    }else{
-        return '竞赛'
-    }
-}
-const last=ref('')
-const tabChange=()=>{
-    if (eltabs.value==='info' && eltabs.value!==last.value){
-        togetProblemContent()
-        last.value='info'
-    }else if(eltabs.value==='record' && eltabs.value!==last.value){
-        last.value='record'
-        recordLoading.value=true
-        toGetProblemRecord()
-    }else{
-        if(eltabs.value!==last.value){
-            last.value='solution'
-            getSolutions(
-                parseInt(p),
-                1
-            ).then((response)=>{
-                console.log(response);
-                solutions.value=response.data.data
-            })
-        }
-        
-    }
-}
 const cheer=()=>{
     confetti({
       particleCount: 500,
@@ -334,6 +285,7 @@ const cheer=()=>{
       origin: {
         x: 0
       },
+      colors:['#bd2332']
     });
     confetti({
       particleCount: 500,
@@ -345,19 +297,126 @@ const cheer=()=>{
       origin: {
         x: 1
       },
+      colors:['#bd2332']
     })
 }
-    const extend=(id)=> {
-        console.log(id);
-        
-        const elem=document.getElementById(id)
-        elem.classList.toggle("active");
+function startCheer() {
+  var end = Date.now() + (5 * 1000);
+
+  (function frame() {
+    confetti({
+      particleCount: 5,
+      angle: 60,
+      spread: 90,
+      startVelocity: 70,
+      ticks:300,
+      gravity:1.2,
+      origin: {
+        x: 0
+      },
+    });
+    confetti({
+      particleCount: 5,
+      angle: 120,
+      spread: 90,
+      ticks:300,
+      gravity:1.2,
+      startVelocity: 70,
+      origin: {
+        x: 1
+      },
+    })
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
     }
+  }());
+}
+const toExit=()=>{
+    ElMessageBox.confirm(
+    '您确定要退出吗？（退出后将无法返回）',
+    '警告',
+    {
+      confirmButtonText: '退出',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+        router.go(-1)
+    })
+}
+    const getTime=()=>{
+        let t=time.value
+        let hour=Math.floor(t/3600)
+        t=t%3600
+        let minute=Math.floor(t/60)
+        let second=t%60
+        return `${hour} : ${minute} : ${second}`
+    }
+    togetProblemContent()
+
+    socketStore.$subscribe((mutation,state)=>{
+        console.log(mutation,state);
+        let m=JSON.parse(state.message)
+        switch(m.code){
+            case 2:
+                if (m.point==100){
+                    ElNotification({
+                    title: '注意',
+                    message: h('i', { style: 'color: teal' }, `对手已提交，取得了${m.point}分,比赛已经结束，但你仍然可以提交，提交将被视为普通的练习`),
+                    type: 'warning',
+                    duration:0
+                    })
+                    competitionStore.setis(true)
+                }else{
+                    ElNotification({
+                    title: '注意',
+                    message: h('i', { style: 'color: teal' }, `对手已提交，取得了${m.point}分`),
+                    type: 'warning',
+                    duration:6000
+                    })
+                }
+                cheer()
+                break
+            case 3:
+                console.log(m.result);
+                console.log("收到结果")
+                runLoading.value=false
+                resultLoading.value=false
+                result.value=m.result
+                activeTab.value="运行结果"
+                resultText.value=showResult()
+                break
+            case 4:
+                ElMessage.error("token失效，请重新登录")
+        }
+        
+    })
+    if (store.userId===0 && store.token!=='') {
+       getBaseInfo()
+       .then((response)=>{
+            store.setInformation(response.data.data)
+       }) 
+    }
+
+
+    onMounted(()=>{
+        setInterval(() => {
+            time.value++
+        }, 1000);
+    })
+    
 </script>
 
 <style scoped>
 .elheader{
+    position: relative;
     padding: 0;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .elmain{
     overflow: hidden;

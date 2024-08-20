@@ -2,7 +2,6 @@
     import Header from "../components/Header.vue"
     import { useUserStore } from '@/store/user.js'
     import { ref } from 'vue'
-    const coin=ref(0)
     const finishedTitle=ref(0)
     const rank=ref(600)
     const onlineNumber=ref(0)
@@ -13,12 +12,12 @@
 <script>
 const getWindowInfo = () => {
     if (window.innerWidth<=1041){
-                const element = document.querySelector('.affix');
-                element.style.display = 'none';
-            }else{
-                const element = document.querySelector('.affix');
-                element.style.display = '';
-            }
+        const element = document.querySelector('.affix');
+        element.style.display = 'none';
+    }else{
+        const element = document.querySelector('.affix');
+        element.style.display = '';
+    }
 };
 
 
@@ -163,10 +162,10 @@ export default {
                             </div>
                             <div class="label-content">
                                 <div class="race-card">
-                                    <div v-if="store.token!==''" class="progress">
-                                        <el-progress type="dashboard" :percentage="rank/10" :width="80" :height="80" define-back-color="#bebebe" stroke-width="8">
+                                    <div v-if="store.userId!==0" class="progress">
+                                        <el-progress type="dashboard" :percentage="store.sinPoint/200" :width="80" :height="80" define-back-color="#bebebe" :stroke-width="8">
                                             <template #default="{ percentage }">
-                                                <span class="percentage-value">{{ percentage*10 }}</span>
+                                                <span class="percentage-value">{{ store.sinPoint }}</span>
                                                 <span class="percentage-label">排位分</span>
                                             </template>
                                         </el-progress>
@@ -175,6 +174,25 @@ export default {
                                     <div class="race-detail">
                                         <p style="margin: 0;font-size: 1.2rem;">
                                             单人匹配
+                                        </p>
+                                        <span style="font-size: 0.8rem;">
+                                            在线人数: {{ onlineNumber }}
+                                        </span>
+                                    </div>                         
+                                </div>
+                                <div class="race-card">
+                                    <div v-if="store.userId!==0" class="progress">
+                                        <el-progress type="dashboard" :percentage="store.mulPoint/200" :width="80" :height="80" define-back-color="#bebebe" :stroke-width="8" status="success">
+                                            <template #default="{ percentage }">
+                                                <span class="percentage-value">{{ store.mulPoint }}</span>
+                                                <span class="percentage-label">排位分</span>
+                                            </template>
+                                        </el-progress>
+                                    </div>
+                                    <img v-else src="@/assets/icon/MaterialSymbolsMilitaryTechOutlineRounded.svg   " alt="">
+                                    <div class="race-detail">
+                                        <p style="margin: 0;font-size: 1.2rem;">
+                                            多人匹配
                                         </p>
                                         <span style="font-size: 0.8rem;">
                                             在线人数: {{ onlineNumber }}
@@ -313,21 +331,21 @@ export default {
                                             </span>
                                         </template>
                                     </el-calendar>
-                                    <section v-if="store.token!==''" class="extra">
+                                    <section v-if="store.userId!==0" class="extra">
                                         <div class="items">
                                             <img src="@/assets/icon/MaterialSymbolsTollOutlineRounded.svg" alt="" class="svgs">
                                             <p class="svg-description">积分</p>
-                                            <p class="svg-num" >{{ coin }}</p>
-                                        </div>
-                                        <div class="items">
-                                            <img src="@/assets/icon/MaterialSymbolsContractEditRounded.svg" alt="" class="svgs">
-                                            <p class="svg-description">已完成题数</p>
-                                            <p class="svg-num">{{ finishedTitle }}</p>
+                                            <p class="svg-num" >{{ store.point }}</p>
                                         </div>
                                         <div class="items">
                                             <img src="@/assets/icon/MaterialSymbolsBarChartRounded.svg" alt="" class="svgs">
-                                            <p class="svg-description">排位分</p>
-                                            <p class="svg-num">{{ rank }}</p>
+                                            <p class="svg-description">多排分数</p>
+                                            <p class="svg-num">{{ store.mulPoint }}</p>
+                                        </div>
+                                        <div class="items">
+                                            <img src="@/assets/icon/MaterialSymbolsBarChartRounded.svg" alt="" class="svgs">
+                                            <p class="svg-description">单排分数</p>
+                                            <p class="svg-num">{{ store.sinPoint }}</p>
                                         </div>
                                     </section>
                                     <section v-else class="extra-nologin">
@@ -461,12 +479,14 @@ export default {
     .percentage-value {
         display: block;
         margin-top: 3px;
-        font-size: 24px;
+        font-size: 20px;
+        color: #606266;
     }
     .percentage-label {
         display: block;
         margin-top: 5px;
         font-size: 12px;
+        color: #606266;
     }
     .race-detail{
         display: flex;

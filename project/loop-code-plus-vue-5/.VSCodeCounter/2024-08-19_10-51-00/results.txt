@@ -1,0 +1,113 @@
+Date : 2024-08-19 10:51:00
+Directory : d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src
+Total : 69 files,  9340 codes, 50 comments, 332 blanks, all 9722 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| vue        |         37 |      8,748 |          2 |        284 |      9,034 |
+| JavaScript |         17 |        500 |         41 |         39 |        580 |
+| CSS        |          1 |         78 |          7 |          9 |         94 |
+| XML        |         14 |         14 |          0 |          0 |         14 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                                             | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                                                |         69 |      9,340 |         50 |        332 |      9,722 |
+| . (Files)                                                                                                                                        |          3 |        102 |         12 |         18 |        132 |
+| api                                                                                                                                              |          9 |        204 |         19 |         18 |        241 |
+| assets                                                                                                                                           |         14 |         14 |          0 |          0 |         14 |
+| assets\icon                                                                                                                                      |         14 |         14 |          0 |          0 |         14 |
+| components                                                                                                                                       |          1 |        374 |          0 |          7 |        381 |
+| https                                                                                                                                            |          3 |         66 |         10 |          7 |         83 |
+| router                                                                                                                                           |          1 |        149 |          1 |          5 |        155 |
+| store                                                                                                                                            |          3 |         65 |          6 |          4 |         75 |
+| view                                                                                                                                             |         35 |      8,366 |          2 |        273 |      8,641 |
+| view (Files)                                                                                                                                     |          7 |      2,755 |          2 |         71 |      2,828 |
+| view\Course                                                                                                                                      |          1 |        221 |          0 |          4 |        225 |
+| view\Library                                                                                                                                     |         16 |        987 |          0 |         63 |      1,050 |
+| view\Library\python                                                                                                                              |         16 |        987 |          0 |         63 |      1,050 |
+| view\Library\python (Files)                                                                                                                      |         15 |        256 |          0 |         57 |        313 |
+| view\Library\python\install                                                                                                                      |          1 |        731 |          0 |          6 |        737 |
+| view\problem                                                                                                                                     |          2 |      1,129 |          0 |         25 |      1,154 |
+| view\tool                                                                                                                                        |          9 |      3,274 |          0 |        110 |      3,384 |
++--------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                                                                         | language   | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\App.vue                                                   | vue        |          8 |          0 |          4 |         12 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\api\competition.js                                        | JavaScript |         25 |          0 |          4 |         29 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\api\header.js                                             | JavaScript |          7 |          1 |          1 |          9 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\api\home.js                                               | JavaScript |          0 |          0 |          1 |          1 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\api\myProblem.js                                          | JavaScript |         75 |          8 |          1 |         84 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\api\problem.js                                            | JavaScript |         14 |          1 |          4 |         19 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\api\solution.js                                           | JavaScript |         30 |          3 |          3 |         36 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\api\store.js                                              | JavaScript |         10 |          1 |          1 |         12 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\api\user.js                                               | JavaScript |         15 |          2 |          2 |         19 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\api\workingArea.js                                        | JavaScript |         28 |          3 |          1 |         32 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\assets\icon\MaterialSymbolsBackpackOutlineRounded.svg     | XML        |          1 |          0 |          0 |          1 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\assets\icon\MaterialSymbolsBarChartRounded.svg            | XML        |          1 |          0 |          0 |          1 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\assets\icon\MaterialSymbolsClarifyOutlineRounded.svg      | XML        |          1 |          0 |          0 |          1 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\assets\icon\MaterialSymbolsContractEditRounded.svg        | XML        |          1 |          0 |          0 |          1 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\assets\icon\MaterialSymbolsExitToAppRounded.svg           | XML        |          1 |          0 |          0 |          1 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\assets\icon\MaterialSymbolsInfoOutlineRounded.svg         | XML        |          1 |          0 |          0 |          1 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\assets\icon\MaterialSymbolsMarkChatReadOutlineRounded.svg | XML        |          1 |          0 |          0 |          1 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\assets\icon\MaterialSymbolsMarkdownCopyOutlineRounded.svg | XML        |          1 |          0 |          0 |          1 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\assets\icon\MaterialSymbolsMilitaryTechOutlineRounded.svg | XML        |          1 |          0 |          0 |          1 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\assets\icon\MaterialSymbolsRewardedAdsOutlineRounded.svg  | XML        |          1 |          0 |          0 |          1 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\assets\icon\MaterialSymbolsTerminalRounded.svg            | XML        |          1 |          0 |          0 |          1 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\assets\icon\MaterialSymbolsTollOutlineRounded.svg         | XML        |          1 |          0 |          0 |          1 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\assets\icon\MaterialSymbolsTrophyOutline.svg              | XML        |          1 |          0 |          0 |          1 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\assets\icon\MaterialSymbolsVerifiedOutline.svg            | XML        |          1 |          0 |          0 |          1 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\components\Header.vue                                     | vue        |        374 |          0 |          7 |        381 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\https\request.js                                          | JavaScript |          6 |          0 |          3 |          9 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\https\requestWI.js                                        | JavaScript |         59 |         10 |          4 |         73 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\https\websocket.js                                        | JavaScript |          1 |          0 |          0 |          1 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\main.js                                                   | JavaScript |         16 |          5 |          5 |         26 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\router\index.js                                           | JavaScript |        149 |          1 |          5 |        155 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\store\controller.js                                       | JavaScript |         14 |          2 |          1 |         17 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\store\user.js                                             | JavaScript |         36 |          2 |          1 |         39 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\store\websocket.js                                        | JavaScript |         15 |          2 |          2 |         19 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\style.css                                                 | CSS        |         78 |          7 |          9 |         94 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Competition.vue                                      | vue        |        667 |          1 |         17 |        685 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Course.vue                                           | vue        |        215 |          0 |          8 |        223 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Course\CourseInfo.vue                                | vue        |        221 |          0 |          4 |        225 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Home.vue                                             | vue        |        581 |          0 |         15 |        596 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Library.vue                                          | vue        |        493 |          1 |          8 |        502 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Library\python\Python-basicSyntax.vue                | vue        |          9 |          0 |          4 |         13 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Library\python\Python-calculator.vue                 | vue        |          9 |          0 |          4 |         13 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Library\python\Python-class.vue                      | vue        |          9 |          0 |          4 |         13 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Library\python\Python-comment.vue                    | vue        |          9 |          0 |          4 |         13 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Library\python\Python-controller.vue                 | vue        |          9 |          0 |          4 |         13 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Library\python\Python-dataStructure.vue              | vue        |          9 |          0 |          4 |         13 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Library\python\Python-error.vue                      | vue        |          9 |          0 |          4 |         13 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Library\python\Python-inputAndOuput.vue              | vue        |          9 |          0 |          4 |         13 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Library\python\Python-install.vue                    | vue        |         31 |          0 |          2 |         33 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Library\python\Python-interpreter.vue                | vue        |          9 |          0 |          4 |         13 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Library\python\Python-introduction.vue               | vue        |          9 |          0 |          4 |         13 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Library\python\Python-module.vue                     | vue        |          9 |          0 |          4 |         13 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Library\python\Python-next.vue                       | vue        |          9 |          0 |          4 |         13 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Library\python\Python-standardLibrary.vue            | vue        |          9 |          0 |          4 |         13 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Library\python\Python.vue                            | vue        |        108 |          0 |          3 |        111 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Library\python\install\Install-Windows.vue           | vue        |        731 |          0 |          6 |        737 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Problem.vue                                          | vue        |        388 |          0 |          9 |        397 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Search.vue                                           | vue        |        156 |          0 |          7 |        163 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\Store.vue                                            | vue        |        255 |          0 |          7 |        262 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\problem\SingCompetitionArea.vue                      | vue        |        546 |          0 |         16 |        562 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\problem\WorkingArea.vue                              | vue        |        583 |          0 |          9 |        592 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\tool\Backpack.vue                                    | vue        |        266 |          0 |          7 |        273 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\tool\EditCollection.vue                              | vue        |        555 |          0 |         14 |        569 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\tool\EditProblem.vue                                 | vue        |        375 |          0 |         12 |        387 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\tool\EditSolution.vue                                | vue        |        240 |          0 |         12 |        252 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\tool\LCPlab.vue                                      | vue        |         32 |          0 |          5 |         37 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\tool\Login.vue                                       | vue        |        280 |          0 |         18 |        298 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\tool\MyProblem.vue                                   | vue        |        434 |          0 |         12 |        446 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\tool\MySolution.vue                                  | vue        |        201 |          0 |          4 |        205 |
+| d:\Training-workspace\project-ws\loop-code-plus_vue_5\project\loop-code-plus-vue-5\src\view\tool\PersonalCenter.vue                              | vue        |        891 |          0 |         26 |        917 |
+| Total                                                                                                                                            |            |      9,340 |         50 |        332 |      9,722 |
++--------------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

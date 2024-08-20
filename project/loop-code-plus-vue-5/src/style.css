@@ -27,6 +27,21 @@ code {
   font-family: courier, monospace;
   padding: 0 3px;
 }
+pre {
+    background: rgb(238, 238, 238);
+    font-family: Consolas;
+    text-align: left;
+    padding: 1em;
+    padding-left: 0.8em;
+    margin: 1em;
+    border-radius: 5px;
+    counter-reset: line;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+}
 body {
   margin: 0;
 }

@@ -30,12 +30,24 @@ const routes = [
     component: ()=>import("@/view/Course.vue")
   },
   { 
+    path: '/Course/CourseInfo/:c',
+    component: ()=>import("@/view/Course/CourseInfo.vue")
+  },
+  { 
     path: '/Problem',
     component: ()=>import("@/view/Problem.vue")
   },
   { 
+    path: '/Problem/Collection/:co',
+    component: ()=>import("@/view/problem/Collection.vue")
+  },
+  { 
     path: '/Problem/WorkingArea/:p',
     component: ()=>import("@/view/problem/WorkingArea.vue")
+  },
+  { 
+    path: '/Problem/SingCompetitionArea/:scp',
+    component: ()=>import("@/view/problem/SingCompetitionArea.vue")
   },
   { 
     path: '/MyProblem',
@@ -48,6 +60,10 @@ const routes = [
   { 
     path: '/MyProblem/EditCollection/:ec',
     component: ()=>import("@/view/tool/EditCollection.vue")
+  },
+  { 
+    path: '/MyProblem/EditSolution/:esp/:es',
+    component: ()=>import("@/view/tool/EditSolution.vue")
   },
   { 
     path: '/MySolution',

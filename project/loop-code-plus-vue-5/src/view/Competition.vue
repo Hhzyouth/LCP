@@ -259,10 +259,9 @@
         </div>
         <template #footer>
         <div class="dialog-footer">
-            <el-button @click='singleSuccess'>成功</el-button>
             <el-button @click='singleFail'>失败</el-button>
-            <el-button @click="singleLoading = false;singleText='开始匹配'" v-show="singleLoading">取消</el-button>
-            <el-button :type="singleType" @click="singleLoading = true;singleText='匹配中';singleType='primary'" :loading="singleLoading" :disabled='singleDisabled'>
+            <el-button @click="singleLoading = false;singleText='开始匹配';close()" v-show="singleLoading">取消</el-button>
+            <el-button :type="singleType" @click="toSingleMatch()" :loading="singleLoading" :disabled='singleDisabled'>
                 <template #loading>
                     <div class="custom-loading">
                         <svg class="circular" viewBox="-10, -10, 50, 50">
@@ -293,9 +292,16 @@
     import Header from "../components/Header.vue"
     import { useUserStore } from "../store/user";
     import { ref } from 'vue'
+    import { createWebSocket, close, add } from "../api/competition";
+    import { useSocketStore } from "../store/websocket";
+    import { useRouter } from "vue-router";
+    import { useCompetitionStore } from "../store/competition";
 
+    const socketStore=useSocketStore()
+    const competitionStore=useCompetitionStore()
     const store = useUserStore()
     const Page=ref('3')
+    const router=useRouter()
     const rankingList = ref(
     [
         {ranking:1,id:1001,name:"张三",win:186,avatar:""},
@@ -311,10 +317,10 @@
     ]
     )
     const singleMatchJoin=ref(false)
-    const ban1 = ref('')
-    const ban2 = ref('')
-    const ban3 = ref('')
-    const select1 = ref('')
+    const ban1 = ref("")
+    const ban2 = ref("")
+    const ban3 = ref("")
+    const select1 = ref("")
     const vipBan = ref(store.role=='VIP')
     const singleLoading = ref(false)
     const singleType = ref('primary')
@@ -341,6 +347,13 @@
             {value:'递归',label:'递归'},
             {value:'深度优先搜索',label:'深度优先搜索'},
             {value:'广度优先搜索',label:'广度优先搜索'},
+            {value:"二分查找",label:"二分查找"},
+            {value:"回溯",label:"回溯"},
+            {value:"递归",label:"递归"},
+            {value:"分治",label:"分治"},
+            {value:"记忆化搜索",label:"记忆化搜索"},
+            {value:"归并排序",label:"归并排序"},
+            {value:"快速选择",label:"快速选择"},
         ]
     },
     {
@@ -353,9 +366,63 @@
             {value:'堆',label:'堆'},
             {value:'栈',label:'栈'},
             {value:'图',label:'图'},
+            {value:'链表',label:'链表'},
+            {value:"集合",label:"集合"},
+            {value:"队列",label:"队列"},
+            {value:"双向链表",label:"双向链表"},
+            {value:"最小生成树",label:"最小生成树"},
+            {value:"并查集",label:"并查集"},
+            {value:"字典树",label:"字典树"},
+            {value:"线段树",label:"线段树"},
+            {value:"树状数组",label:"树状数组"},
+            {value:"后缀数组",label:"后缀数组"},
+            {value:"数组",label:"数组"},
+            {value:"字符串",label:"字符串"},
+            {value:"矩阵",label:"矩阵"},
         ]
     },
     ]
+    const toSingleMatch=()=>{
+        singleType.value='primary';
+        if (store.userId===0){
+            router.push("/Login")
+        }else{
+            singleLoading.value = true;
+            singleText.value='匹配中';
+            createWebSocket()
+        }
+        
+        
+    }
+    socketStore.$subscribe((mutation,state)=>{
+        console.log(mutation,state);
+        let m=JSON.parse(state.message)
+        console.log(m);
+        
+        switch(m.code){
+            case 0:
+                const temp={
+                    code:1,
+                    roomId:m.roomId,
+                    userId:store.userId,
+                    ban1:ban1.value,
+                    ban2:ban2.value,
+                    ban3:ban3.value,
+                    select1:select1.value
+                }
+                competitionStore.setRoomId(m.roomId)
+                add(JSON.stringify(temp)) 
+                break
+            case 1:
+                singleSuccess()
+                competitionStore.setis(false)
+                setTimeout(()=>{
+                    router.push(`/Problem/SingCompetitionArea/${m.problemId}`)
+                },2000)
+                
+        }
+        
+    })
 </script>
 <script>
     export default {

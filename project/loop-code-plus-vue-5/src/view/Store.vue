@@ -5,6 +5,17 @@
                 <Header :page="Page"/>
             </el-header>
             <el-main class="main">
+                <div class="main-header">
+                    <div class="store-header">
+                        <img src="../assets/image/main-logo.png" alt="" style="width: 300px;">
+                        <div style="display: flex;justify-content: center;align-items: center;height: 110px">
+                            <h1 class="title">
+                                商店
+                            </h1>
+                        </div>
+                        
+                    </div>
+                </div>
                 <div class="store-container">
                     <el-skeleton
                         class="first-box"
@@ -84,8 +95,7 @@
             console.log(response)
             loading.value=false
             data.value=response.data.data
-            PageCount.value=Math.ceil(response.data.storeNum/6)
-            console.log(PageCount);
+            PageCount.value=Math.ceil(response.data.num/6)
         })
         .catch(function (error) {
             ElMessage.error('网络连接错误')
@@ -181,6 +191,7 @@
         margin: 0 0 10px 10px;
     }
     .main{
+        padding: 0;
         height: calc(100% - 60px);
         background-color: rgba(239, 239, 239, 0.5);
     }
@@ -201,7 +212,7 @@
     }
     .discription.active{
         width: calc(100% - 275px); 
-        padding: 0 10px;
+        padding: 8px;
     }
     .dis-container{
         word-wrap: break-word;
@@ -229,5 +240,23 @@
     .extends:hover {
         color: black;
         cursor: pointer;
+    }
+    
+    .main-header{
+        width: 100%;
+        background: linear-gradient(315deg, rgb(30, 30, 30) 0 50%, rgb(50, 50, 50) 50% 100%);
+        background-color: rgb(41, 41, 41);
+        padding: 64px 0 32px 0;
+    }
+    .store-header{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .title{
+        font-size: 3rem;
+        color: rgb(241, 187, 70);
+        margin-bottom: 32px;
     }
 </style>

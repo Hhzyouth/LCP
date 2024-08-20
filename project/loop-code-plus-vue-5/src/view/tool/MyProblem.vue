@@ -7,8 +7,8 @@
                 </el-header>
                 <el-main class="elmain">
                     <div class="container">
-                      <el-tabs v-model="activeName" class="tabs" @tab-click="handleClick"  type="border-card">
-                        <el-tab-pane label="我的题目" name="problem">
+                      <el-tabs v-model="activeName" class="tabs" @tab-change="handleChange"  type="border-card">
+                        <el-tab-pane label="我的题目" name="problem" style="min-height: 100px;" v-loading="problemLoading">
                           <div class="main-header">
                             <div class="editp"><router-link :to="'/MyProblem/EditProblem/0'" class="bc"><el-button class="createButton" round plain type="success"><el-icon><Plus /></el-icon><span style="padding-left: 2px;">创建题目</span></el-button></router-link></div>
                             <div class="edit"></div>
@@ -21,28 +21,32 @@
                             </div>
                             <div class="problem-list">
                             <div v-for="(problem,index) in problemList" :key="problem.id" :class="index%2 == 0?'problem one':'problem two'">
-                                <div class="edit"><el-button class="deleteButton" :icon="Delete" circle plain type="danger" @click="deleteConfirm(problem.name)"/></div>  
-                                <div class="edit"><router-link :to="'/MyProblem/EditProblem/'+problem.id"><el-button class="editButton" :icon="Edit" circle plain type="info"/></router-link></div>
+                                <div class="edit"><el-button class="deleteButton" :icon="Delete" circle plain type="danger" @click="deleteConfirm(problem.problemName,problem.problemId)"/></div>  
+                                <div class="edit"><router-link :to="'/MyProblem/EditProblem/'+problem.problemId"><el-button class="editButton" :icon="Edit" circle plain type="info"/></router-link></div>
                                 <div class="status" :style="{color:problem.status==0?'#67C23A':'#409EFF'}">
                                   {{ problem.status==0 ? '私有' : '公开' }}
                                 </div>
-                                <div class="id">{{ problem.id }}</div>
-                                <router-link class="name" :to='`/Problem/WorkingArea/${problem.id}`'>{{ problem.name }}</router-link>
-                                <div :class="classLevel(problem.level)">{{ showLevel(problem.level) }}</div>
+                                <div class="id">{{ problem.problemId }}</div>
+                                <router-link class="name" :to='`/Problem/WorkingArea/${problem.problemId}`'>{{ problem.problemName }}</router-link>
+                                <div :class="classLevel(problem.difficultyLevel)">{{ showLevel(problem.difficultyLevel) }}</div>
                                 <el-scrollbar class="tag-container">
                                 <div class="tag">
-                                    <el-tag v-for="tag in problem.tags" type="success" class="tag-item" round>{{ tag }}</el-tag>
+                                    <el-tag v-for="tag in JSON.parse(problem.tag)" type="success" class="tag-item" round>{{ tag }}</el-tag>
                                 </div>
                                 </el-scrollbar>
                                 <el-scrollbar class="collection-container">
                                 <div class="collection">
-                                    <el-tag v-for="collection in problem.collections" type="primary" class="tag-item" round>{{ collection }}</el-tag>
+                                    <el-tag v-for="collection in JSON.parse(problem.collection)" type="primary" class="tag-item" round>{{ collection }}</el-tag>
                                 </div>
                                 </el-scrollbar>
                               </div>
                           </div>
+                          <div style="display: flex;width: 100%;justify-content: center;margin-top: 16px;" v-if="problemPageCount>1">
+                              <el-pagination background layout="prev, pager, next" :page-count="problemPageCount" class="pagination" @change="toGetMyProblems()"
+                              v-model:current-page="problemCurrentPage"  />
+                          </div>
                         </el-tab-pane>
-                        <el-tab-pane label="我的题目集" name="problemList">
+                        <el-tab-pane label="我的题目集" name="problemList" v-loading="collectionLoading" style="min-height: 100px;">
                           <div class="main-header">
                             <div class="editp"><router-link :to="'/MyProblem/EditCollection/0'" class="bc"><el-button class="createButton" round plain type="success"><el-icon><Plus /></el-icon><span style="padding-left: 2px;">创建题集</span></el-button></router-link></div>
                             <div class="edit"></div>
@@ -52,20 +56,24 @@
                             <div class="problem-container">题目</div>
                             </div>
                             <div class="problem-list">
-                            <div v-for="(collection,index) in collectionList" :key="collection.id" :class="index%2 == 0?'problem one':'problem two'">
-                                <div class="edit"><el-button class="deleteButton" :icon="Delete" circle plain type="danger" @click="deleteConfirmList(collection.name)"/></div>  
-                                <div class="edit"><router-link :to="'/MyProblem/EditCollection/'+collection.id"><el-button class="editButton" :icon="Edit" circle plain type="info"/></router-link></div>
+                            <div v-for="(collection,index) in collectionList" :key="collection.colId" :class="index%2 == 0?'problem one':'problem two'">
+                                <div class="edit"><el-button class="deleteButton" :icon="Delete" circle plain type="danger" @click="deleteConfirmList(collection.colName,collection.colId)"/></div>  
+                                <div class="edit"><router-link :to="'/MyProblem/EditCollection/'+collection.colId"><el-button class="editButton" :icon="Edit" circle plain type="info"/></router-link></div>
                                 <div class="status" :style="{color:collection.status==0?'#67C23A':'#409EFF'}">
                                   {{ collection.status==0 ? '私有' : '公开' }}
                                 </div>
-                                <div class="id">{{ collection.id }}</div>
-                                <router-link class="name" :to='`/Problem/WorkingArea/${collection.id}`'>{{ collection.name }}</router-link>
+                                <div class="id">{{ collection.colId }}</div>
+                                <router-link class="name" :to='`/Problem/Collection/${collection.colId}`' :title="collection.colName">{{ collection.colName }}</router-link>
                                 <el-scrollbar class="problem-container">
                                 <div class="problem">
-                                    <span v-for="item in collection.problems" class="tag-item">《{{ item[1] }}》</span>
+                                    <span v-for="item in JSON.parse(collection.problemList)" class="tag-item">《{{ item.problemName }}》</span>
                                 </div>
                                 </el-scrollbar>
                               </div>
+                          </div>
+                          <div style="display: flex;width: 100%;justify-content: center;margin-top: 16px;" v-if="collectionPageCount>1">
+                              <el-pagination background layout="prev, pager, next" :page-count="collectionPageCount" class="pagination" @change="toGetMyCollections()"
+                              v-model:current-page="collectionCurrentPage"  />
                           </div>
                         </el-tab-pane>
                       </el-tabs>
@@ -78,96 +86,130 @@
   
   
 <script setup>
-    import Header from "../../components/Header.vue"
-    import { ref } from 'vue'
-    import { Edit, Delete, Plus } from '@element-plus/icons-vue'
+import Header from "../../components/Header.vue"
+import { ref } from 'vue'
+import { Edit, Delete, Plus } from '@element-plus/icons-vue'
+import { getMyProblems, deleteMyProblem, getMyCollections, deleteMyCollection } from "../../api/myProblem";
+// import { useUserStore } from '@/store/user.js'
+import { useControllerStore } from "@/store/controller";
+const cstore=useControllerStore()
+const activeName = ref(cstore.myProblemTabsActiveName)
+const problemPageCount=ref(1)
+const problemCurrentPage=ref(1)
+const problemLoading=ref(false)
+const problemList=ref([])
 
-    const activeName = ref('problem')
+const collectionPageCount=ref(1)
+const collectionCurrentPage=ref(1)
+const collectionLoading=ref(false)
+const collectionList=ref([])
 
-    const handleClick = (tab, event) => {
-      console.log(tab, event)
-    }
-    const Page=ref('')
-    const deleteConfirm=(name)=>{
-      ElMessageBox.confirm(
-      `题目 "${name}" 将会被删除`,
-      '警告',
-      {
-        confirmButtonText: '删除',
-        cancelButtonText: '取消',
-        type: 'warning',
-        confirmButtonClass: 'el-button el-button--danger',
-      }
-    )
-      .then(() => {
+// const store=useUserStore()
+const Page=ref('')
+const deleteConfirm=(name,id)=>{
+  ElMessageBox.confirm(
+  `题目 "${name}" 将会被删除`,
+  '警告',
+  {
+    confirmButtonText: '删除',
+    cancelButtonText: '取消',
+    type: 'warning',
+    confirmButtonClass: 'el-button el-button--danger',
+  }
+)
+  .then(() => {
+    deleteMyProblem(
+      id
+    ).then((response)=>{
+      console.log(response);
+      if (response.data.code===200){
         ElMessage({
           type: 'success',
           message: '题目已删除',
         })
-      })
-      .catch(() => {
+        toGetMyProblems()
+      }else{
         ElMessage({
-          type: 'info',
-          message: '已取消删除',
-        })
-      })
-    }
-    const deleteConfirmList=(name)=>{
-      ElMessageBox.confirm(
-      `题目集 "${name}" 将会被删除`,
-      '警告',
-      {
-        confirmButtonText: '删除',
-        cancelButtonText: '取消',
         type: 'warning',
-        confirmButtonClass: 'el-button el-button--danger',
+        message: '题目未能成功删除，请重试',
+      })
       }
-    )
-      .then(() => {
-        ElMessage({
-          type: 'success',
-          message: '题目集已删除',
-        })
+    }).catch((error)=>{
+      ElMessage({
+        type: 'warning',
+        message: '题目未能成功删除，请重试',
       })
-      .catch(() => {
-        ElMessage({
-          type: 'info',
-          message: '已取消删除',
-        })
+    })
+  })
+  .catch(() => {
+    ElMessage({
+      type: 'info',
+      message: '已取消删除',
+    })
+  })
+}
+const deleteConfirmList=(name,id)=>{
+  ElMessageBox.confirm(
+  `题目集 "${name}" 将会被删除`,
+  '警告',
+  {
+    confirmButtonText: '删除',
+    cancelButtonText: '取消',
+    type: 'warning',
+    confirmButtonClass: 'el-button el-button--danger',
+  }
+)
+  .then(() => {
+    deleteMyCollection(
+      id
+    ).then((response)=>{
+      toGetMyCollections()
+      ElMessage({
+        type: 'success',
+        message: '题目集已删除',
       })
-    }
-    const problemList=[
-  {status:1,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:168,name:"两数求和2",level:4,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:7,name:"两数之积",level:9,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:12,name:"两数之积2",level:7,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:56,name:"两数之积3",level:6,tags:["数组","哈希表","链表","二叉树","深度优先搜索"],collections:["LCP101","微软面试","苏州大学练习题"]},
-  {status:0,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:168,name:"两数求和2",level:4,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:7,name:"两数之积",level:9,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:12,name:"两数之积2",level:7,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:56,name:"两数之积3",level:6,tags:["数组","哈希表","链表","二叉树","深度优先搜索"],collections:["LCP101","微软面试","苏州大学练习题"]},
-  {status:1,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:168,name:"两数求和2",level:4,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:7,name:"两数之积",level:9,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:0,id:12,name:"两数之积2",level:7,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:56,name:"两数之积3",level:6,tags:["数组","哈希表","链表","二叉树","深度优先搜索"],collections:["LCP101","微软面试","苏州大学练习题"]},
-  {status:0,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:168,name:"两数求和2",level:4,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:7,name:"两数之积",level:9,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:12,name:"两数之积2",level:7,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:56,name:"两数之积3",level:6,tags:["数组","哈希表","链表","二叉树","深度优先搜索"],collections:["LCP101","微软面试","苏州大学练习题"]},
-  {status:1,id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:168,name:"两数求和2",level:4,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:7,name:"两数之积",level:9,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:12,name:"两数之积2",level:7,tags:["数组","哈希表"],collections:["LCP101"]},
-  {status:1,id:56,name:"两数之积3",level:6,tags:["数组","哈希表","链表","二叉树","深度优先搜索"],collections:["LCP101","微软面试","苏州大学练习题"]},
-]
-const collectionList=[
-  {status:1,id:1,name:"算法提高精选",problems:[[1,'两数求和'],[168,'两数求和2'],[7,'两数之积'],[21,'接雨水'],[22,'吃早餐'],[23,'非典型的多轨道班车问题'],[24,'非典型的多轨道班车问题2']]},
-  {status:0,id:13,name:"我的题目集1",problems:[[1,'两数求和']]},
-  {status:0,id:74,name:"我的题目集2",problems:[[1,'两数求和']]},
-]
+
+    }).catch(() => {
+      ElMessage({
+        type: 'warning',
+        message: '题目集未能成功删除，请重试',
+      })
+    })
+    
+  })
+  .catch(() => {
+    ElMessage({
+      type: 'info',
+      message: '已取消删除',
+    })
+  })
+}
+const toGetMyProblems=()=>{
+  problemLoading.value=true
+  getMyProblems(
+    problemCurrentPage.value
+  ).then((response)=>{
+    console.log(response);
+    
+    problemLoading.value=false
+    problemList.value=response.data.data
+    problemPageCount.value=Math.ceil(response.data.num/30) 
+  })
+}
+const toGetMyCollections=()=>{
+  collectionLoading.value=true
+  getMyCollections(
+    collectionCurrentPage.value
+  ).then((response)=>{
+    console.log(response);
+    
+    collectionLoading.value=false
+    collectionList.value=response.data.data
+    collectionPageCount.value=Math.ceil(response.data.num/30) 
+  })
+}
+
+
 const showLevel=(level)=>{
   switch(level){
     case 1:
@@ -208,6 +250,20 @@ const classLevel=(level)=>{
       return 'level hell'
     default:
       return 'level notKnow'
+  }
+}
+
+if(activeName.value==='problem'){
+  toGetMyProblems()
+}else{
+  toGetMyCollections()
+}
+const handleChange = () => {
+  cstore.setMyProblemTabsActiveName(activeName.value)
+  if(activeName.value==='problem'){
+    toGetMyProblems()
+  }else{
+    toGetMyCollections()
   }
 }
 </script>
@@ -269,6 +325,9 @@ const classLevel=(level)=>{
   flex: 150 0 auto;
   margin-left: 8px;
   padding: 12px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .level{
   min-width: 0px;

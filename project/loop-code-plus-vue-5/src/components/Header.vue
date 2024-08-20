@@ -24,7 +24,7 @@
                 <div class="top-input">
                     <el-input class="input" v-model="input" style="width: 240px" placeholder="搜索" :prefix-icon="Search" @keyup.enter.native="Searchit()"/>
                 </div>
-                <el-popover v-if="store.token!==''" placement="bottom" :width="280" trigger="click" popper-class="popover" :offset="20" popper-style="border-radius: 0.8rem;">
+                <el-popover v-if="store.token!=='' && store.userId!==0" placement="bottom" :width="280" trigger="click" popper-class="popover" :offset="20" popper-style="border-radius: 0.8rem;">
                     <template #reference>
                         <el-avatar :src="store.avatar" style="width: 30px;height: 30px;"/>
                     </template>
@@ -41,7 +41,7 @@
                         </router-link>
                     </div>
                     <div class="tools">
-                        <router-link class="tool" to="/MySolution">
+                        <router-link class="tool" to="/MySolution" @click.prevent="()=>{}">
                             <img src="@/assets/icon/MaterialSymbolsMarkChatReadOutlineRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">我的题解</span>
                         </router-link>
@@ -78,7 +78,7 @@
                     </div>
                 </el-popover>
                 <router-link v-else style="color: white;" to="/Login">注册 / 登录</router-link>
-                <el-popover v-if="store.token!==''" placement="bottom" :width="480" trigger="click" popper-class="popover" :offset="20" popper-style="height: 400px; overflow: auto;border-radius: 0.8rem;">
+                <el-popover v-if="store.token!==''&& store.userId!==0" placement="bottom" :width="480" trigger="click" popper-class="popover" :offset="20" popper-style="height: 400px; overflow: auto;border-radius: 0.8rem;">
                     <template #reference>
                         <el-icon style="width: 25px; height:25px; color: white;margin-left: 15px;"><Bell /></el-icon>
                     </template>
@@ -109,6 +109,9 @@
     import { Search } from '@element-plus/icons-vue'
     import { useRouter } from 'vue-router'
     import { useUserStore } from '@/store/user.js'
+    import { getBaseInfo } from '../api/header'
+    import { getRanks } from '../api/home'
+
     const router =useRouter()
     const props = defineProps({
     //子组件接收父组件传递过来的值
@@ -117,7 +120,7 @@
     const {page} =toRefs(props)
     const activeIndex = page
     const imgToHome =()=>router.push('/')
-    const handleSelect = (key, keyPath) => {
+    const handleSelect = (key) => {
         switch (key) {
             case '1':
                 router.push('/')
@@ -135,7 +138,7 @@
                 router.push('/Problem')
                 break;
             case '6':
-            router.push('/Store')
+                router.push('/Store')
                 break;
             default:
                 break;
@@ -143,7 +146,6 @@
     }
     const input = ref('')
     function Searchit() {
-        console.log(123);
         if (input.value!==''){
             router.push({ path: `/Search/${input.value}`});
         }   
@@ -164,10 +166,24 @@
     ]
 
     const store=useUserStore()
-    console.log(store.title);
     const exit=()=>{
         console.log("=====Exit=====");
-        store.setToken({token:''})
+        store.setToken('')
+        store.clearInformation()
+        router.go(0)
+    }
+    
+    if (store.userId===0 && store.token!=='') {
+       getBaseInfo()
+       .then((response)=>{
+            store.setInformation(response.data.data)
+       }) 
+
+       getRanks()
+       .then((response)=>{
+        console.log(response);
+        store.setRanks(response.data.data)
+       })
     }
     
 </script>
@@ -176,8 +192,6 @@ export default {
     data(){
         return {
             clientWidth:document.body.clientWidth,
-            popoverDisplay:["none","none"],
-            cur:3,
         }
     },
     mounted(){
@@ -189,58 +203,34 @@ export default {
             })()
         };
         const wid=document.body.clientWidth
-        if (wid<=650){
+        if (wid<=755){
             document.querySelectorAll('.menu-item').forEach((item)=>{
                 item.style.display = 'none'
             })
-        }else if(wid>650 && wid<=1030){
+        }else if(wid>755 && wid<=1030){
             document.querySelectorAll('.menu-item').forEach((item)=>{
                 item.style.display = 'flex'
             })
-            document.querySelector('.top-menu-right').style.display = 'none';
-        }else{
-            document.querySelector('.top-menu-right').style.display = 'flex';
+            document.querySelector('.top-input').style.display = 'none';
         }
     },
     watch:{
         clientWidth(newVal,oldVal){
-            if (newVal<=650 && oldVal>650){
+            if (newVal<=755 && oldVal>650){
                     document.querySelectorAll('.menu-item').forEach((item)=>{
                         item.style.display = 'none'
                     })
-                    document.querySelector('.top-menu-right').style.display = 'none';
-                    document.querySelectorAll('.popover').forEach((popover,index)=>{
-                        if (popover.style.display!=='none'){
-                            this.popoverDisplay[index]='block';
-                        }
-                        popover.style.display = 'none';
-                    })
-                    this.cur=1
-                }else if((oldVal<=650 || oldVal>1030) && newVal>650 && newVal<=1030){
+                    document.querySelector('.top-input').style.display = 'none';
+                }else if((oldVal<=755 || oldVal>1030) && newVal>755 && newVal<=1030){
                     document.querySelectorAll('.menu-item').forEach((item)=>{
                         item.style.display = 'flex'
                     })
-                    document.querySelector('.top-menu-right').style.display = 'none';
-                    document.querySelectorAll('.popover').forEach((popover,index)=>{
-                        if (popover.style.display!=='none'){
-                            this.popoverDisplay[index]='block';
-                        }
-                        popover.style.display = 'none';
-                    })
-                    this.cur=2
+                    document.querySelector('.top-input').style.display = 'none';
                 }else if(oldVal<=1030 && newVal>1030){
                     document.querySelectorAll('.menu-item').forEach((item)=>{
                         item.style.display = 'flex'
                     })
-                    document.querySelector('.top-menu-right').style.display = 'flex';
-                    document.querySelectorAll('.popover').forEach((popover,index)=>{
-                        if (popover.style.display==='none' && this.cur!==3){
-                            popover.style.display = this.popoverDisplay[index];
-                        }else{
-                            this.popoverDisplay[index] = popover.style.display;
-                        }
-                    })
-                    this.cur=3
+                    document.querySelector('.top-input').style.display = 'flex';
                 }
             
         }
