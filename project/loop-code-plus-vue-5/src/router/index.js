@@ -69,6 +69,14 @@ const routes = [
     path:'/PersonalCenter',
     component: ()=>import("@/view/tool/PersonalCenter.vue")
   },
+  {
+    path:'/PersonalCenter/info',
+    component: ()=>import("@/view/PersonalCenter/info.vue")
+  },
+  {
+    path:'/Achievement',
+    component: ()=>import("@/view/tool/Achievement.vue")
+  },
   { 
     path: '/Python',
     component: ()=>import("@/view/Library/python/Python.vue"),

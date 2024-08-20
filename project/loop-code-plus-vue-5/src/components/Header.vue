@@ -57,20 +57,20 @@
                             <img src="@/assets/icon/MaterialSymbolsBackpackOutlineRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">背包</span>
                         </router-link>
-                        <div class="tool">
+                        <router-link class="tool" to="/Achievement">
                             <img src="@/assets/icon/MaterialSymbolsVerifiedOutline.svg" alt="" class="tool-img">
                             <span class="tool-name">成就</span>
-                        </div>
+                        </router-link>
                         <div class="tool">
                             <img src="@/assets/icon/MaterialSymbolsMarkdownCopyOutlineRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">我的竞赛</span>
                         </div>
                     </div>
                     <div class="tool-bar">
-                        <div class="bar">
+                        <router-link class="bar" to="/PersonalCenter/info">
                             <img src="@/assets/icon/MaterialSymbolsMarkdownCopyOutlineRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">设置</span>
-                        </div>
+                        </router-link>
                         <div class="bar" @click="exit">
                             <img src="@/assets/icon/MaterialSymbolsExitToAppRounded.svg" alt="" class="tool-img">
                             <span class="tool-name">退出</span>
