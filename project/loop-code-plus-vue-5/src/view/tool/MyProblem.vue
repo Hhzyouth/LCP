@@ -163,6 +163,7 @@ const deleteConfirmList=(name,id)=>{
     deleteMyCollection(
       id
     ).then((response)=>{
+      toGetMyCollections()
       ElMessage({
         type: 'success',
         message: '题目集已删除',
