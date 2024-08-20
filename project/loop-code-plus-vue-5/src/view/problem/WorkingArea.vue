@@ -181,7 +181,9 @@
             toGetProblemRecord()
             })
     }
-    const showResult=()=>{
+    const showResult=()=>{ 
+        console.log(result.value);
+        
         const temp=eval(result.value)
         // const temp=eval('('+result.value+')')
         if (temp[2]===0){
@@ -279,6 +281,8 @@ const transStatus=(r)=>{
     return ''
 }
 const statusClass=(r)=>{
+    console.log(r);
+    
     const t=eval(r)
     switch(t[2]){
         case 0:

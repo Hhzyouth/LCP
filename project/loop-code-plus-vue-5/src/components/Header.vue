@@ -110,6 +110,8 @@
     import { useRouter } from 'vue-router'
     import { useUserStore } from '@/store/user.js'
     import { getBaseInfo } from '../api/header'
+    import { getRanks } from '../api/home'
+
     const router =useRouter()
     const props = defineProps({
     //子组件接收父组件传递过来的值
@@ -176,6 +178,12 @@
        .then((response)=>{
             store.setInformation(response.data.data)
        }) 
+
+       getRanks()
+       .then((response)=>{
+        console.log(response);
+        store.setRanks(response.data.data)
+       })
     }
     
 </script>
@@ -184,8 +192,6 @@ export default {
     data(){
         return {
             clientWidth:document.body.clientWidth,
-            popoverDisplay:["none","none"],
-            cur:3,
         }
     },
     mounted(){
@@ -197,56 +203,34 @@ export default {
             })()
         };
         const wid=document.body.clientWidth
-        if (wid<=650){
+        if (wid<=755){
             document.querySelectorAll('.menu-item').forEach((item)=>{
                 item.style.display = 'none'
             })
-        }else if(wid>650 && wid<=1030){
+        }else if(wid>755 && wid<=1030){
             document.querySelectorAll('.menu-item').forEach((item)=>{
                 item.style.display = 'flex'
             })
-            document.querySelector('.top-menu-right').style.display = 'none';
+            document.querySelector('.top-input').style.display = 'none';
         }
     },
     watch:{
         clientWidth(newVal,oldVal){
-            if (newVal<=650 && oldVal>650){
+            if (newVal<=755 && oldVal>650){
                     document.querySelectorAll('.menu-item').forEach((item)=>{
                         item.style.display = 'none'
                     })
-                    document.querySelector('.top-menu-right').style.display = 'none';
-                    document.querySelectorAll('.popover').forEach((popover,index)=>{
-                        if (popover.style.display!=='none'){
-                            this.popoverDisplay[index]='block';
-                        }
-                        popover.style.display = 'none';
-                    })
-                    this.cur=1
-                }else if((oldVal<=650 || oldVal>1030) && newVal>650 && newVal<=1030){
+                    document.querySelector('.top-input').style.display = 'none';
+                }else if((oldVal<=755 || oldVal>1030) && newVal>755 && newVal<=1030){
                     document.querySelectorAll('.menu-item').forEach((item)=>{
                         item.style.display = 'flex'
                     })
-                    document.querySelector('.top-menu-right').style.display = 'none';
-                    document.querySelectorAll('.popover').forEach((popover,index)=>{
-                        if (popover.style.display!=='none'){
-                            this.popoverDisplay[index]='block';
-                        }
-                        popover.style.display = 'none';
-                    })
-                    this.cur=2
+                    document.querySelector('.top-input').style.display = 'none';
                 }else if(oldVal<=1030 && newVal>1030){
                     document.querySelectorAll('.menu-item').forEach((item)=>{
                         item.style.display = 'flex'
                     })
-                    document.querySelector('.top-menu-right').style.display = 'flex';
-                    document.querySelectorAll('.popover').forEach((popover,index)=>{
-                        if (popover.style.display==='none' && this.cur!==3){
-                            popover.style.display = this.popoverDisplay[index];
-                        }else{
-                            this.popoverDisplay[index] = popover.style.display;
-                        }
-                    })
-                    this.cur=3
+                    document.querySelector('.top-input').style.display = 'flex';
                 }
             
         }

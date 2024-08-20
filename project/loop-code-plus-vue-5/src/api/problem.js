@@ -14,5 +14,12 @@ export const getProblems = (page,tag,collection,userId) => {
           },
     });
 };
+//获取题目集列表
+export const getCollectionList = () => {
+    return request({
+        url: '/problem/colList',
+        method: 'get',
+    });
+};
 
 

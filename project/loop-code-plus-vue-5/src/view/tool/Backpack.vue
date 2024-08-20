@@ -14,7 +14,7 @@
                     </div>
                     <div class="store-tool">
                         <div class="tool-container">
-                            <div class="price" style="margin:0 ;"><el-icon><Coin /></el-icon>700</div>
+                            <div class="price" style="margin:0 ;"><el-icon><Coin /></el-icon>{{store.point}}</div>
                         </div>
                         
                     </div>
@@ -84,6 +84,9 @@
     import Header from "@/components/Header.vue"
     import { ref } from 'vue'
     import { getCurrentPageGoods } from "@/api/store.js";
+    import { useUserStore } from "../../store/user";
+
+    const store=useUserStore()
     const Page=ref('')
     const data= ref([])
     const currentPage=ref(1)
@@ -105,7 +108,7 @@
             animated.value=false
         })
     }
-    getGoods()
+    //getGoods()
     const lst=ref(new Set())
     const handelCurrentChange=()=>{
         for (let item of lst.value.keys()){

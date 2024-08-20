@@ -82,3 +82,13 @@ export const setCollection = (data) => {
         data: temp
     });
 };
+//获取题目集内容和已完成情况
+export const getCollection=(collectionId)=>{
+    return requestwi({
+        url: '/collection/getColProblem',
+        method: 'get',
+        params: {
+            colId : collectionId
+          },
+    });
+}

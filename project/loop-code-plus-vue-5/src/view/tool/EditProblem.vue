@@ -31,7 +31,7 @@
                             </el-checkbox-group>
                             </el-form-item>
                             <el-form-item label="输入用例" required prop="inputSample">
-                                <el-input v-model="form.inputSample" placeholder="此用例仅用于测试 例:{lst:[1,2,3]}"/>
+                                <el-input v-model="form.inputSample" placeholder='此用例仅用于测试 例:{"lst":[1,2,3]}'/>
                             </el-form-item>
                             <el-form-item label="输出用例" required prop="outputSample">
                                 <el-input v-model="form.outputSample" placeholder="此用例仅用于测试 例:6"/>
@@ -306,6 +306,7 @@ if(ep!=='0'){
 const rules = reactive({
     problemName: [
         { required: true, message: '题目名称不能为空', trigger: 'blur' },
+        { max: 20, message: '题目名称最大限制20个字符', trigger: 'blur' },
     ],
     inputSample: [
     {

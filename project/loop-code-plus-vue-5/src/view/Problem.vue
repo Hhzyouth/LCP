@@ -34,7 +34,7 @@
                       <el-icon v-if="problemDone.has(problem.problemId)" style="color: #67c23a;height: 100%;"><SuccessFilled /></el-icon>
                     </div>
                     <div class="id">{{ problem.problemId }}</div>
-                    <router-link class="name" :to='`/Problem/WorkingArea/${problem.problemId}`' target="_blank">{{ problem.problemName }}</router-link>
+                    <router-link class="name" :to='`/Problem/WorkingArea/${problem.problemId}`' target="_blank" :title="problem.problemName">{{ problem.problemName }}</router-link>
                     <div :class="classLevel(problem.difficultyLevel)">{{ showLevel(problem.difficultyLevel) }}</div>
                     <el-scrollbar class="tag-container">
                       <div class="tag">
@@ -43,7 +43,7 @@
                     </el-scrollbar>
                     <el-scrollbar class="collection-container">
                       <div class="collection">
-                        <el-tag v-for="collection in JSON.parse(problem.collection)" type="primary" class="tag-item" round>{{ collection }}</el-tag>
+                        <router-link v-for="collection in JSON.parse(problem.collection)" :to="`/Problem/Collection/${colNametoId[collection]}`"><el-tag  type="primary" class="tag-item" round>{{ collection }}</el-tag></router-link>
                       </div>
                     </el-scrollbar>
                   </div>
@@ -82,8 +82,8 @@
 
 <script setup>
 import Header from "../components/Header.vue"
-import { reactive, ref, toRaw } from 'vue'
-import { getProblems } from '@/api/problem.js'
+import { reactive, ref } from 'vue'
+import { getProblems, getCollectionList } from '@/api/problem.js'
 import { useUserStore } from '@/store/user.js'
 
 const loading=ref(false)
@@ -123,8 +123,10 @@ const dataStructureCSSList=reactive([{ type: 'info', effect: 'plain' },{ type: '
 const algorithmList=["动态规划","贪心","深度优先搜索","二分查找","广度优先搜索","回溯","递归","分治","记忆化搜索","归并排序","快速选择"];
 const initAlgorithmCSSList=[{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' }]
 const algorithmCSSList=reactive([...initAlgorithmCSSList])
-const collectionList=["LCP101","微软面试","微软笔试","苏州大学练习题","苏州大学考试题","华为","字节跳动","考研408","Python学习","Java学习","蓝桥杯"];
-const collectionCSSList=reactive([{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' },{ type: 'info', effect: 'plain' }])
+const collectionList=reactive([])
+const collectionCSSList=reactive([])
+const rawCollectionList=ref([])
+const colNametoId=reactive({})
 
 const activeTagList=reactive(new Set());
 const activeCollectionList=reactive(new Set());
@@ -231,6 +233,16 @@ const setCollectionCSS=(index)=>{
   getProblem()
 }
 getProblem()
+getCollectionList()
+.then((response)=>{
+  console.log(response);
+  rawCollectionList.value=response.data.data
+  for (let i of rawCollectionList.value){
+    collectionList.push(i.colName)
+    collectionCSSList.push({ type: 'info', effect: 'plain' })
+    colNametoId[i.colName]=i.colId
+  }
+})
 </script>
 <script>
 const getWindowInfo = () => {
@@ -306,6 +318,9 @@ export default {
   flex: 150 0 auto;
   margin-left: 8px;
   padding: 10px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .level{
   min-width: 0px;

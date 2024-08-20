@@ -38,6 +38,10 @@ const routes = [
     component: ()=>import("@/view/Problem.vue")
   },
   { 
+    path: '/Problem/Collection/:co',
+    component: ()=>import("@/view/problem/Collection.vue")
+  },
+  { 
     path: '/Problem/WorkingArea/:p',
     component: ()=>import("@/view/problem/WorkingArea.vue")
   },

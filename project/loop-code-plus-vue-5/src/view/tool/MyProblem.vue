@@ -63,7 +63,7 @@
                                   {{ collection.status==0 ? '私有' : '公开' }}
                                 </div>
                                 <div class="id">{{ collection.colId }}</div>
-                                <router-link class="name" :to='`/Problem/WorkingArea/${collection.colId}`'>{{ collection.colName }}</router-link>
+                                <router-link class="name" :to='`/Problem/Collection/${collection.colId}`' :title="collection.colName">{{ collection.colName }}</router-link>
                                 <el-scrollbar class="problem-container">
                                 <div class="problem">
                                     <span v-for="item in JSON.parse(collection.problemList)" class="tag-item">《{{ item.problemName }}》</span>
@@ -325,6 +325,9 @@ const handleChange = () => {
   flex: 150 0 auto;
   margin-left: 8px;
   padding: 12px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .level{
   min-width: 0px;

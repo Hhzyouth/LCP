@@ -293,15 +293,26 @@ if(ec!=='0'){
     form.colId=response.data.data.collection.colId
     form.colName=response.data.data.collection.colName
     delivery.value=response.data.data.collection.status===1?true:false
-    problemList.value=response.data.data.problemList
+    problemList.value=transformProblemList(response.data.data.problemList)
   }).catch((error)=>{
+    console.log(error);
+    
     ElMessage.error("网络错误")
   })
 }
-
+const transformProblemList=(lst)=>{
+  // console.log(lst);
+  let temp=[]
+  for (let p of lst){
+    const {problemId,userId,problemName,difficultyLevel,tag,collection}=p
+    temp.push({problemId,userId,problemName,difficultyLevel,tag,collection})
+  }
+  return temp
+}
 const rules = reactive({
     colName: [
         { required: true, message: '题目集名称不能为空', trigger: 'blur' },
+        { max: 16, message: '题目集名称最大限制16个字符', trigger: 'blur' },
     ],
 })
 const submitForm = async (formEl) => {
