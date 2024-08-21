@@ -14,13 +14,13 @@
                                 </div>
                             <div class="personal-discription">
                                 <div class="personal-name">
-                                    {{ nickname }}
+                                    {{ store.nickname }}
                                 </div>
                                 <div class="personal-id">
-                                    id:{{id}}
+                                    id:{{store.userId}}
                                 </div>
                                 <div class="personal-title">
-                                    {{ title }}
+                                    {{ store.title}}
                                 </div>
                             </div>
                         </div>
@@ -299,10 +299,28 @@
                                         
                                     </div>
                                     <div class="pic-img" v-else-if="gradePicture===2">
-                                        <img src="@\assets\image\段位1.jpg" alt="" class="pic-item">
+                                        <img v-if="rankingPersonNum2<=2000" src="@\assets\image\段位1.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum2<=4000" src="@\assets\image\段位2.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum2<=6000" src="@\assets\image\段位3.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum2<=8000" src="@\assets\image\段位4.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum2<=10000" src="@\assets\image\段位5.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum2<=12000" src="@\assets\image\段位6.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum2<=14000" src="@\assets\image\段位7.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum2<=16000" src="@\assets\image\段位8.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum2<=18000" src="@\assets\image\段位9.jpg" alt="" class="pic-item">
+                                        <img v-else src="@\assets\image\段位10.jpg" alt="" class="pic-item">
                                     </div>
                                     <div class="pic-img" v-else-if="gradePicture===3">
-                                        <img src="@\assets\image\段位1.jpg" alt="" class="pic-item">
+                                        <img v-if="rankingPersonNum3<=2000" src="@\assets\image\段位1.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum3<=4000" src="@\assets\image\段位2.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum3<=6000" src="@\assets\image\段位3.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum3<=8000" src="@\assets\image\段位4.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum3<=10000" src="@\assets\image\段位5.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum3<=12000" src="@\assets\image\段位6.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum3<=14000" src="@\assets\image\段位7.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum3<=16000" src="@\assets\image\段位8.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum3<=18000" src="@\assets\image\段位9.jpg" alt="" class="pic-item">
+                                        <img v-else src="@\assets\image\段位10.jpg" alt="" class="pic-item">
                                     </div>
                                 </div>
                             </div>
@@ -412,9 +430,7 @@ use([GridComponent, BarChart, CanvasRenderer])
 
 const store=useUserStore()
 
-const id=store.userId
-const nickname=store.nickname
-const title=store.title
+
 
 
 const Page=ref()
@@ -451,9 +467,9 @@ const progressNum =[{name:"数组",num1:100,num2:100},{name:"二分查找",num1:
 const datagraph1 = ref([])
 const datagraph2 = ref([])
 const datagraph3 = ref([])
-const truedata1 = ref([117,116,76,49,38,4,102,24,120,144,14,53,100,96,45,61,93,50,119,116])
-const truedata2 = ref([10,20,30,40,50,60,70,80,90,100,10,20,30,40,50,60,70,80,90,100])
-const truedata3 = ref([10,20,30,40,50,60,70,80,90,100,10,20,30,40,50,60,70,80,90,100])
+const truedata1 = ref([ 80,41,62,99,107,109,111,111,128,134,136,147,120,122,83,90,93,52,71,73])
+const truedata2 = ref([42, 9, 10, 19, 18, 52, 53, 66,  101, 107, 119, 123, 128, 173,84, 98,94, 98,46, 48,])
+const truedata3 = ref([85,32, 38,50, 63, 64, 64, 90,124, 126, 147, 162, 181,97, 106, 52, 56,41, 46,74])
 const topNum1 = ref()
 const topNum2 = ref()
 const topNum3 = ref()
@@ -850,13 +866,13 @@ const outmouse2=()=>{
     datagraph2.value[flag02].itemStyle.color="rgb(255, 161, 22)"
     rankingNum2.value=''
     rankingNumPeople2.value=''
-    topNumVelue1(topNum2)
+    topNumVelue2(topNum2)
 }
 const outmouse3=()=>{
     datagraph3.value[flag03].itemStyle.color="rgb(255, 161, 22)"
     rankingNum3.value=''
     rankingNumPeople3.value=''
-    topNumVelue1(topNum3)
+    topNumVelue3(topNum3)
 }
 
 const addmore=ref(true)
