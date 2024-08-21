@@ -286,13 +286,23 @@
                                 </div>
                                 <div class="pic">
                                     <div class="pic-img" v-if="gradePicture===1">
-                                        <img src="@\assets\image\Snipaste_2024-08-17_16-38-38_1_240x240.jpg" alt="" class="pic-item">
+                                        <img v-if="rankingPersonNum1<=2000" src="@\assets\image\段位1.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum1<=4000" src="@\assets\image\段位2.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum1<=6000" src="@\assets\image\段位3.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum1<=8000" src="@\assets\image\段位4.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum1<=10000" src="@\assets\image\段位5.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum1<=12000" src="@\assets\image\段位6.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum1<=14000" src="@\assets\image\段位7.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum1<=16000" src="@\assets\image\段位8.jpg" alt="" class="pic-item">
+                                        <img v-else-if="rankingPersonNum1<=18000" src="@\assets\image\段位9.jpg" alt="" class="pic-item">
+                                        <img v-else src="@\assets\image\段位10.jpg" alt="" class="pic-item">
+                                        
                                     </div>
                                     <div class="pic-img" v-else-if="gradePicture===2">
-                                        <img src="@\assets\image\Snipaste_2024-08-17_16-38-38_1_240x240.jpg" alt="" class="pic-item">
+                                        <img src="@\assets\image\段位1.jpg" alt="" class="pic-item">
                                     </div>
                                     <div class="pic-img" v-else-if="gradePicture===3">
-                                        <img src="@\assets\image\Snipaste_2024-08-17_16-38-38_1_240x240.jpg" alt="" class="pic-item">
+                                        <img src="@\assets\image\段位1.jpg" alt="" class="pic-item">
                                     </div>
                                 </div>
                             </div>
@@ -859,6 +869,7 @@ const moreitems=[  {solutionName:'关于此题的诸多解法分析',id:1,name:"
 problemList.item=problemList.item.concat(moreitems)
 console.log(problemList.item.concat(moreitems))
 }
+
 </script>
 
 
