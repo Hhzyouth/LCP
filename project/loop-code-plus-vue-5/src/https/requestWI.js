@@ -67,7 +67,7 @@ servicewi.interceptors.response.use(
             }
             console.log("response:",error);
             return Promise.reject(error);
-        }
+         }
     }
 );
 export default servicewi;

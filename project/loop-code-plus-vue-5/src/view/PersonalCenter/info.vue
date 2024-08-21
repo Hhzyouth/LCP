@@ -19,7 +19,7 @@
                             <div class="line" style="padding: 10px 0 10px 0;"></div>
                             <div class="sheet-body-title">
                                 <div class="portrait">
-                                    <img src="@/assets/image/course-Python.png" alt="" class="portrait-img">
+                                    <img :src="store.avatar" alt="" class="portrait-img">
                                     <div class="icon-size">
                                         <el-upload
                                             class="avatar-uploader"
@@ -191,11 +191,15 @@
     </div>
 </template>
 <script setup>
+import { useUserStore } from '@/store/user.js'
+
 import Header from "../../components/Header.vue"
 import {ref} from 'vue'
 import { ElMessage } from 'element-plus'
 import { reactive } from 'vue'
 const Page=ref('')
+
+const store=useUserStore()
 
 const changeEmail=ref(false)
 const email=ref('123@qq.com')
