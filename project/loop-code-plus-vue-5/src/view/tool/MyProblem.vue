@@ -27,7 +27,7 @@
                                   {{ problem.status==0 ? '私有' : '公开' }}
                                 </div>
                                 <div class="id">{{ problem.problemId }}</div>
-                                <router-link class="name" :to='`/Problem/WorkingArea/${problem.problemId}`'>{{ problem.problemName }}</router-link>
+                                <router-link class="name" :to='`/Problem/WorkingArea/${problem.problemId}`' :title="problem.problemName">{{ problem.problemName }}</router-link>
                                 <div :class="classLevel(problem.difficultyLevel)">{{ showLevel(problem.difficultyLevel) }}</div>
                                 <el-scrollbar class="tag-container">
                                 <div class="tag">

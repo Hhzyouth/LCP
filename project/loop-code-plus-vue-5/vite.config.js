@@ -34,7 +34,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: ' http://172.20.10.3:8080/', // 凡是遇到 /api 路径的请求，都映射到 target 属性
+        target: ' http://192.168.115.15:8080/', // 凡是遇到 /api 路径的请求，都映射到 target 属性
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, '') // 重写 api 为 空，就是去掉它
       }

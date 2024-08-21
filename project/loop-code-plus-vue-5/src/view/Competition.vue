@@ -259,7 +259,6 @@
         </div>
         <template #footer>
         <div class="dialog-footer">
-            <el-button @click='singleFail'>失败</el-button>
             <el-button @click="singleLoading = false;singleText='开始匹配';close()" v-show="singleLoading">取消</el-button>
             <el-button :type="singleType" @click="toSingleMatch()" :loading="singleLoading" :disabled='singleDisabled'>
                 <template #loading>
@@ -389,6 +388,12 @@
         }else{
             singleLoading.value = true;
             singleText.value='匹配中';
+            setTimeout(()=>{
+                if (singleDisabled.value!==true){
+                    singleFail()
+                    close()
+                }
+            },10000)
             createWebSocket()
         }
         
