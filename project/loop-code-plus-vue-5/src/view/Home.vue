@@ -13,18 +13,9 @@
         console.log(response);
         store.setRanks(response.data.data)
        })
+    
 </script>
 <script>
-const getWindowInfo = () => {
-    if (window.innerWidth<=1041){
-        const element = document.querySelector('.affix');
-        element.style.display = 'none';
-    }else{
-        const element = document.querySelector('.affix');
-        element.style.display = '';
-    }
-};
-
 
 export default {
     data() {
@@ -40,7 +31,7 @@ export default {
         var myTimeDisplay = setInterval(() => {
            this.getNowTime(); //每秒更新一次时间
         }, 1000);
-        window.addEventListener('resize', getWindowInfo);
+        window.addEventListener('resize', this.getWindowInfo,true);
     },
     methods: {
         getNowTime() {
@@ -74,11 +65,21 @@ export default {
         addZero(s) {
             return s < 10 ? ('0' + s) : s;
         },
+        getWindowInfo(){
+            if (window.innerWidth<=1041){
+                const element = document.querySelector('.affix');
+                element.style.display = 'none';
+            }else{
+                const element = document.querySelector('.affix');
+                element.style.display = '';
+            }
+        }
         
     },
-    beforeDestroy(){
-        window.removeEventListener("resize", getWindowInfo);
+    beforeUnmount(){
+        window.removeEventListener("resize", this.getWindowInfo,true);
     }
+    
 
 }
 

@@ -256,8 +256,13 @@ const getWindowInfo = () => {
 };
 export default {
   mounted(){
+    getWindowInfo()
     window.addEventListener('resize', getWindowInfo);
+  },
+  beforeUnmount(){
+    window.removeEventListener('resize', getWindowInfo);
   }
+  
 }
 </script>
 

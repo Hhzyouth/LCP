@@ -17,6 +17,8 @@ export const createWebSocket=()=>{
 }
 
 export const add=(message)=>{
+    console.log(message);
+    
     if (socket!=null){
         socket.send(message)
     }

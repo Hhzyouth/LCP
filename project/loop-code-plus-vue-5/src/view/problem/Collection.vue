@@ -62,7 +62,7 @@
 
 <script setup>
 import Header from "@/components/Header.vue"
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted, onBeforeUnmount } from 'vue'
 import { useUserStore } from '@/store/user.js'
 import { useRoute } from "vue-router"
 import { getCollection } from "../../api/myProblem"
@@ -140,8 +140,7 @@ const classLevel=(level)=>{
 console.log(co);
 
 getColProblem()
-</script>
-<script>
+
 const getWindowInfo = () => {
     if (window.innerWidth<=1301){
         document.querySelector('.main-rightside').style.display = 'none';
@@ -151,11 +150,14 @@ const getWindowInfo = () => {
         document.querySelector('.main-container').style.width = '900px';
     }
 };
-export default {
-  mounted(){
-    window.addEventListener('resize', getWindowInfo);
-  }
-}
+
+onMounted(()=>{
+  getWindowInfo()
+  window.addEventListener('resize', getWindowInfo,true);
+})
+onBeforeUnmount(()=>{
+  window.removeEventListener('resize', getWindowInfo,true);
+})
 </script>
 
 
