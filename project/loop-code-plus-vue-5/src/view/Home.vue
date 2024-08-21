@@ -2,12 +2,17 @@
     import Header from "../components/Header.vue"
     import { useUserStore } from '@/store/user.js'
     import { ref } from 'vue'
-    const finishedTitle=ref(0)
-    const rank=ref(600)
+    import { getRanks } from "../api/home";
     const onlineNumber=ref(0)
     const Page=ref('1')
 
     const store=useUserStore()
+
+    getRanks()
+       .then((response)=>{
+        console.log(response);
+        store.setRanks(response.data.data)
+       })
 </script>
 <script>
 const getWindowInfo = () => {
