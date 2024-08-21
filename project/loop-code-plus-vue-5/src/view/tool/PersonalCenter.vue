@@ -10,17 +10,17 @@
                     <div class="first-floor">
                         <div class="resume">
                             <div class="portrait">
-                                    <img src="@/assets/image/course-Python.png" alt="" class="portrait-img">
+                                    <img :src="store.avatar" alt="" class="portrait-img">
                                 </div>
                             <div class="personal-discription">
                                 <div class="personal-name">
-                                    张三
+                                    {{ nickname }}
                                 </div>
                                 <div class="personal-id">
-                                    id:123456789
+                                    id:{{id}}
                                 </div>
                                 <div class="personal-title">
-                                    Java
+                                    {{ title }}
                                 </div>
                             </div>
                         </div>
@@ -279,20 +279,20 @@
                                         <div class="top">多人排位分数</div>
                                         <div class="grade-num">{{rankingPersonNum2}}</div>
                                     </div>
-                                    <div class="a-grade" @mouseover="gradePicture=3" :class="gradePicture===3 ? 'a-grade button-color': 'a-grade'">
+                                    <div class="a-grade" @mouseover="gradePicture=3" :class="gradePicture===3 ? 'a-grade button-color': 'a-grade'" style="margin-bottom: 0;">
                                         <div class="top">竞赛分数</div>
                                         <div class="grade-num">{{rankingPersonNum3}}</div>
                                     </div>
                                 </div>
                                 <div class="pic">
                                     <div class="pic-img" v-if="gradePicture===1">
-                                        <img src="@\assets\image\Snipaste_2024-08-17_16-38-38(1).png" alt="" class="pic-item">
+                                        <img src="@\assets\image\Snipaste_2024-08-17_16-38-38_1_240x240.jpg" alt="" class="pic-item">
                                     </div>
                                     <div class="pic-img" v-else-if="gradePicture===2">
-                                        <img src="@\assets\image\Snipaste_2024-08-17_16-38-38(2).png" alt="" class="pic-item">
+                                        <img src="@\assets\image\Snipaste_2024-08-17_16-38-38_1_240x240.jpg" alt="" class="pic-item">
                                     </div>
                                     <div class="pic-img" v-else-if="gradePicture===3">
-                                        <img src="@\assets\image\Snipaste_2024-08-17_16-38-38(1).png" alt="" class="pic-item">
+                                        <img src="@\assets\image\Snipaste_2024-08-17_16-38-38_1_240x240.jpg" alt="" class="pic-item">
                                     </div>
                                 </div>
                             </div>
@@ -325,6 +325,7 @@
                                             </div>
                                         </div>
                                         <div v-if="lst==='2' " class="list-text">
+                                            
                                             <div class="list-text-item">
                                                 所有题单 >
                                             </div>
@@ -386,6 +387,7 @@
 </template>
 
 <script setup>
+import { useUserStore } from '@/store/user.js'
 import Header from "../../components/Header.vue"
 
 import { reactive, ref } from 'vue'
@@ -398,6 +400,11 @@ import { CanvasRenderer } from 'echarts/renderers'
 
 use([GridComponent, BarChart, CanvasRenderer])
 
+const store=useUserStore()
+
+const id=store.userId
+const nickname=store.nickname
+const title=store.title
 
 
 const Page=ref()
@@ -434,7 +441,7 @@ const progressNum =[{name:"数组",num1:100,num2:100},{name:"二分查找",num1:
 const datagraph1 = ref([])
 const datagraph2 = ref([])
 const datagraph3 = ref([])
-const truedata1 = ref([10,20,30,40,50,60,70,80,90,100,10,20,30,40,50,60,70,80,90,100])
+const truedata1 = ref([117,116,76,49,38,4,102,24,120,144,14,53,100,96,45,61,93,50,119,116])
 const truedata2 = ref([10,20,30,40,50,60,70,80,90,100,10,20,30,40,50,60,70,80,90,100])
 const truedata3 = ref([10,20,30,40,50,60,70,80,90,100,10,20,30,40,50,60,70,80,90,100])
 const topNum1 = ref()
@@ -446,16 +453,30 @@ const rankingNum3=ref()
 const rankingNumPeople1=ref()
 const rankingNumPeople2=ref()
 const rankingNumPeople3=ref()
-const rankingPersonNum1=ref(12345)
-const rankingPersonNum2=ref(12345)
-const rankingPersonNum3=ref(12345)
+const rankingPersonNum1=ref(store.sinPoint)
+const rankingPersonNum2=ref(store.mulPoint)
+const rankingPersonNum3=ref(store.weekPoint)
 
 const gradePicture=ref(1)
 
-const flag01=Math.ceil(rankingPersonNum1.value/1000)-1
-const flag02=Math.ceil(rankingPersonNum2.value/1000)-1
-const flag03=Math.ceil(rankingPersonNum3.value/1000)-1
 
+
+let flag01=Math.ceil(rankingPersonNum1.value/1000)-1
+let flag02=Math.ceil(rankingPersonNum2.value/1000)-1
+let flag03=Math.ceil(rankingPersonNum3.value/1000)-1
+
+const dealdata=()=>{
+    if(flag01===-1){
+        flag01=0
+    }
+    if(flag02===-1){
+        flag02=0
+    }
+    if(flag03===-1){
+        flag03=0
+    }
+}
+dealdata()
 
 const problemList=reactive( {item: [
   {solutionName:'关于此题的诸多解法分析以及时间复杂度的讨论，请多多点赞',id:1,name:"两数求和",level:1,tags:["数组","哈希表"],collections:["LCP101"]},
@@ -816,13 +837,13 @@ const outmouse1=()=>{
     topNumVelue1(topNum1)
 }
 const outmouse2=()=>{
-    datagraph2.value[flag01].itemStyle.color="rgb(255, 161, 22)"
+    datagraph2.value[flag02].itemStyle.color="rgb(255, 161, 22)"
     rankingNum2.value=''
     rankingNumPeople2.value=''
     topNumVelue1(topNum2)
 }
 const outmouse3=()=>{
-    datagraph3.value[flag02].itemStyle.color="rgb(255, 161, 22)"
+    datagraph3.value[flag03].itemStyle.color="rgb(255, 161, 22)"
     rankingNum3.value=''
     rankingNumPeople3.value=''
     topNumVelue1(topNum3)
