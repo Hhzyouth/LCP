@@ -418,7 +418,7 @@
 import { useUserStore } from '@/store/user.js'
 import Header from "../../components/Header.vue"
 
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import VChart, { THEME_KEY } from 'vue-echarts';
 import { use } from 'echarts/core'
 import { BarChart } from 'echarts/charts'
@@ -479,9 +479,9 @@ const rankingNum3=ref()
 const rankingNumPeople1=ref()
 const rankingNumPeople2=ref()
 const rankingNumPeople3=ref()
-const rankingPersonNum1=ref(store.sinPoint)
-const rankingPersonNum2=ref(store.mulPoint)
-const rankingPersonNum3=ref(store.weekPoint)
+const rankingPersonNum1=ref(computed(()=>store.sinPoint))
+const rankingPersonNum2=ref(computed(()=>store.mulPoint))
+const rankingPersonNum3=ref(computed(()=>store.weekPoint))
 
 const gradePicture=ref(1)
 
