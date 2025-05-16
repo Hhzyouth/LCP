@@ -6,6 +6,8 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import path from 'path' 
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
+import fileURLToPath from 'node:url'
+import URL from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -26,9 +28,11 @@ export default defineConfig({
       }
     ),
   ],
+  base: './',
   resolve: {
 		alias: {   //配置路径别名
-			'@': path.resolve(__dirname, 'src')
+			//'@': path.resolve(__dirname, 'src')
+      '@': fileURLToPath(new URL('./src', import.meta.url))
 		}
 	},
   server: {
