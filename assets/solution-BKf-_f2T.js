@@ -1,0 +1,1 @@
+import{b7 as e,b6 as s}from"./index-BXCC11IL.js";const n=(t,o)=>s({url:"/solution/get",method:"get",params:{problemId:t,page:o}}),a=t=>e({url:"/solution/updateContent",method:"get",params:{solutionId:t}}),i=t=>{let o=JSON.parse(JSON.stringify(t));return o.tag=JSON.stringify(t.tag),e({url:"/solution/add",method:"post",data:o})};export{a,n as g,i as s};

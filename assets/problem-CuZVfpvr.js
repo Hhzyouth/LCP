@@ -1,0 +1,1 @@
+import{b6 as e}from"./index-BXCC11IL.js";const a=(t,o,r,s)=>e({url:"/problem/list",method:"get",params:{page:t,tag:o,collection:r,userId:s}}),m=()=>e({url:"/problem/colList",method:"get"});export{a,m as g};
