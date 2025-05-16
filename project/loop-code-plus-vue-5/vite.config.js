@@ -31,8 +31,8 @@ export default defineConfig({
   base: './',
   resolve: {
 		alias: {   //配置路径别名
-			//'@': path.resolve(__dirname, 'src')
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+			'@': path.resolve(__dirname, 'src')
+      //'@': fileURLToPath(new URL('./src', import.meta.url))
 		}
 	},
   server: {

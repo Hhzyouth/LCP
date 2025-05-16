@@ -16,7 +16,7 @@
         <h3><span class="section-number">4.1.1. </span>安装步骤<a class="headerlink" href="#installation-steps" title="Link to this heading">¶</a></h3>
         <p>四个 Python 3.12 安装程序可供下载 - 32位和64位版本的各有两个。 <em>web installer</em> （网络安装包）是一个小的初始化工具，它将在安装过程中，根据需要自动下载所需的组件。 <em>offline installer</em> （离线安装包）内含默认安装所需的组件，可选择功能仍需要Internet连接下载。请参阅 <a class="reference internal" href="#install-layout-option"><span class="std std-ref">免下载安装</span></a> 以了解在安装过程中避免下载的其他方法。</p>
         <p>启动安装程序后，可以选择以下两个选项之一：</p>
-        <img alt="../_images/win_installer.png" src="../_images/win_installer.png">
+        <!-- <img alt="../_images/win_installer.png" src="../_images/win_installer.png"> -->
         <p>如果选择“Install Now（立即安装）”：</p>
         <ul class="simple">
         <li><p>您 <em>不</em> 需要成为管理员（除非需要对C运行库进行系统更新，或者为所有用户安装 <a class="reference internal" href="#launcher"><span class="std std-ref">适用于Windows的Python启动器</span></a> ）</p></li>
